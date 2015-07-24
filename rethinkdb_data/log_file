@@ -1,0 +1,14 @@
+2015-07-27T19:41:45.437185000 0.132695s notice: Recursively removing directory /Users/belenduchene/Sites/graphql-server/rethinkdb_data/tmp
+2015-07-27T19:41:45.439580000 0.135097s notice: Initializing directory /Users/belenduchene/Sites/graphql-server/rethinkdb_data
+2015-07-27T19:41:45.439741000 0.135250s info: Creating a default database for your convenience. (This is because you ran 'rethinkdb' without 'create', 'serve', or '--join', and the directory '/Users/belenduchene/Sites/graphql-server/rethinkdb_data' did not already exist or is empty.)
+2015-07-27T19:41:45.439796000 0.135305s notice: Running rethinkdb 2.0.2 (CLANG 6.0 (clang-600.0.57))...
+2015-07-27T19:41:45.449027000 0.144537s notice: Running on Darwin 14.4.0 x86_64
+2015-07-27T19:41:45.449103000 0.144611s notice: Loading data from directory /Users/belenduchene/Sites/graphql-server/rethinkdb_data
+2015-07-27T19:41:47.754782000 2.450337s info: Automatically using cache size of 322 MB
+2015-07-27T19:41:47.755678000 2.451233s notice: Listening for intracluster connections on port 29015
+2015-07-27T19:41:47.757893000 2.453448s notice: Listening for client driver connections on port 28015
+2015-07-27T19:41:47.758034000 2.453590s notice: Listening for administrative HTTP connections on port 8080
+2015-07-27T19:41:47.758038000 2.453593s notice: Listening on addresses: 127.0.0.1, ::1
+2015-07-27T19:41:47.758044000 2.453599s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2015-07-27T19:41:47.758050000 2.453605s notice: Server ready, "MacBook_Pro_de_belen_DUCHENE_local_z07" f8261392-5787-41ed-b4e4-478eb8713f6c
+2015-07-27T19:41:49.649227000 4.344829s notice: A newer version of the RethinkDB server is available: 2.0.4. You can read the changelog at <https://github.com/rethinkdb/rethinkdb/releases>.

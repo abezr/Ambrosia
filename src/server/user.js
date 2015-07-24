@@ -1,15 +1,7 @@
-import mongoose from 'mongoose';
-
-var UserSchema = new mongoose.Schema({
-  name: {
-    type: String
-  },
-  friends: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  }]
-});
-
-var User = mongoose.model('User', UserSchema);
+var User = {
+  id: '1',
+  name: 'paco',
+  friends: ['J-P', 'pablo', 'David', 'Michel', 'J-C']
+};
 
 export default User;
