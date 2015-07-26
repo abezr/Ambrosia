@@ -8,7 +8,9 @@ import {
 
 import co from 'co';
 import User from './user';
+import debug from 'debug';
 
+var sc = debug('schema');
 /**
  * generate projection object for mongoose
  * @param  {Object} fieldASTs
@@ -17,7 +19,6 @@ import User from './user';
 function getProjection (fieldASTs) {
   return fieldASTs.selectionSet.selections.reduce((projections, selection) => {
     projections[selection.name.value] = 1;
-
     return projections;
   }, {});
 }
@@ -68,9 +69,10 @@ var schema = new GraphQLSchema({
             type: new GraphQLNonNull(GraphQLString)
           }
         },
-        resolve: (root, {id}, source, fieldASTs) => {
+        resolve: (user, {id}, source, fieldASTs) => {
+          sc(source);
           var projections = getProjection(fieldASTs);
-          return User.findById(id, projections);
+          return User.findById(id.id, projections);
         }
       }
     }
