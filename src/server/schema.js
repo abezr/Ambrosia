@@ -4,11 +4,13 @@ import {
   GraphQLSchema,
   GraphQLString,
   GraphQLList
-} from 'graphql/lib/type';
+}
+from 'graphql/lib/type';
 
 import co from 'co';
 import User from './user';
 import debug from 'debug';
+import r from 'rethinkdb';
 
 var sc = debug('schema');
 /**
@@ -16,7 +18,7 @@ var sc = debug('schema');
  * @param  {Object} fieldASTs
  * @return {Project}
  */
-function getProjection (fieldASTs) {
+function getProjection(fieldASTs) {
   return fieldASTs.selectionSet.selections.reduce((projections, selection) => {
     projections[selection.name.value] = 1;
     return projections;
@@ -38,15 +40,14 @@ var userType = new GraphQLObjectType({
     friends: {
       type: new GraphQLList(userType),
       description: 'The friends of the user, or an empty list if they have none.',
-      resolve: (user, params, source, fieldASTs) => {
-        var projections = getProjection(fieldASTs);
-        return User.find({
-          _id: {
-            // to make it easily testable
-            $in: user.friends.map((id) => id.toString())
-          }
-        }, projections);
-      },
+      resolve: (user, params, conn, fieldASTs) => co(function*(){
+        var friends = yield user.friends.map(function(id) {
+          return r.table('user').get(id).run(conn, function(err, result) {
+            return result;
+          });
+        });
+        return friends;
+      })
     }
   })
 });
@@ -69,11 +70,15 @@ var schema = new GraphQLSchema({
             type: new GraphQLNonNull(GraphQLString)
           }
         },
-        resolve: (user, {id}, source, fieldASTs) => {
-          sc(source);
-          var projections = getProjection(fieldASTs);
-          return User.findById(id.id, projections);
-        }
+        resolve: (user, {
+          id
+        }, conn, fieldASTs) => co(function*() {
+          var data = yield r.table('user').get(id).run(conn, function(err, result) {
+            sc(result);
+            return result;
+          });
+          return data;
+        })
       }
     }
   }),
@@ -94,18 +99,9 @@ var schema = new GraphQLSchema({
             type: GraphQLString
           }
         },
-        resolve: (obj, {id, name}, source, fieldASTs) => co(function *() {
-          var projections = getProjection(fieldASTs);
-
-          yield User.update({
-            _id: id
-          }, {
-            $set: {
-              name: name
-            }
-          });
-
-          return yield User.findById(id, projections);
+        resolve: (obj, {id, name}, conn, fieldASTs) => co(function*() {
+          var res = yield r.table('user').get(id).update({name: name}, {returnChanges: true}).run(conn);
+          return res.changes[0].new_val;
         })
       }
     }

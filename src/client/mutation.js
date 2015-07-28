@@ -26,5 +26,5 @@ request
   })
   .end(function (err, res) {
     debug(err || res.body);
-    debug('friends', res.body.data.updateUser.friends);
+    debug('friends', res.body);
   });
