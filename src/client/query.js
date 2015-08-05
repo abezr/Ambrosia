@@ -19,5 +19,5 @@ request
   })
   .end(function (err, res) {
     debug(err || res.body);
-    debug('friends', res.body.data.user.friends);
+    debug('friends', res.body);
   });

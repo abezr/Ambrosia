@@ -4,16 +4,22 @@
   "description": "GraphQL server with Mongoose (MongoDB) and Node.js",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --harmony src/server/index.js",
+    "watch": "nodemon -w ./src --harmony src/server/index.js",
+    "watchify": "watchify -v -d src/client/main.js -o dist/bundle.js",
+    "start": "DEBUG=* node --harmony src/server/index.js",
     "client": "node src/client/index.js",
     "test": "NODE_ENV=test mocha --compilers js:babel/register --require co-mocha $(find src -name \"*.spec.js\")",
     "seed": "node --harmony ./seed"
   },
+  "browserify": {
+    "transform": [
+      "reactify",
+      "babelify"
+    ]
+  },
   "author": "RisingStack",
   "license": "ISC",
   "dependencies": {
-    "babel": "^5.6.14",
-    "babel-core": "^5.6.15",
     "co": "^4.5.4",
     "co-body": "^2.0.0",
     "debug": "^2.2.0",
@@ -27,6 +33,10 @@
     "superagent": "^1.2.0"
   },
   "devDependencies": {
+    "babel": "^5.6.14",
+    "babel-core": "^5.6.15",
+    "babelify": "^6.1.3",
+    "browserify": "^11.0.1",
     "chai": "^3.0.0",
     "co-mocha": "^1.1.2",
     "co-supertest": "0.0.10",

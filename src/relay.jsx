@@ -3,16 +3,9 @@ var React = require('react');
 var Debug = require('debug');
 var co = require('co');
 
-var debug = new Debug('relay');
+var log = new Debug('relay');
 
-var Relay = {};
-
-// function Relay (opt) {
-//   this.components = [];
-//   this.currentData = {};
-//   this.queryPath = opt.queryPath;
-//   this.mutationPath = opt.mutationPath;
-// }
+function Relay(opt) {}
 
 // Relay.prototype.createParentContainer = function (component) {
 //   component.componentWillMount = function () {
@@ -21,45 +14,54 @@ var Relay = {};
 //   }.bind(this);
 // }
 
-Relay.createContainer = function (component) {
+Relay.prototype.createContainer = function(Component) {
+//if(!Loading) Loading = <div>Loading page...</div>;
   var that = this;
-  return React.createClass({
-    componentWillMount: function () {
-      that.query(component.query).then(function(query) {
-        this.query = query;
-      }.bind(this));
-    },
-    render: function () {
-      return <component {...this.query}/>
-    }
+  var p = new Promise(function(resolve, reject) {
+    that.query(Component.query).then(function(data) {
+      console.log('Relay:createContainer', data);
+      var node = React.createClass({
+        render: function() {
+          return (
+            <Component heros={data.data.users}/>
+          );
+        }
+      });
+      resolve(node);
+    });
   });
-  //this.components[component.name] = component; //register all component to build query
-}
+  return p;
+//console.log('Relay:createContainer', data);
+} //this.components[component.name] = component; //register all component to build query
+Relay.prototype.mutation = function(string, params) {
+  log('mutation');
+  request.post(this.mutationPath).send({
+    query: string,
+    params: params
+  }).end(function(err, res) {
+    debug(err || res.body);
+    debug('data well inserted', res.body);
+  });
+};
 
-Relay.mutation = function (string, params) {
-  request
-    .post(this.mutationPath)
-    .send({
-      query: string,
-      params: params
-    })
-    .end(function (err, res) {
-      debug(err || res.body);
-      debug('data well inserted', res.body);
-    });
-}
-
-Relay.query = co(function*(string, params) { //we sould turn back the returned result into a promise
-  var query = yield request
-    .get('http://localhost:3000/data')
-    .query({
+Relay.prototype.query = function(string, params) { //I should turn back the returned result into a promise
+// return co(function* () {
+//   yield request.get('http://localhost:3000/data').query({
+//     query: string
+//   }).end(function(err, res) {
+//     return (err || res.body);
+//   });
+// });
+  var p = new Promise(function(resolve, reject) {
+    request.get('http://localhost:3000/data').query({
       query: string
-    })
-    .end(function (err, res) {
-      debug(err || res.body);
-      debug('successfull query', res.body);
+    }).end(function(err, res) {
+      resolve(res.body);
+      reject(err);
     });
-  return query;
-});
+  });
+  return p;
+};
 
 module.exports = Relay;
+export default Relay;

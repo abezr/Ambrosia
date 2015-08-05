@@ -13,15 +13,12 @@ var Html = React.createClass({
             <html>
             <head>
                 <meta charSet="utf-8" />
-                <title></title>
+                <title>Relay Implementation</title>
                 <meta name="viewport" content="width=device-width, user-scalable=no" />
-                <link rel='stylesheet' href='' />
             </head>
             <body>
-                <div id="app" className='' dangerouslySetInnerHTML={{__html: this.props.markup}}></div>
+              <div id="app" dangerouslySetInnerHTML={{__html: this.props.markup}}></div>
             </body>
-            <script dangerouslySetInnerHTML={{__html: this.props.state}}></script>
-            <script src="/dist/bundle.js" defer></script>
             </html>
         );
     }

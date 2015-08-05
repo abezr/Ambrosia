@@ -1,4 +1,4 @@
-import {
+ import {
   GraphQLObjectType,
   GraphQLNonNull,
   GraphQLSchema,
@@ -7,23 +7,11 @@ import {
 }
 from 'graphql/lib/type';
 
-import User from './user';
-
 import debug from 'debug';
 import r from 'rethinkdb';
+import co from 'co';
 
 var sc = debug('schema');
-/**
- * generate projection object for mongoose
- * @param  {Object} fieldASTs
- * @return {Project}
- */
-function getProjection(fieldASTs) {
-  return fieldASTs.selectionSet.selections.reduce((projections, selection) => {
-    projections[selection.name.value] = 1;
-    return projections;
-  }, {});
-}
 
 var userType = new GraphQLObjectType({
   name: 'User',
@@ -41,7 +29,7 @@ var userType = new GraphQLObjectType({
       type: new GraphQLList(userType),
       description: 'The friends of the user, or an empty list if they have none.',
 
-      resolve: (user, params, conn, fieldASTs) => co(function*(){
+      resolve: (user, params, conn) => co(function*() {
         var friends = yield user.friends.map(function(id) {
           return r.table('user').get(id).run(conn, function(err, result) {
             return result;
@@ -57,12 +45,6 @@ var schema = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-      hello: {
-        type: GraphQLString,
-        resolve: function() {
-          return 'world';
-        }
-      },
       user: {
         type: userType,
         args: {
@@ -71,20 +53,31 @@ var schema = new GraphQLSchema({
             type: new GraphQLNonNull(GraphQLString)
           }
         },
-
-        resolve: (user, {
-          id
-        }, conn, fieldASTs) => co(function*() {
-          var data = yield r.table('user').get(id).run(conn, function(err, result) {
-            sc(result);
+        resolve: (user, {id}, conn) => co(function* () {
+          return yield r.table('user').get(id).run(conn, function(err, result) {
             return result;
           });
-          return data;
         })
-      }
+      },
+      users: {
+        type: new GraphQLList(userType),
+        resolve: (user, {}, conn) => co(function* () {
+          var p = new Promise(function(resolve, reject) {
+            r.table('user').run(conn, function(err, result) {
+              result.toArray(function(err, res) {
+                if(err) reject(err);
+                resolve(res);
+              });
+            })
+          });
+          return yield p.then(function(value){
+            console.log("schema:query");
+            return value;
+          });
+        })
+      },
     }
   }),
-
   // mutation
   mutation: new GraphQLObjectType({
     name: 'Mutation',
@@ -102,8 +95,14 @@ var schema = new GraphQLSchema({
           }
         },
 
-        resolve: (obj, {id, name}, conn, fieldASTs) => co(function*() {
-          var res = yield r.table('user').get(id).update({name: name}, {returnChanges: true}).run(conn);
+        resolve: (obj, {
+          id, name
+        }, conn) => co(function*() {
+          var res = yield r.table('user').get(id).update({
+            name: name
+          }, {
+            returnChanges: true
+          }).run(conn);
           return res.changes[0].new_val;
         })
       }

@@ -1,11 +1,15 @@
 import koa from 'koa';
-import Router from 'koa-router';
+import koaRouter from 'koa-router';
+
+import React from 'react';
 //import ReactRouter from 'react-router';
 import qs from 'koa-qs';
 import parseBody from 'co-body';
 
 import r from 'rethinkdb';
-import {graphql} from 'graphql';
+import {
+  graphql
+} from 'graphql';
 import debug from 'debug';
 var config = {
   host: 'localhost',
@@ -14,17 +18,18 @@ var config = {
 };
 
 var err = debug('server:error');
+var log = debug('server');
 
 import schema from './schema';
 
 let port = process.env.PORT || 3000;
-let routes = new Router();
+let routes = new koaRouter();
 var server = koa();
 
 // support nested query tring params
 qs(server);
 
-server.use(function*(next) {
+server.use(function* (next) {
   yield r.connect(config, function(error, conn) {
     if (error) {
       err(error);
@@ -36,21 +41,9 @@ server.use(function*(next) {
   yield next;
 });
 
-import HtmlRoot from '../client/components/html.jsx';
-import Heroes from '../client/components/heroes.jsx'
-
-
-server.use(function*(next) {
-  var html = React.renderToStaticMarkup(HtmlRoot({
-    markup: React.renderToString(Heroes)
-  }));
-  yield next;
-  this.body = html;
-})
-
-routes.get('/data', function*() {
+routes.get('/data', function* () {
   var query = this.query.query;
-  var params = this.query.params;
+  console.log('server:get', query);
   var resp = yield graphql(schema, query, this._rdbConn);
 
   if (resp.errors) {
@@ -60,11 +53,11 @@ routes.get('/data', function*() {
     };
     return;
   }
-
   this.body = resp;
 });
 
-routes.post('/data', function*() {
+routes.post('/data', function* () {
+  console.log('post data');
   var payload = yield parseBody(this);
   var resp = yield graphql(schema, payload.query, this._rdbConn, payload.params);
 
@@ -81,7 +74,24 @@ routes.post('/data', function*() {
 
 server.use(routes.middleware());
 
-server.use(function*(next) {
+
+server.use(function* (next) {
+  console.log('root rendering');
+  var heroes = yield require('../client/components/heroes.jsx').then(function(node){
+    return node;
+  });
+  var root = React.createFactory(require('../client/components/html.jsx'));
+  var Heroes = React.createFactory(heroes);
+  var html = React.renderToStaticMarkup(root({
+    markup: React.renderToString(Heroes({
+      className: 'heroes'
+    }))
+  }));
+  yield next;
+  this.body = html;
+});
+
+server.use(function* (next) {
   this._rdbConn.close();
   yield next;
 });
