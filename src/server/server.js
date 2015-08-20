@@ -1,15 +1,20 @@
 import koa from 'koa';
 import koaRouter from 'koa-router';
+import mount from 'koa-mount';
+import graphqlHTTP from 'koa-gql';
+import qs from 'koa-qs';
+import serve from 'koa-serve';
+import parseBody from 'co-body';
+import path from 'path';
 
 import React from 'react';
 //import ReactRouter from 'react-router';
-import qs from 'koa-qs';
-import parseBody from 'co-body';
+
+import webpack from 'webpack';
+import WebpackDevMiddleware from 'koa-webpack-dev-middleware';
 
 import r from 'rethinkdb';
-import {
-  graphql
-} from 'graphql';
+import {graphql} from 'graphql';
 import debug from 'debug';
 var config = {
   host: 'localhost',
@@ -20,7 +25,7 @@ var config = {
 var err = debug('server:error');
 var log = debug('server');
 
-import schema from './schema';
+import {Schema} from './schema';
 
 let port = process.env.PORT || 3000;
 let routes = new koaRouter();
@@ -28,6 +33,17 @@ var server = koa();
 
 // support nested query tring params
 qs(server);
+
+var compiler = webpack(require('../../webpack.config.js'));
+server.use(WebpackDevMiddleware(compiler, {
+  publicPath: '../../src/client',
+  stats: {colors: true}
+}));
+
+var rdbConn = null;
+
+//serve a static assets
+server.use(serve('node_modules', '../../node_modules'));
 
 server.use(function* (next) {
   yield r.connect(config, function(error, conn) {
@@ -41,55 +57,43 @@ server.use(function* (next) {
   yield next;
 });
 
-routes.get('/data', function* () {
-  var query = this.query.query;
-  console.log('server:get', query);
-  var resp = yield graphql(schema, query, this._rdbConn);
-
-  if (resp.errors) {
-    this.status = 400;
-    this.body = {
-      errors: resp.errors
-    };
-    return;
-  }
-  this.body = resp;
+routes.get('/graphql', function* (next) {
+  console.log('get graphql');
+  var result = yield graphqlHTTP({schema: Schema, rootValue: this._rdbConn});
+  console.log(result);
 });
-
-routes.post('/data', function* () {
-  console.log('post data');
-  var payload = yield parseBody(this);
-  var resp = yield graphql(schema, payload.query, this._rdbConn, payload.params);
-
-  if (resp.errors) {
-    this.status = 400;
-    this.body = {
-      errors: resp.errors
-    };
-    return;
-  }
-
-  this.body = resp;
+routes.post('/graphql', function* (next) {
+  console.log('post graphql');
+  yield graphqlHTTP({schema: Schema, rootValue: this_rdbConn});
 });
 
 server.use(routes.middleware());
 
-
 server.use(function* (next) {
   console.log('root rendering');
-  var heroes = yield require('../client/components/heroes.jsx').then(function(node){
-    return node;
-  });
+  // var heroes = yield require('../client/components/heroes.jsx').then(function(node){
+  //   return node;
+  // });
   var root = React.createFactory(require('../client/components/html.jsx'));
-  var Heroes = React.createFactory(heroes);
+  var hello = React.createFactory(require('../client/components/index.js'));
   var html = React.renderToStaticMarkup(root({
-    markup: React.renderToString(Heroes({
+    markup: React.renderToString(hello({
       className: 'heroes'
     }))
   }));
   yield next;
   this.body = html;
 });
+
+// server.use(function* (next) {
+//   //var root = React.createFactory(require('../client/components/html.jsx'));
+//   var hello = React.createFactory(require('../client/components/index.js'));
+//   var html = React.renderToString(hello({
+//     className: 'hello'
+//   }));
+//   yield next;
+//   this.body = html;
+// });
 
 server.use(function* (next) {
   this._rdbConn.close();
