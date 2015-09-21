@@ -23,7 +23,7 @@ function catchSignupDetails(details) {
         details.errors = errors;
         return details;
     }
-    return true;
+    return false;
 }
 function catchLoginDetails(details) {
     var errors = {};
@@ -33,7 +33,7 @@ function catchLoginDetails(details) {
       details.errors = errors;
       return details;
     }
-    return true;
+    return false;
 }
 var Validate = function (details) {
   return details.form === 'signup' ? catchSignupDetails(details) : catchLoginDetails(details);

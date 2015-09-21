@@ -17,7 +17,7 @@ import ReactRouterRelay from 'react-router-relay';
 var ViewerQuery = {
   user: (Component) => Relay.QL `
   query {
-    user(id: $id) {
+    user(id: "559645cd1a38532d143492") {
       ${Component.getFragment('user') },
     },
   }
@@ -27,9 +27,8 @@ var ViewerQuery = {
 ReactDom.render(
   <Router createElement={ReactRouterRelay.createElement} history={new BrowserHistory()}>
     <Route name="home" // added a name to the route
-      path="/home/:id" component={Index} queries={ViewerQuery} // and the query
-      renderFailure={function(error, retry) { Router.transitionTo('/login');}}/>
+      path="/" component={Index} queries={ViewerQuery} // and the query
+      renderFailure={function(error, retry) { console.log(error) }}/>
     <Route/>
-    <Route name="login"
-      path="/login" component={login}/>
+    <Route name="login" path="/login" component={login}/>
   </Router>, document.getElementById('app'));

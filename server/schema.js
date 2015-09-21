@@ -121,7 +121,7 @@ var GraphQLUser = new GraphQLObjectType({
   fields: {
     id: globalIdField('User'),
     name: {
-      type: new GraphQLNonNull(GraphQLString),
+      type: GraphQLString,
       description: 'the name of the user',
     },
     mail: {
@@ -209,10 +209,14 @@ var queryType = new GraphQLObjectType({
       args: {
         id: {
           name: 'id',
-          type: new GraphQLNonNull(GraphQLString)
+          type: GraphQLString
         }
       },
-      resolve: (conn, {id}, fieldAST) => getUser(id, conn)
+      resolve: (conn, {id}, fieldAST) => co(function *() {
+        var user = yield getUser(id, conn);
+        console.log('schema:rootquerytype', user);
+        return user;
+      })
     },
     users: {
       type: new GraphQLList(GraphQLUser),

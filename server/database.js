@@ -3,15 +3,17 @@ import co from 'co';
 
 export function getUser(id, conn) {
   return co(function*() {
-    return yield r.table('user').get(id).run(conn, function(err, result) {
-      //pass in the connection variable to find subfield...
-      if(result) {
-        result.conn = conn;
-        return result;
-      } else {
-        return err;
-      }
+    var user = yield r.table('user').get(id).run(conn, function(err, result) {
+      return result ? result : err;
     });
+    if(!user) {
+      user = {
+        id:'',
+        name:'',
+      }
+    }
+    console.log('database', user);
+    return user;
   });
 }
 

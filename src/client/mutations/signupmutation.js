@@ -2,15 +2,31 @@
 import Relay from 'react-relay';
 
 export default class SignupMutation extends Relay.Mutation {
+  static fragments = {
+    user: () => Relay.QL`
+      fragment on User {
+        id
+      }
+    `,
+  };
   getMutation() {
     return Relay.QL`mutation{Signup}`;
-
-
   }
+  //SignupMutation require name, mail and password
   getVariables() {
     return {
-      credentials: this.props.credentials
+      name: this.props.credentials.name,
+      mail: this.props.credentials.mail,
+      password: this.props.credentials.password
     };
+  }
+  getConfigs() {
+    return [{
+      type: 'FIELDS_CHANGE',
+      fieldIDs: {
+        user: this.props.user.id,
+      }
+    }];
   }
   getOptimisticResponse() {
     return {

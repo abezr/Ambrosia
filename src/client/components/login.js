@@ -8,7 +8,7 @@ export default class Auth extends React.Component {
   render() {
     return (
       <div className='auth'>
-        <Login/>
+        <Login {...this.props}/>
       </div>
     );
   }
@@ -21,30 +21,10 @@ class Login extends React.Component {
     this.state = { toggle: false, errors: {} };
   }
 
-  switch() {
-    this.setState({toggle: !this.state.toggle});
-  }
-
-  signup(e) {
-    e.preventDefault();
-    var details = {};
-    details.form = e.target.id;
-    var el = e.target.getElementsByTagName('INPUT');
-    for(var i=0; i<el.length; i++) {
-      details[el[i].id] = el[i].value;
-    }
-    if(validate(details)) {
-      console.log('details validate');
-      Relay.Store.update( new SignupMutation({credentials: details}) );
-    } else {
-      this.setState({errors: details.error});
-    }
-  }
-
   render() {
     return (
       <div className='form'>
-        <form id={classnames('signup', {hidden: !this.state.toggle})} onSubmit={this.signup}>
+        <form id='signup' className={classnames('signup', {hidden: !this.state.toggle})} onSubmit={this._signup}>
           <span className='close-icon' onClick={this.close}/>
           <span className='log' key='mail'>Mail<br/>
             <span className='error'>{this.state.errors.mail}</span>
@@ -58,11 +38,11 @@ class Login extends React.Component {
             <span className="confirmPassword">Confirm your Password</span><br/>
             <span className='error'>{this.state.errors.match}</span>
             <input id='confirmPassword' key='input-confirmPassword' className='signup' type= 'password'/>
-            <div className='question' onClick={this.switch}>allready a member?</div>
+            <div className='question' onClick={this._switch}>allready a member?</div>
           </span><br/>
-          <input type='submit' key='submit' value='Signup' form='signup' className='submit'/>
+        <input type='submit' key='submit' value='Signup' form='signup' id='submit'/>
         </form>
-      <form id={classnames('login', {hidden: this.state.toggle})} onSubmit={this.login}>
+      <form id='login' className={classnames('login', {hidden: this.state.toggle})} onSubmit={this._login}>
         <span className='close-icon' onClick={this.close}/>
         <div className='social' ref='fb'><span className='facebook-icon'/>Sign in with facebook</div>
         <br/>
@@ -75,11 +55,45 @@ class Login extends React.Component {
           Password<br/>
         <span className='error'>{this.state.errors.password}</span>
           <input id='password' ref='password-input' className='login' type='password'/>
-          <div className='question' onClick={this.switch}>not a member yet?</div>
+          <div className='question' onClick={this._switch}>not a member yet?</div>
         </span><br/>
-      <input type='submit' value='Log-In' form='login' className='submit'/>
+      <input type='submit' value='Log-In' form='login' id='submit'/>
       </form>
     </div>
   );
   }
+
+  _switch = () => {
+    this.setState({toggle: !this.state.toggle});
+  }
+
+  _signup = (e) => {
+    e.preventDefault();
+    console.log('signup', e.target);
+    var details = {};
+    details.form = e.target.id;
+    var el = e.target.getElementsByTagName('INPUT');
+    for(var i=0; i<el.length; i++) {
+      if(el[i].id !== 'submit') {
+        details[el[i].id] = el[i].value;
+      }
+    }
+    if(!validate(details)) {
+      console.log('details validate', details);
+      Relay.Store.update( new SignupMutation({credentials: details, user: this.props.user}) );
+    } else {
+      console.log('unvalidate details', details);
+      this.setState({errors: details.errors});
+    }
+  }
 }
+
+export default Relay.createContainer(Auth, {
+  fragments: {
+    user: () => Relay.QL`
+    fragment on User {
+      ${SignupMutation.getFragment('user')}
+    }
+    `
+  }
+})
