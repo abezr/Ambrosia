@@ -1,11 +1,14 @@
 import React from 'react';
 import Relay from 'react-relay';
+import {Link} from 'react-router';
 import classnames from 'classnames';
 import validate from '../validate';
 import SignupMutation from '../mutations/signupmutation';
+import LoginMutation from '../mutations/loginmutation';
 
-export default class Auth extends React.Component {
+class Auth extends React.Component {
   render() {
+    console.log(this.props);
     return (
       <div className='auth'>
         <Login {...this.props}/>
@@ -22,8 +25,12 @@ class Login extends React.Component {
   }
 
   render() {
+    console.log('login', this.props);
     return (
       <div className='form'>
+        <Link to={'/'}>Home</Link>
+        {this.props.user.mail}
+        {this.props.user.name}
         <form id='signup' className={classnames('signup', {hidden: !this.state.toggle})} onSubmit={this._signup}>
           <span className='close-icon' onClick={this.close}/>
           <span className='log' key='mail'>Mail<br/>
@@ -59,17 +66,17 @@ class Login extends React.Component {
         </span><br/>
       <input type='submit' value='Log-In' form='login' id='submit'/>
       </form>
+      <button type="button">Click to render again</button>
     </div>
-  );
+    );
   }
 
   _switch = () => {
     this.setState({toggle: !this.state.toggle});
   }
 
-  _signup = (e) => {
+  _login = (e) => {
     e.preventDefault();
-    console.log('signup', e.target);
     var details = {};
     details.form = e.target.id;
     var el = e.target.getElementsByTagName('INPUT');
@@ -79,10 +86,25 @@ class Login extends React.Component {
       }
     }
     if(!validate(details)) {
-      console.log('details validate', details);
+      Relay.Store.update( new LoginMutation({credentials: details, user: this.props.user}) );
+    } else {
+      this.setState({errors: details.errors});
+    }
+  }
+
+  _signup = (e) => {
+    e.preventDefault();
+    var details = {};
+    details.form = e.target.id;
+    var el = e.target.getElementsByTagName('INPUT');
+    for(var i=0; i<el.length; i++) {
+      if(el[i].id !== 'submit') {
+        details[el[i].id] = el[i].value;
+      }
+    }
+    if(!validate(details)) {
       Relay.Store.update( new SignupMutation({credentials: details, user: this.props.user}) );
     } else {
-      console.log('unvalidate details', details);
       this.setState({errors: details.errors});
     }
   }
@@ -90,9 +112,15 @@ class Login extends React.Component {
 
 export default Relay.createContainer(Auth, {
   fragments: {
+    //Question: Is fragment on mutation available on the component himself? no it's not
+    //and you use a mutation you have to call mutation fragment if not you get a warning
     user: () => Relay.QL`
     fragment on User {
+      id,
+      mail,
+      name,
       ${SignupMutation.getFragment('user')}
+      ${LoginMutation.getFragment('user')}
     }
     `
   }

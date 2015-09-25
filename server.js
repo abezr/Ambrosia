@@ -48,6 +48,9 @@ qs(server);
 //   }
 // }));
 
+//set secret for cookies
+server.keys = ['im a newer secret', 'i like turtle'];
+
 //serve a static assets
 console.log(__dirname);
 server.use(serve('.'));
@@ -77,9 +80,12 @@ routes.get('/graphql', function* (next) {
 routes.post('/graphql', function* (next) {
   console.log('post request');
 //TODO pass the session object for being identicating
-  var result = yield graphqlHTTP({
+  yield graphqlHTTP({
     schema: Schema,
-    rootValue: this._rdbConn
+    rootValue: {
+      conn: this._rdbConn,
+      cookie: this.cookies
+    }
   });
 });
 

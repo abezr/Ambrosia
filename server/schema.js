@@ -25,6 +25,7 @@ from 'graphql-relay';
 
 import {
   getUser,
+  getUserByCredentials,
   getUsers,
   addUser,
   updateUser
@@ -45,38 +46,11 @@ var {nodeInterface, nodeField} = nodeDefinitions(
       return getUser(id);
     }
     return null;
-  }, (obj) => {
+  },
+  (obj) => {
       return GraphQLUser;
   }
 );
-
-// var GraphQLUser = new GraphQLObjectType({
-//   name: 'User',
-//   description: 'User creator',
-//   fields: () => ({
-//     id: {
-//       type: new GraphQLNonNull(GraphQLString),
-//       description: 'The id of the user.',
-//     },
-//     name: {
-//       type: GraphQLString,
-//       description: 'The name of the user.',
-//     },
-//     friends: {
-//       type: new GraphQLList(GraphQLUser),
-//       description: 'The friends of the user, or an empty list if they have none.',
-//
-//       resolve: (user, params, conn) => co(function*() {
-//         var friends = yield user.friends.map(function(id) {
-//           return r.table('user').get(id).run(conn, function(err, result) {
-//             return result;
-//           });
-//         });
-//         return friends;
-//       })
-//     }
-//   })
-// });
 
 var GraphQLFriend = new GraphQLObjectType({
   name: 'Friend',
@@ -86,12 +60,15 @@ var GraphQLFriend = new GraphQLObjectType({
       type: GraphQLString,
       description: 'the name of the friend'
     },
+    mail: {
+      type: GraphQLString,
+      description: 'the mail of the friend'
+    }
   }
 });
 
 var {
   connectionType: friendsConnection,
-  edgeType: GraphQLFriendEdge
 } = connectionDefinitions({
   name: 'Friend',
   nodeType: GraphQLFriend
@@ -110,7 +87,6 @@ var GraphQLRestaurant = new GraphQLObjectType({
 
 var {
   connectionType: restaurantsConnection,
-  edgeType: GraphQLRestaurantEdge
 } = connectionDefinitions({
   name: 'Restaurant',
   nodeType: GraphQLRestaurant
@@ -131,14 +107,10 @@ var GraphQLUser = new GraphQLObjectType({
     friends: {
       type: friendsConnection,
       args: connectionArgs,
-      description: 'The friends of the user',
-      resolve: (user, args, var3) => co(function*() {
-        console.log('Schema: resolve friends');
-        var friends = yield user.friends.map((id) => {
-          log(id);
-          return getUser(id, user.conn)
-        });
-        console.log(friends);
+      description: 'The friends of the user, for now everybody is friends with user',
+      resolve: (user, args, {rootValue}) => co(function*() {
+        var friends = yield getUsers(rootValue.conn);
+        console.log('Schema:resolve friends', friends);
         return connectionFromArray(friends, args);
       })
     },
@@ -159,104 +131,20 @@ var GraphQLUser = new GraphQLObjectType({
   interfaces: [nodeInterface]
 });
 
-// connectionFromArray(
-//   user.friends.map((id) => getUser(id, user.conn)), args
-// )
-
-
-// var queryType = new GraphQLObjectType({
-//   name: 'RootQueryType',
-//   fields: {
-//     user: {
-//       type: GraphQLUser,
-//       args: {
-//         id: {
-//           name: 'id',
-//           type: new GraphQLNonNull(GraphQLString)
-//         }
-//       },
-//       resolve: (user, {id}, conn) => co(function*() {
-//         return yield r.table('user').get(id).run(conn, function(err, result) {
-//           return result;
-//         });
-//       })
-//     },
-//     users: {
-//       type: new GraphQLList(GraphQLUser),
-//       resolve: (user, {}, conn) => co(function*() {
-//         var p = new Promise(function(resolve, reject) {
-//           r.table('user').run(conn, function(err, result) {
-//             result.toArray(function(err, res) {
-//               if (err) reject(err);
-//               resolve(res);
-//             });
-//           })
-//         });
-//         return yield p.then(function(value) {
-//           console.log("schema:query");
-//           return value;
-//         });
-//       })
-//     },
-//   }
-// });
-
 var queryType = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: () => ({
     user: {
       type: new GraphQLNonNull(GraphQLUser),
-      args: {
-        id: {
-          name: 'id',
-          type: GraphQLString
-        }
-      },
-      resolve: (conn, {id}, fieldAST) => co(function *() {
-        var user = yield getUser(id, conn);
+      resolve: (rootValue) => co(function *() {
+        var user = yield getUser(rootValue.cookie);
         console.log('schema:rootquerytype', user);
         return user;
       })
     },
-    users: {
-      type: new GraphQLList(GraphQLUser),
-      resolve: (root, obj, conn) => {
-        return getUsers(conn);
-      }
-    },
     node: nodeField
   })
 });
-// mutation
-// var mutation = new GraphQLObjectType({
-//   name: 'Mutation',
-//   fields: {
-//     updateUser: {
-//       type: GraphQLUser,
-//       args: {
-//         id: {
-//           name: 'id',
-//           type: new GraphQLNonNull(GraphQLString)
-//         },
-//         name: {
-//           name: 'name',
-//           type: GraphQLString
-//         }
-//       },
-//
-//       resolve: (obj, {
-//         id, name
-//       }, conn) => co(function*() {
-//         var res = yield r.table('user').get(id).update({
-//           name: name
-//         }, {
-//           returnChanges: true
-//         }).run(conn);
-//         return res.changes[0].new_val;
-//       })
-//     }
-//   }
-// });
 
 var updateUserMutation = mutationWithClientMutationId({
   name : 'updateUser',
@@ -283,9 +171,9 @@ var updateUserMutation = mutationWithClientMutationId({
 var SignupMutation = mutationWithClientMutationId({
   name: 'Signup',
   inputFields: {
-    name: { type: new GraphQLNonNull(GraphQLString)},
     mail: { type: new GraphQLNonNull(GraphQLString)},
     password: { type: new GraphQLNonNull(GraphQLString)},
+    id: { type: new GraphQLNonNull(GraphQLID) },
   },
   outputFields: {
     user: {
@@ -293,18 +181,41 @@ var SignupMutation = mutationWithClientMutationId({
       resolve: (newUser) => newUser
     }
   },
-  mutateAndGetPayload: (conn, credentials) => {
-    log('var1', conn);
-    log('var2', credentials);
-    var newUser = addUser(credentials, conn);
+  mutateAndGetPayload: (credentials, {rootValue}) => co(function *() {
+    console.log('mutation');
+    var conn = rootValue;
+    var newUser = yield addUser(credentials, rootValue);
+    console.log('newUser', newUser);
     return newUser;
-  }
+  })
+});
+
+var LoginMutation = mutationWithClientMutationId({
+  name: 'Login',
+  inputFields: {
+    mail: { type: new GraphQLNonNull(GraphQLString)},
+    password: { type: new GraphQLNonNull(GraphQLString)}
+  },
+  outputFields: {
+    user: {
+      type: GraphQLUser,
+      resolve: (newUser) => newUser
+    }
+  },
+  mutateAndGetPayload: (credentials, {rootValue}) => co(function *() {
+    var newUser = yield getUserByCredentials(credentials, rootValue);
+    delete newUser.id;
+    console.log('schema:loginmutation', newUser);
+
+    return newUser;
+  })
 });
 
 var mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
     Signup: SignupMutation,
+    Login: LoginMutation,
     updateUser: updateUserMutation
   })
 });

@@ -1,0 +1,9 @@
+div.nav {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+}
+
+div.flex-item {
+  flex: 0 1 auto;
+}

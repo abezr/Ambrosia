@@ -1,23 +1,23 @@
-//I assume we do not need a getConfig field for this mutation
 import Relay from 'react-relay';
 
 export default class SignupMutation extends Relay.Mutation {
   static fragments = {
     user: () => Relay.QL`
       fragment on User {
-        id
+        id,
+        mail
       }
     `,
   };
   getMutation() {
     return Relay.QL`mutation{Signup}`;
   }
-  //SignupMutation require name, mail and password
+  //SignupMutation require mail and password
   getVariables() {
     return {
-      name: this.props.credentials.name,
       mail: this.props.credentials.mail,
-      password: this.props.credentials.password
+      password: this.props.credentials.password,
+      id: this.props.user.id
     };
   }
   getConfigs() {
@@ -39,7 +39,6 @@ export default class SignupMutation extends Relay.Mutation {
     fragment on SignupPayload {
       user {
         id,
-        name,
         mail
       }
     }

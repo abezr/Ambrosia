@@ -1,50 +1,76 @@
 import r from 'rethinkdb';
 import co from 'co';
 
-export function getUser(id, conn) {
+export function getUser(cookie) {
+  if(cookie.get('user')) {
+    return cookie.get('user');
+  } else {
+    return {
+      name: '',
+      mail: ''
+    };
+  }
+}
+
+export function getUserByCredentials(credentials, rootValue) {
   return co(function*() {
-    var user = yield r.table('user').get(id).run(conn, function(err, result) {
-      return result ? result : err;
-    });
-    if(!user) {
-      user = {
-        id:'',
-        name:'',
+    console.log(credentials);
+    var result;
+    yield r.table('user').filter(function(user) {
+      return (user('mail').eq(credentials.mail)
+          .or(user('pseudo').eq(credentials.mail)))
+        .and(user('password').eq(credentials.password));
+    }).run(rootValue.conn, function(error, cursor) {
+      if (error) throw error;
+      if (cursor.length === 0) {
+        console.log('database:cursor.length=0');
+        return {
+          mail: '',
+          pseudo: '',
+          error: 'mail or password incorrect'
+        };
       }
-    }
-    console.log('database', user);
-    return user;
+      cursor.each(function(err, row) {
+        console.log('database:cursor.each', row);
+        if (err) throw err;
+        result = row;
+      });
+    });
+    rootValue.cookie.set('user', result);
+    return result;
   });
 }
 
 export function getUsers(conn) {
   return co(function*() {
-    var p = new Promise(function(resolve, reject) {
-      r.table('user').run(conn, function(err, result) {
-        result.toArray(function(err, res) {
-          if (err) reject(err);
-          resolve(res);
-        });
+      var friends;
+      yield r.table('user').run(conn, function(err, result) {
+        friends = result;
       });
+      console.log('database', friends);
+      return friends.toArray();
     });
-    return yield p.then(function(value) {
-      console.log("schema:query");
-      return value;
-    });
-  });
 }
 
-export function addUser(name, conn) {
+export function addUser(credentials, rootValue) {
   return co(function*() {
-    var res = yield r.table('user').insert({
-      name: name,
-      mail: mail,
-      password: password
+    // yield r.table('user').insert({
+    //   name: credentials.name,
+    //   mail: credentials.mail,
+    //   password: credentials.password
+    // }).run(conn, function (err, result) {
+    //   console.log('database:addUser', err, result);
+    // });
+    var user = yield r.table('user').insert({
+      mail: credentials.mail,
+      password: credentials.password
     }, {
       returnChanges: true
-    }).run(conn);
-    delete res.changes[0].new_val.password;
-    return res.changes[0].new_val;
+    }).run(rootValue.conn, function(err, result) {
+      console.log('database:addUser', result.changes[0].new_val, result);
+    });
+    rootValue.cookie.set('user', user.changes[0].new_val);
+    return user.changes[0].new_val;
   });
 }
 
