@@ -1,5 +1,6 @@
 import React from 'react';
 import Relay from 'react-relay';
+import request from 'superagent';
 import {Link} from 'react-router';
 import classnames from 'classnames';
 import validate from '../validate';
@@ -10,12 +11,23 @@ class Auth extends React.Component {
   render() {
     console.log(this.props);
     return (
-      <div className='auth'>
+      <div className='modal'>
         <Login {...this.props}/>
       </div>
     );
   }
 }
+//keep the userId in document and then run an other query with relay...
+//or use it just to save userId in cookie after the loginMutation have been successful
+var loginRequest = function (credentials) {
+  console.log('loginRequest')
+  request.get('http://localhost:3800/login')
+         .query({userID: credentials.userID})
+         .end(function (err, res) {
+           if(err) console.log('login:error');
+           console.log('login:res', res.body);
+         });
+};
 
 class Login extends React.Component {
 
@@ -26,47 +38,44 @@ class Login extends React.Component {
 
   render() {
     console.log('login', this.props);
+    const {user} = this.props.user;
     return (
       <div className='form'>
-        <Link to={'/'}>Home</Link>
-        {this.props.user.mail}
-        {this.props.user.name}
         <form id='signup' className={classnames('signup', {hidden: !this.state.toggle})} onSubmit={this._signup}>
-          <span className='close-icon' onClick={this.close}/>
-          <span className='log' key='mail'>Mail<br/>
+          <span className='close-icon' onClick={this._close}/>
+          <div className='log' key='mail'>Mail<br/>
             <span className='error'>{this.state.errors.mail}</span>
             <input id='mail' key='input-mail' className='signup' type='email'/>
-          </span><br/>
-          <span className='log' key='password'>Password<br/>
+          </div><br/>
+        <div className='log' key='password'>Password<br/>
             <span className='error'>{this.state.errors.password}</span>
             <input id='password' key='input-password' className='signup' type= 'password'/>
-          </span><br/>
-          <span className='log' key='confirmPassword'>
+          </div><br/>
+        <div className='log' key='confirmPassword'>
             <span className="confirmPassword">Confirm your Password</span><br/>
             <span className='error'>{this.state.errors.match}</span>
             <input id='confirmPassword' key='input-confirmPassword' className='signup' type= 'password'/>
             <div className='question' onClick={this._switch}>allready a member?</div>
-          </span><br/>
+          </div><br/>
         <input type='submit' key='submit' value='Signup' form='signup' id='submit'/>
         </form>
       <form id='login' className={classnames('login', {hidden: this.state.toggle})} onSubmit={this._login}>
-        <span className='close-icon' onClick={this.close}/>
+        <span className='close-icon' onClick={this._close}/>
         <div className='social' ref='fb'><span className='facebook-icon'/>Sign in with facebook</div>
         <br/>
-        <span className='log' ref='pseudo'>
+        <div className='log' ref='pseudo'>
           Pseudo<br/>
-        <span className='error'>{this.state.errors.pseudo}</span>
+          <span className='error'>{this.state.errors.pseudo}</span>
           <input id='pseudo' ref ='pseudo-input' className='login' type='text'/>
-        </span><br/>
-        <span className='log' ref='password'>
+        </div><br/>
+        <div className='log' ref='password'>
           Password<br/>
-        <span className='error'>{this.state.errors.password}</span>
+          <span className='error'>{this.state.errors.password}</span>
           <input id='password' ref='password-input' className='login' type='password'/>
           <div className='question' onClick={this._switch}>not a member yet?</div>
-        </span><br/>
+        </div><br/>
       <input type='submit' value='Log-In' form='login' id='submit'/>
       </form>
-      <button type="button">Click to render again</button>
     </div>
     );
   }
@@ -75,22 +84,36 @@ class Login extends React.Component {
     this.setState({toggle: !this.state.toggle});
   }
 
-  _login = (e) => {
-    e.preventDefault();
-    var details = {};
-    details.form = e.target.id;
-    var el = e.target.getElementsByTagName('INPUT');
-    for(var i=0; i<el.length; i++) {
-      if(el[i].id !== 'submit') {
-        details[el[i].id] = el[i].value;
-      }
-    }
-    if(!validate(details)) {
-      Relay.Store.update( new LoginMutation({credentials: details, user: this.props.user}) );
-    } else {
-      this.setState({errors: details.errors});
-    }
+  _close = () => {
+    console.log('close');
+    this.props.history.goBack();
   }
+
+  _login = (e) => {
+      e.preventDefault();
+      var onSuccess = ({Login}) => {
+        console.log('Mutation successful!');
+        loginRequest(Login.user);
+      };
+      var onFailure = (transaction) => {
+        var error = transaction.getError() || new Error('Mutation failed.');
+        console.error(error);
+      };
+      var details = {};
+      details.form = e.target.id;
+      var el = e.target.getElementsByTagName('INPUT');
+      for(var i=0; i<el.length; i++) {
+        if(el[i].id !== 'submit') {
+          details[el[i].id] = el[i].value;
+        }
+      }
+      if(!validate(details)) {
+        Relay.Store.update( new LoginMutation({credentials: details, user: this.props.user.user}), {onFailure, onSuccess});
+      } else {
+        this.setState({errors: details.errors});
+      }
+  };
+
 
   _signup = (e) => {
     e.preventDefault();
@@ -103,7 +126,7 @@ class Login extends React.Component {
       }
     }
     if(!validate(details)) {
-      Relay.Store.update( new SignupMutation({credentials: details, user: this.props.user}) );
+      Relay.Store.update( new SignupMutation({credentials: details, user: this.props.user.user}) );
     } else {
       this.setState({errors: details.errors});
     }
@@ -111,17 +134,22 @@ class Login extends React.Component {
 }
 
 export default Relay.createContainer(Auth, {
+  initialVariables: {userID: document.getElementById('app').dataset.userid || ''},
+
   fragments: {
     //Question: Is fragment on mutation available on the component himself? no it's not
     //and you use a mutation you have to call mutation fragment if not you get a warning
     user: () => Relay.QL`
-    fragment on User {
-      id,
-      mail,
-      name,
-      ${SignupMutation.getFragment('user')}
-      ${LoginMutation.getFragment('user')}
+    fragment on Root {
+      user(id: $userID) {
+        id,
+        userID,
+        mail,
+        name,
+        ${SignupMutation.getFragment('user')}
+        ${LoginMutation.getFragment('user')}
+      }
     }
     `
   }
-})
+});

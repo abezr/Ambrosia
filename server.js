@@ -7,6 +7,7 @@ import serve from 'koa-static';
 import session from 'koa-session';
 import parseBody from 'co-body';
 import path from 'path';
+import {getUserByCredentials} from './server/database';
 
 // import React from 'react';
 // import Relay from 'react-relay';
@@ -52,8 +53,8 @@ qs(server);
 server.keys = ['im a newer secret', 'i like turtle'];
 
 //serve a static assets
-console.log(__dirname);
 server.use(serve('.'));
+
 server.use(session(server));
 
 server.use(function* (next) {
@@ -67,24 +68,26 @@ server.use(function* (next) {
   }.bind(this));
   yield next;
 });
+
+server.use(function* (next) {
+  yield next;
+});
 // server.use(mount('/graphql', graphqlHTTP({ schema: Schema })));
 
-routes.get('/graphql', function* (next) {
-  var result = yield graphqlHTTP({
-    schema: Schema,
-    rootValue: this._rdbConn
-  });
-  console.log('get request result', result);
+routes.get('/login', function* (next) {
+  yield this.cookies.set('userID', this.query.userID);
+  console.log('server:login', this.query);
+  this.body = {cookie: 'well'};
 });
 
 routes.post('/graphql', function* (next) {
-  console.log('post request');
+  //looks like my cookie is'nt writable or readable under the post request;
 //TODO pass the session object for being identicating
   yield graphqlHTTP({
     schema: Schema,
     rootValue: {
       conn: this._rdbConn,
-      cookie: this.cookies
+      session: this.session
     }
   });
 });
@@ -98,17 +101,19 @@ server.use(routes.middleware());
 //     this.body = renderFullPage(html);
 //   });
 //   yield next;
-// });
+// });id = "${userID}"
 
 server.use(function* (next) {
+  //let's try to pass the session object into a script tag
+  var userID = this.cookies.get('userID') || '';
+  yield next;
   this.body = `<!doctype html>
                 <html>
                   <body>
-                    <div id="app"></div>
+                    <div id = "app" data-userid= "${userID}"></div>
                   </body>
                 <script src='/src/app.js'></script>
                 </html>`;
-  yield next;
 });
 
 // server.use(function* (next) {

@@ -1,13 +1,39 @@
+@import 'login';
 @import "nav";
-
-form#signup {
-  background-color: blue;
+@import "start";
+@import "restaurants";
+@import "shop";
+body {
+  margin: 0;
 }
 
-form.hidden {
+@mixin button {
+  padding: 0.5;
+  border-radius: 10px;
+  cursor: default;
+  color: black;
+  text-decoration: none;
+  &:hover {
+    color: white;
+    background-color: black;
+  }
+}
+
+div.nav-brand {
+  border-bottom: 1px solid;
+  a {
+    padding: 1em;
+    @include button;
+  }
+  div.title {
+    a {
+      padding: 0;
+    }
+  }
+}
+
+
+
+.hidden {
   display: none;
-}
-
-div.form {
-  background-color: red;
 }

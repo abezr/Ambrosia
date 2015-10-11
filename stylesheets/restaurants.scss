@@ -1,0 +1,51 @@
+
+div.restaurant-list {
+  .restaurant {
+    position: relative;
+    padding: 1em;
+    margin: auto;
+    width: 90%;
+    border: 1px solid;
+    margin-bottom: 1em;
+    .order-button {
+      font-size: 1.5em;
+      border: 3px solid;
+      position: absolute;
+      top: 0.5em;
+      right: 0.5em;
+      padding: 0.5em;
+      border-radius: 10px;
+      cursor: default;
+      color: black;
+      text-decoration: none;
+      &:hover {
+        color: white;
+        background-color: black;
+      }
+    }
+    .restaurant-name {
+      cursor: default;
+      font-size: 1.5em;
+    }
+    .restaurant-description {
+      cursor: default;
+    }
+    .foods {
+      margin: 1em;
+      .food-name {
+        font-size: 1.5em;
+      }
+      .meals {
+        padding: 1em;
+        margin: 1em;
+        border: 1px solid;
+        .meal {
+          padding-bottom: 1em;
+        }
+      }
+    }
+    .food {
+      @include flex-item;
+    }
+  }
+}

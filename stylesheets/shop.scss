@@ -1,0 +1,47 @@
+div.shop {
+  text-align: center;
+  .caddy {
+    position: fixed;
+    bottom: 0;
+    .item {
+      padding: 1em;
+      border-right: 1px solid;
+      margin: 0;
+    }
+    .command {
+      padding: 2em;
+      border: 1px solid;
+      border-radius: 10px;
+      &:hover {
+        background-color: black;
+        color: white;
+      }
+    }
+  }
+  .food {
+    cursor: default;
+    border-radius: 10px;
+    padding: 1em;
+    border: 3px solid;
+    .description {
+      margin: 1em;
+    }
+    .name {
+      font-size: 1.5em;
+    }
+    .meals {
+      border-top: 1px solid;
+      .meal {
+        .name {
+          font-size: 1.5em;
+        }
+        cursor: default;
+        padding: 1em;
+        &:hover {
+          background-color: black;
+          color: white;
+        }
+      }
+    }
+  }
+}

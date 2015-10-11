@@ -1,20 +1,26 @@
 import r from 'rethinkdb';
 import co from 'co';
 
-export function getUser(cookie) {
-  if(cookie.get('user')) {
-    return cookie.get('user');
-  } else {
-    return {
-      name: '',
-      mail: ''
-    };
-  }
+export function getUser(rootValue, id) {
+  if (id === '') return {name:'', mail:''};
+  return co(function* () {
+    var p = new Promise(function(resolve, reject) {
+      r.table('user').get(id).run(rootValue.conn, function(error, result){
+        if(error) reject(error);
+        resolve(result);
+      });
+    });
+    return yield p.then(function(value){
+      console.log('database:getUser', value);
+      value.userID = value.id;
+      var data = value || {mail:'', user:''};
+      return data;
+    });
+  });
 }
-
+//to use it with relay use rootValue.conn as run arguments
 export function getUserByCredentials(credentials, rootValue) {
   return co(function*() {
-    console.log(credentials);
     var result;
     yield r.table('user').filter(function(user) {
       return (user('mail').eq(credentials.mail)
@@ -36,20 +42,21 @@ export function getUserByCredentials(credentials, rootValue) {
         result = row;
       });
     });
-    rootValue.cookie.set('user', result);
+    result.userID = result.id;
+    console.log('database:getUserByCredentials:session', result);
     return result;
   });
 }
 
 export function getUsers(conn) {
   return co(function*() {
-      var friends;
-      yield r.table('user').run(conn, function(err, result) {
-        friends = result;
-      });
-      console.log('database', friends);
-      return friends.toArray();
+    var friends;
+    yield r.table('user').run(conn, function(err, result) {
+      friends = result;
     });
+    console.log('database:getUsers', friends);
+    return friends.toArray();
+  });
 }
 
 export function addUser(credentials, rootValue) {
@@ -69,7 +76,7 @@ export function addUser(credentials, rootValue) {
     }).run(rootValue.conn, function(err, result) {
       console.log('database:addUser', result.changes[0].new_val, result);
     });
-    rootValue.cookie.set('user', user.changes[0].new_val);
+    rootValue.session.user = user.changes[0].new_val;
     return user.changes[0].new_val;
   });
 }
@@ -84,3 +91,74 @@ export function updateUser(id, name, conn) {
     return res.changes[0].new_val;
   });
 }
+
+export function addRestaurant(restaurant, rootValue) {
+  return co(function*() {
+    restaurant.orders = [];
+    var data = yield r.table('restaurant').insert(restaurant, {
+      returnChanges: true
+    }).run(rootValue.conn, function(err, result) {});
+    return data.changes[0].new_val;
+  });
+}
+
+export function getRestaurant(id, rootValue) {
+  return co(function*() {
+    var p = new Promise(function(resolve, reject) {
+      r.table('restaurant').get(id).run(rootValue.conn, function(err, res) {
+        if(err) reject(err);
+        resolve(res);
+      });
+    });
+    return yield p.then(function(value){
+      console.log('database:getRestaurant', value);
+      var data = value || null;
+      return data;
+    });
+  });
+}
+
+export function getRestaurants(conn) {
+  return co(function*() {
+    var p = new Promise(function(resolve, reject) {
+      r.table('restaurant').run(conn, function(err, result) {
+        result.toArray(function(err, res) {
+          if(err) reject(err);
+          resolve(res);
+        });
+      });
+    });
+    return yield p.then(function(value){
+      console.log('getRestaurant');
+      return value;
+    });
+  });
+}
+
+export function addOrder(restaurantID, order, rootValue) {
+  return co(function*() {
+    var p = new Promise(function(resolve, reject) {
+      r.table('restaurant').get(restaurantID)('orders').append(order).run(rootValue.conn, function (err, res) {
+        console.log('database:addOrder', res);
+        res.toArray(function(err, res) {
+          if (err) reject(err);
+          resolve(res);
+        });
+      });
+    });
+    return yield p.then(function(value){
+      return value;
+    });
+  });
+}
+
+// export function getRestaurants(conn) {
+//   return co(function*() {
+//       var restaurants;
+//       yield r.table('restaurant').run(conn, function(err, result) {
+//         restaurants = result;
+//       });
+//       console.log('database:getRestaurants', restaurants.toArray());
+//       return restaurants.toArray();
+//     });
+// }

@@ -36,6 +36,7 @@ export default class LoginMutation extends Relay.Mutation {
     return Relay.QL`
     fragment on LoginPayload {
       user {
+        userID,
         mail
       }
     }

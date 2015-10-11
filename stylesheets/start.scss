@@ -1,0 +1,137 @@
+div.brand {
+  span.name {
+    cursor: default;
+    &:hover {
+      border: 1px solid;
+      padding: 0.1em;
+    }
+  }
+  span.description {
+    cursor: default;
+    &:hover {
+      border: 1px solid;
+      padding: 0.1em;
+    }
+  }
+  margin-top: 3em;
+  text-align: center;
+  input#name {
+    font-size: 1em;
+    margin: 1em;
+  }
+  textarea#description {
+    font-size: 1em;
+    margin: 1em;
+    width: 50%;
+    height: 4em;
+  }
+}
+div.food {
+  text-align: center;
+  span.name {
+    margin: 1em;
+  }
+  span.description {
+    margin: 1em;
+  }
+}
+div.meal-modal {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  text-align: center;
+  color: white;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(10, 10, 10, 0.9);
+  span.title {
+    margin: 1em;
+  }
+  span.close {
+    background-image: url("/stylesheets/icons/close-white.svg");
+    width: 2em;
+    height: 2em;
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    &:hover {
+      border: 1px solid;
+    }
+  }
+  span.plus {
+    cursor: pointer;
+    float: left;
+    margin: 0.25em;
+  }
+}
+span.submit {
+  cursor: default;
+  border-radius: 10px;
+  bottom: 3em;
+  right: 3em;
+  font-size: 2em;
+  position: absolute;
+  padding: 1em;
+  background-color: rgba(0, 0, 0, 0.83);
+  color: white;
+  &:hover {
+    color: black;
+    background-color: white;
+    border: 1px solid;
+  }
+}
+span.plus {
+  cursor: default;
+  margin: 1em;
+  border-radius: 5px;
+  border: 1px solid black;
+  padding: 0.25em;
+  &:hover {
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+  }
+}
+.box {
+  span.name {
+    cursor: default;
+    &:hover {
+      border: 1px solid;
+      padding: 0.1em;
+    }
+  }
+  span.description {
+    cursor: default;
+    &:hover {
+      border: 1px solid;
+      padding: 0.1em;
+    }
+  }
+  span.close {
+    position: absolute;
+    width: 1.5em;
+    height: 1.5em;
+    top: 0.5em;
+    right: 0.5em;
+    background-image: url("/stylesheets/icons/close-black.svg");
+    &:hover {
+      border: 1px solid;
+    }
+  }
+  input {
+    font-size: 1em;
+  }
+  textarea {
+    font-size: 1em;
+  }
+  align-self: flex-start;
+  position: relative;
+  width: 30%;
+  height: 6em;
+  border: 1px solid;
+  margin: 1%;
+  &:hover {
+
+    //  height: 10em;
+  }
+}

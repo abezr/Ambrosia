@@ -8,7 +8,7 @@ class Users extends React.Component {
   }
 
   render() {
-    console.log(this.props);
+    const {user} = this.props;
     var createUser = function (user) {
       console.log(user);
       return (
@@ -23,22 +23,25 @@ class Users extends React.Component {
     return (
       <div>
         <h1>List of all users</h1>
-        <div>{this.props.user.friends.edges.map(createUser)}</div>
+        <div>{user.user.friends.edges.map(createUser)}</div>
       </div>
     );
   }
 }
 
 export default Relay.createContainer(Users, {
+  initialVariables: {userID: document.getElementById('app').dataset.userid || ''},
   fragments: {
     user: () => Relay.QL`
-    fragment on User {
-      friends(first: 900000) {
-        edges {
-          node {
-            id,
-            name,
-            mail
+    fragment on Root {
+      user(id: $userID) {
+        friends(first: 900000) {
+          edges {
+            node {
+              id,
+              name,
+              mail
+            }
           }
         }
       }
