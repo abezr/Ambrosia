@@ -11,38 +11,65 @@ export class Index extends React.Component {
     this.state = { login: false };
   }
 
-  componentWillMount() {
-  }
-
   render() {
-    console.log('index:render', this.props, window.userID);
-    const {children, user} = this.props;
+    //const {children, root} = this.props;
+    const user = this.props.user.user;
     if (!this.props) return <div>Loading...</div>;
     return (
       <div>
       <div className='nav nav-brand'>
         <div className='flex-item-1 title'><Link to='/' >Ambrosia</Link></div>
-        <div className='flex-item-2'>{user.user.mail}<br/>{user.user.name}</div>
         <Link to='/restaurants' className='flex-item-2'>Restaurants</Link>
-        <Link to='/start' className='flex-item-3'>Start!</Link>
-        <Link to='/register' className='flex-item-4 login-link' onCLick={this._switch}><span>Login</span></Link>
+        <Link to='/start' className='flex-item-2'>Start!</Link>
+        <LoginButton {...user}/>
       </div>
       <div className='content'>
 
       </div>
-      {children}
+      {this.props.children}
       </div>
     );
   }
 }
 
+class LoginButton extends React.Component {
+  constructor(props, context) {
+    super(props, context)
+    this.state = {expand: false};
+  }
+  _logout = () => {
+    console.log('must implement a logout mutation');
+  }
+  _expand = () => {
+    this.setState({expand: true});
+  }
+  _retract = () => {
+    this.setState({expand: false});
+  }
+  render() {
+    if(this.props.mail === '') {
+      return <Link to='/register' className='flex-item-4 login-link'><span>Login</span></Link>;
+    } else {
+      return (
+        <div className='session flex-item-2'>
+          <div className= 'button' onMouseEnter={this._expand} onMouseLeave={this._retract}>{this.props.name ? this.props.name : this.props.mail} ▼</div>
+          <div className={classnames('menu', {hidden: !this.state.expand})} onMouseEnter={this._expand} onMouseLeave={this._retract}>
+            <div className='profile-link'><Link to='/profile'>Profile</Link></div>
+            <div className='button' onClick={this._logout}>Logout</div>
+          </div>
+        </div>
+      );
+    }
+  }
+}
+
 export default Relay.createContainer(Index, {
-  initialVariables: {userID: document.getElementById('app').dataset.userid || '2'},
   fragments: {
     user: () => Relay.QL`
     fragment on Root {
-      user(id: $userID) {
+      user {
         mail,
+        name,
         id
       }
     }

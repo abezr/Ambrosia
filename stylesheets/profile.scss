@@ -1,0 +1,66 @@
+div.profile {
+  position: relative;
+  padding: 2em;
+  img {
+    width: 15em;
+    height: 15em;
+  }
+  div.save {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  div.restaurants-list {
+    border: 1px solid;
+    .restaurant {
+      cursor: default;
+      color: black;
+      text-decoration: none;
+      display: block;
+      padding: 0.5em;
+      border-bottom: 1px solid;
+      &:hover {
+        font-size: 1.5em;
+      }
+    }
+    .last-restaurant {
+      cursor: default;
+      text-decoration: none;
+      color: black;
+      display: block;
+      padding: 0.5em;
+      &:hover {
+        font-size: 1.5em;
+      }
+    }
+  }
+
+  div.orders-list {
+    border: 1px solid;
+    padding: 0.5em;
+    .last-order {
+      position: relative;
+      .price {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+    }
+    .order {
+      @extend.last-order;
+      border-bottom: 1px solid;
+    }
+  }
+
+  .item {
+    padding: 0.5em;
+  }
+  h1,h2 {
+    input {
+      width: 100%;
+      font-size: inherit;
+      font-style: inherit;
+      border: none;
+    }
+  }
+}

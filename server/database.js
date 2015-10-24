@@ -2,19 +2,25 @@ import r from 'rethinkdb';
 import co from 'co';
 
 export function getUser(rootValue, id) {
-  if (id === '') return {name:'', mail:''};
-  return co(function* () {
+  if (!rootValue.cookies.get('userID')) return {
+    name: '',
+    mail: ''
+  };
+  return co(function*() {
     var p = new Promise(function(resolve, reject) {
-      r.table('user').get(id).run(rootValue.conn, function(error, result){
-        if(error) reject(error);
+      r.table('user').get(rootValue.cookies.get('userID')).run(rootValue.conn, function(error, result) {
+        if (error) reject(error);
         resolve(result);
       });
     });
-    return yield p.then(function(value){
+    return yield p.then(function(value) {
       console.log('database:getUser', value);
+      if (!value) return {
+        mail: '',
+        name: ''
+      };
       value.userID = value.id;
-      var data = value || {mail:'', user:''};
-      return data;
+      return value;
     });
   });
 }
@@ -43,6 +49,7 @@ export function getUserByCredentials(credentials, rootValue) {
       });
     });
     result.userID = result.id;
+    rootValue.cookies.set('userID', result.id);
     console.log('database:getUserByCredentials:session', result);
     return result;
   });
@@ -70,7 +77,8 @@ export function addUser(credentials, rootValue) {
     // });
     var user = yield r.table('user').insert({
       mail: credentials.mail,
-      password: credentials.password
+      password: credentials.password,
+      orders: []
     }, {
       returnChanges: true
     }).run(rootValue.conn, function(err, result) {
@@ -80,14 +88,23 @@ export function addUser(credentials, rootValue) {
     return user.changes[0].new_val;
   });
 }
-
-export function updateUser(id, name, conn) {
+/**
+ * [updateUser udate user fields]
+ * @param {[string]} id [rethinkdb user id]
+ * @param  {[object]} user [{id: string, name: string || null, mail: string || null, profilePicture:string || null}]
+ * @param  {[object]} rootValue [graphQL rootValue object]
+ * @return {[object]}      [a GrapQLUser object]
+ */
+export function updateUser(id, user, rootValue) {
+  var data = {};
+  for(var key in user) {
+    if (user[key] !== null && key !== 'id') data[key] = user[key];
+  }
+  console.log('database:updateUser:data', data);
   return co(function*() {
-    var res = yield r.table('user').get(id).update({
-      name: name
-    }, {
+    var res = yield r.table('user').get(id).update(data, {
       returnChanges: true
-    }).run(conn);
+    }).run(rootValue.conn);
     return res.changes[0].new_val;
   });
 }
@@ -103,15 +120,15 @@ export function addRestaurant(restaurant, rootValue) {
 }
 
 export function getRestaurant(id, rootValue) {
+  console.log('database:getRestaurant', id);
   return co(function*() {
     var p = new Promise(function(resolve, reject) {
       r.table('restaurant').get(id).run(rootValue.conn, function(err, res) {
-        if(err) reject(err);
+        if (err) reject(err);
         resolve(res);
       });
     });
-    return yield p.then(function(value){
-      console.log('database:getRestaurant', value);
+    return yield p.then(function(value) {
       var data = value || null;
       return data;
     });
@@ -123,35 +140,80 @@ export function getRestaurants(conn) {
     var p = new Promise(function(resolve, reject) {
       r.table('restaurant').run(conn, function(err, result) {
         result.toArray(function(err, res) {
-          if(err) reject(err);
+          if (err) reject(err);
           resolve(res);
         });
       });
     });
-    return yield p.then(function(value){
+    return yield p.then(function(value) {
       console.log('getRestaurant');
       return value;
     });
   });
 }
 
-export function addOrder(restaurantID, order, rootValue) {
+export function addOrder(restaurantID, userID, order, rootValue) {
+  console.log('database:addOrder', restaurantID, userID, order);
   return co(function*() {
     var p = new Promise(function(resolve, reject) {
-      r.table('restaurant').get(restaurantID)('orders').append(order).run(rootValue.conn, function (err, res) {
-        console.log('database:addOrder', res);
+      //find a solution to fullfill an agenda
+      //for now we just add the orders in any order
+      r.table('restaurant').get(restaurantID).update({
+        orders: r.row('orders').append(order)
+      }, {
+        returnChanges: true
+      }).run(rootValue.conn, function(err, res) {
+        if (err) reject(err);
+        resolve(res.changes[0].new_val);
+      });
+    });
+    var q = new Promise(function(resolve, reject) {
+      r.table('user').get(userID).update({
+        orders: r.row('orders').append(order)
+      }, {
+        returnChanges: true
+      }).run(rootValue.conn, function(err, res) {
+        if (err) reject(err);
+        resolve(res.changes[0].new_val);
+      });
+    });
+    var result = yield [p, q];
+    console.log('database:addOrder', result);
+    return yield p.then(function(value) {
+      return value;
+    });
+  });
+}
+
+export function getRestaurantOrders(args, rootValue) {
+var endofDay = args.midnightTime + 24*60*60*1000;
+return co(function*() {
+  var p = new Promise(function(resolve, reject) {
+    r.table('restaurant').get("fda97adb-ef7f-44c8-b06a-f82572bd24e3")('orders').filter(r.row('date').lt(endofDay).and(r.row("date").gt(args.midnightTime))).orderBy('date').run(rootValue.conn, function(err, res) {
+        if(err) reject(err);
+        console.log('database:getRestaurantOrders', res, endofDay, args.midnightTime);
+        resolve(res);
+    });
+  });
+  var orders = yield p;
+  console.log('database:getRestaurantOrders', orders);
+  return yield p;
+});
+}
+
+export function getUserOrders(userID, rootValue) {
+  return co(function*() {
+    var p = new Promise(function(resolve, reject) {
+      r.table('user').get(userID)('orders').run(rootValue.conn, function(err, res) {
         res.toArray(function(err, res) {
           if (err) reject(err);
           resolve(res);
         });
       });
     });
-    return yield p.then(function(value){
-      return value;
-    });
+    return yield p;
   });
 }
-
 // export function getRestaurants(conn) {
 //   return co(function*() {
 //       var restaurants;

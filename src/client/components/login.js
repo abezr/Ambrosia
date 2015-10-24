@@ -17,17 +17,6 @@ class Auth extends React.Component {
     );
   }
 }
-//keep the userId in document and then run an other query with relay...
-//or use it just to save userId in cookie after the loginMutation have been successful
-var loginRequest = function (credentials) {
-  console.log('loginRequest')
-  request.get('http://localhost:3800/login')
-         .query({userID: credentials.userID})
-         .end(function (err, res) {
-           if(err) console.log('login:error');
-           console.log('login:res', res.body);
-         });
-};
 
 class Login extends React.Component {
 
@@ -93,7 +82,7 @@ class Login extends React.Component {
       e.preventDefault();
       var onSuccess = ({Login}) => {
         console.log('Mutation successful!');
-        loginRequest(Login.user);
+        //loginRequest(Login.user);
       };
       var onFailure = (transaction) => {
         var error = transaction.getError() || new Error('Mutation failed.');
@@ -134,14 +123,13 @@ class Login extends React.Component {
 }
 
 export default Relay.createContainer(Auth, {
-  initialVariables: {userID: document.getElementById('app').dataset.userid || ''},
 
   fragments: {
     //Question: Is fragment on mutation available on the component himself? no it's not
     //and you use a mutation you have to call mutation fragment if not you get a warning
     user: () => Relay.QL`
     fragment on Root {
-      user(id: $userID) {
+      user {
         id,
         userID,
         mail,

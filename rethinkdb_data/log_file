@@ -202,3 +202,4 @@
 2015-10-08T15:16:50.282847000 2.416833s info: Table 1613c507-e57e-49f5-bccb-293b05e4db65: Starting a new Raft election for term 4.
 2015-10-08T15:16:50.357200000 2.491186s info: Table 1613c507-e57e-49f5-bccb-293b05e4db65: This server is Raft leader for term 4. Latest log index is 8.
 2015-10-09T15:16:45.299294000 86401.316794s notice: A newer version of the RethinkDB server is available: 2.1.5-2. You can read the changelog at <https://github.com/rethinkdb/rethinkdb/releases>.
+2015-10-21T15:15:58.624304000 1123202.004665s warn: Problem when checking for new versions of RethinkDB: HTTP request to update.rethinkdb.com failed.

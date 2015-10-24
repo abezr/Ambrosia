@@ -1,0 +1,15 @@
+.timepicker {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  span.inc-plus {
+    cursor: pointer;
+  }
+  span.inc-less {
+    cursor: pointer;
+  }
+  input {
+    width: 2em;
+    font-size: 1em;
+  }
+}

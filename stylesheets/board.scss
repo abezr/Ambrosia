@@ -1,0 +1,20 @@
+div.board {
+  div.dashboard {
+    position: relative;
+  }
+  div.timeline{
+    text-align: center;
+    div.play {
+      margin: 0.5em auto;
+      width: 4em;
+      height: 4em;
+      background-image: url('/stylesheets/icons/play.svg');
+    }
+    div.pause {
+      margin: 0.5em auto;
+      width: 4em;
+      height: 4em;
+      background-image: url('/stylesheets/icons/pause.svg');
+    }
+  }
+}

@@ -30,11 +30,10 @@ class Users extends React.Component {
 }
 
 export default Relay.createContainer(Users, {
-  initialVariables: {userID: document.getElementById('app').dataset.userid || ''},
   fragments: {
     user: () => Relay.QL`
     fragment on Root {
-      user(id: $userID) {
+      user {
         friends(first: 900000) {
           edges {
             node {

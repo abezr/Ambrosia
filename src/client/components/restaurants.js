@@ -10,8 +10,7 @@ class Restaurants extends React.Component {
   }
 
   render() {
-    console.log(this.props);
-    var {user} = this.props.user;
+    var restaurants = this.props.restaurant.restaurants;
     var createRestaurant = function (restaurant) {
       return (
             <Restaurant {...restaurant} key={restaurant.node.id}/>
@@ -20,7 +19,7 @@ class Restaurants extends React.Component {
     return (
       <div>
         <h1>List of all restaurants</h1>
-        <div className='restaurant-list'>{user.restaurants.edges.map(createRestaurant)}</div>
+        <div className='restaurant-list'>{restaurants.edges.map(createRestaurant)}</div>
       </div>
     );
   }
@@ -78,13 +77,11 @@ class Restaurant extends React.Component {
 }
 
 export default Relay.createContainer(Restaurants, {
-  initialVariables: {userID: document.getElementById('app').dataset.userid || ''},
 
   fragments: {
-    user: () => Relay.QL`
+    restaurant: () => Relay.QL`
     fragment on Root {
-      user(id: $userID) {
-        restaurants(first: 10) {
+      restaurants(first: 10) {
           edges {
             node {
               id,
@@ -102,7 +99,6 @@ export default Relay.createContainer(Restaurants, {
           }
         }
       }
-    }
     `
   }
 });

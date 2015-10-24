@@ -87,7 +87,7 @@ routes.post('/graphql', function* (next) {
     schema: Schema,
     rootValue: {
       conn: this._rdbConn,
-      session: this.session
+      cookies: this.cookies
     }
   });
 });

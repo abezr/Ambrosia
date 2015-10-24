@@ -17,25 +17,20 @@ export default class OrderMutation extends Relay.Mutation {
     return Relay.QL`mutation{Order}`;
   }
   getVariables() {
+    console.log(this.props.order);
     return {
-      userID: this.props.user.id,
+      order: this.props.order,
       restaurantID: this.props.restaurant.id,
-      order: this.props.order
-    }
+      userID: this.props.user.id
+    };
   }
   getConfigs() {
     return [
       {
-        type: 'FIELDS_CHANGE',
-        fieldIDs: {
-          restaurant: this.props.restaurant.id
-        }
-      },
-      {
         type: 'RANGE_ADD',
         parentName: 'restaurant',
         parentID: this.props.restaurant.id,
-        connectionNAme: 'orders',
+        connectionName: 'orders',
         edgeName: 'orderEdge',
         rangeBehaviors: {
           '': 'append'
@@ -53,7 +48,10 @@ export default class OrderMutation extends Relay.Mutation {
   getFatQuery() {
     return Relay.QL`
     fragment on OrderPayload {
-
+      orderEdge {
+        node,
+        cursor
+      }
     }`;
   }
 }
