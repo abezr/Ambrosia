@@ -1,7 +1,7 @@
 import r from 'rethinkdb';
 import config from '../config';
 
-var restaurantID = 'fda97adb-ef7f-44c8-b06a-f82572bd24e3';
+var restaurantID = 'd4fda81c-c4c6-4f7f-9716-37c2a1e59fc1';
 
 var card = [{
   parent: 'Pizzas',

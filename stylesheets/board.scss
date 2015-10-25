@@ -1,19 +1,38 @@
 div.board {
   div.dashboard {
     position: relative;
+    div.order {
+      border: 1px solid;
+      margin: 1em;
+      text-align: center;
+      h1 {
+        margin: 0;
+        span.price {
+          float: right;
+        }
+        span.time {
+          float: left;
+        }
+      }
+    }
   }
   div.timeline{
     text-align: center;
-    div.play {
+    span.play {
       margin: 0.5em auto;
-      width: 4em;
-      height: 4em;
+      float: left;
+      width: 2em;
+      height: 2em;
       background-image: url('/stylesheets/icons/play.svg');
     }
-    div.pause {
-      margin: 0.5em auto;
-      width: 4em;
-      height: 4em;
+    span.time {
+      font-size: 2em;
+    }
+    span.pause {
+      margin: 0.5em;
+      float: left;
+      width: 2em;
+      height: 2em;
       background-image: url('/stylesheets/icons/pause.svg');
     }
   }

@@ -234,9 +234,8 @@ export var GraphQLRestaurant = new GraphQLObjectType({
       },
       description: 'all the orders of the restaurant',
       resolve: (restaurant, {midnightTime, ...args}, {rootValue}) => co(function*() {
-        var restaurantID = fromGlobalId(restaurant.id).id;
+        var restaurantID = restaurant.id;
         var orders = yield getRestaurantOrders({midnightTime, restaurantID}, rootValue);
-        console.log('schema:ordersconnection', orders);
         return connectionFromArray(orders, args);
       })
     }

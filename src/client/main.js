@@ -16,7 +16,7 @@ import Restaurants from './components/restaurants';
 import Ordering from './components/ordering';
 import Profile from './components/profile';
 import React from 'react';
-import ReactDom from 'react/lib/ReactDOM';
+import ReactDom from 'react-dom';
 import {createHistory} from 'history';
 import Relay from 'react-relay';
 // import rootQuery from '../indexroute.js';
@@ -94,6 +94,7 @@ ReactDom.render(
       <Route path="register" component={Login} queries={ViewerQuery} />
       <Route path="chief" component={ChiefIndex}>
         <Route path="board/:id" component = {Board} queries={RestaurantQuery}/>
+        <Route path="card/:id" component = {Start} queries={ViewerQuery}/>
       </Route>
     </Route>
   </Router>, document.getElementById('app'));

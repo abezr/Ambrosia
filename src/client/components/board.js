@@ -17,14 +17,13 @@ var id;
 const millisecondsPerDay = 24*60*60*1000;
 const midnightTime = new Date().setHours(0, 0, 0, 0);
 var time = new Date().getTime();
-var updateTime;
 
 class Board extends React.Component {
 
   constructor(props, context) {
     super(props, context);
     id = this.props.id;
-    updateTime = () => {
+    var updateTime = () => {
       time = new Date().getTime();
       this.forceUpdate();
     }
@@ -43,6 +42,7 @@ class Board extends React.Component {
 }
 
 var timeLineDate;
+var timeLineWheel;
 var updateEachSeconds;
 class TimeLine extends React.Component {
 
@@ -54,15 +54,19 @@ class TimeLine extends React.Component {
       x: (this.props.time - this.props.midnightTime)/10000,
       play: true
     }
+    timeLineWheel = (event) => {
+      event.preventDefault();
+      console.log('Timeline:onWheel', event.currentTarget);
+      timeLineDate.setTime(this.props.midnightTime + (this.state.x * 10000));
+      this.setState({
+        play: false,
+        x: this.state.x += event.currentTarget.id === 'timeline' ? event.deltaX : event.deltaY
+      });
+    }
   }
   onWheel = (event) => {
     event.preventDefault();
-    timeLineDate.setTime(this.props.midnightTime + (this.state.x * 10000));
-    this.setState({
-      play: false,
-      x: this.state.x += event.deltaX
-    });
-    console.log('Timeline:onWheel', event.deltaX);
+
   }
 
   onPlay = () => {
@@ -101,16 +105,16 @@ class TimeLine extends React.Component {
     return (
     <div className='timeline' ref = {(item) => {this.width = item ? item.clientWidth : time}}>
       <h1>{timeLineDate.getDate()} / {timeLineDate.getMonth() + 1} / {timeLineDate.getFullYear()}</h1>
-      <h2>{timeLineDate.getHours()} : {timeLineDate.getMinutes() < 10 ? '0'+timeLineDate.getMinutes() : timeLineDate.getMinutes()}</h2>
-      <div className={classnames('play', {hidden: this.state.play})} onClick={this.onPlay} />
-      <div className={classnames('pause', {hidden: !this.state.play})} />
-      <svg className= 'command' viewBox="0 -400 8640 800" onWheel = {this.onWheel} onClick = {this.onClick}>
+      <svg id='timeline' className= 'command' viewBox="0 -400 8640 800" onWheel = {timeLineWheel} onClick = {this.onClick}>
         <rect x='0' y='-400' width={time} height='800' fill = 'rgba(0, 0, 0, 0.8)'/>
         <rect x={time} y='-400' width={8640 - time} height='800' fill = 'rgba(255, 255, 255, 0.8)'/>
         <path d='M0,0 H1440' stroke = 'black' strokeWidth = '1'/>
         <rect className = 'cursor' x={this.state.x} y='-400' width='80' height='800' fill = 'grey'/>
       {this.props.orders.map(createOrders)}
       </svg>
+      <span className='time'>{timeLineDate.getHours()} : {timeLineDate.getMinutes() < 10 ? '0'+timeLineDate.getMinutes() : timeLineDate.getMinutes()}</span>
+      <span className={classnames('play', {hidden: this.state.play})} onClick={this.onPlay} />
+      <span className={classnames('pause', {hidden: !this.state.play})} />
     </div>
     );
   }
@@ -126,12 +130,22 @@ class Dashboard extends React.Component {
   }
 
   render() {
+    var i = 0;
+    /**
+     * A function to return only the 5 next order after timeLineDate
+     * @param  {[object]} order [description]
+     * @param  {[int]} index [description]
+     * @return {[react element]}       []
+     */
     var createOrder = function (order, index) {
-      return <Order key={order.node.id} order={order.node}/>;
+      if (order.node.date >= timeLineDate.getTime() && i < 5) {
+        i++;
+        return <Order key={order.node.id} order={order.node}/>;
+      }
     };
     return (
       <div className = "dashboard">
-        <div className = 'container'>
+        <div id = 'dashboard' className = 'container' onWheel={timeLineWheel}>
           {this.props.orders.map(createOrder)}
         </div>
       </div>
@@ -143,15 +157,16 @@ class Order extends React.Component {
 
   constructor(props, context) {
     super(props, context);
+    this.state = {expand: false};
   }
 
   render() {
     var order = this.props.order;
-    var createDetail = function (detail) {
+    var createItem = (item) => {
       return (
-        <div className = 'detail'>
-          <img src='detail.picture'/>
-          {detail.name}
+        <div className = 'flex-item-2'>
+          {item.parent}<br/>
+          {item.name}
         </div>
       );
     };
@@ -159,8 +174,11 @@ class Order extends React.Component {
     var Hours = date.getHours();
     var Minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
     return (
-      <div className={classnames('order', {hidden: order.date < timeLineDate, green: order.payed})}>
+      <div className={classnames('order', {hidden: order.date < timeLineDate, green: order.payed})} onClick={()=>{this.setState({expand: !this.state.expand});}} onWheel={(e) => {if(this.state.expand === true) e.stopPropagation();}}>
         <h1>Mr Dupond<span className='price'>{order.price + 'mB'}</span><span className='time'>{Hours} : {Minutes}</span></h1>
+        <div className={classnames('items', {'nav-wrap': this.state.expand, hidden: !this.state.expand})}>
+          {order.items.map(createItem)}
+        </div>
       </div>
     );
   }
@@ -169,7 +187,7 @@ class Order extends React.Component {
 export default Relay.createContainer(Board, {
   initialVariables: {
     midnightTime: midnightTime,
-    id: 'UmVzdGF1cmFudDpmZGE5N2FkYi1lZjdmLTQ0YzgtYjA2YS1mODI1NzJiZDI0ZTM='
+    id: 'UmVzdGF1cmFudDpkNGZkYTgxYy1jNGM2LTRmN2YtOTcxNi0zN2MyYTFlNTlmYzE='
   },
   fragments: {
     restaurant: () => Relay.QL`
