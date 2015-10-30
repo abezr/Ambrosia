@@ -1,41 +1,28 @@
 import {
-  GraphQLBoolean,
-  GraphQLID,
-  GraphQLInt,
-  GraphQLList,
-  GraphQLNonNull,
-  GraphQLObjectType,
-  GraphQLInputObjectType,
-  GraphQLSchema,
-  GraphQLString
+  GraphQLBoolean, GraphQLID, GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLInputObjectType, GraphQLSchema, GraphQLString
 }
 from 'graphql';
 
 import {
-  connectionArgs,
-  connectionDefinitions,
-  connectionFromArray,
-  cursorForObjectInConnection,
-  fromGlobalId,
-  globalIdField,
-  mutationWithClientMutationId,
-  nodeDefinitions,
-  toGlobalId
+  connectionArgs, connectionDefinitions, offsetToCursor, connectionFromArray, cursorForObjectInConnection, fromGlobalId, globalIdField, mutationWithClientMutationId, nodeDefinitions, toGlobalId
 }
 from 'graphql-relay';
 
 import {
-  addUser,
-  getUser,
-  updateUser,
-  newUser,
-  getUserByCredentials,
-  addOrder,
-  addRestaurant
-} from './database';
+  addUser, getUser, updateUser, newUser, getUserByCredentials, addOrder, getRestaurant, addRestaurant, updateRestaurantCard
+}
+from './database';
 
-import {GraphQLUser} from './type/user';
-import {GraphQLInputRestaurant, GraphQLRestaurantEdge, GraphQLInputOrder, GraphQLOrderEdge} from './type/restaurant';
+import {
+  GraphQLUser
+}
+from './type/user';
+
+import {
+  GraphQLRestaurant, GraphQLInputRestaurant, GraphQLRestaurantEdge, GraphQLInputOrder, GraphQLOrderEdge, GraphQLInputFood
+}
+from './type/restaurant';
+
 import co from 'co';
 
 export var SignupMutation = mutationWithClientMutationId({
@@ -67,7 +54,7 @@ export var SignupMutation = mutationWithClientMutationId({
 });
 
 export var UserMutation = mutationWithClientMutationId({
-  name:'UserMutation',
+  name: 'UserMutation',
   inputFields: {
     id: {
       type: GraphQLString
@@ -88,7 +75,9 @@ export var UserMutation = mutationWithClientMutationId({
       resolve: (user) => user
     }
   },
-  mutateAndGetPayload: (args, {rootValue}) => co(function*() {
+  mutateAndGetPayload: (args, {
+    rootValue
+  }) => co(function*() {
     console.log('mutation:UserMutation', args);
     var id = fromGlobalId(args.id).id;
     var user = yield updateUser(id, args, rootValue);
@@ -137,21 +126,64 @@ export var OrderMutation = mutationWithClientMutationId({
     }
   },
   outputFields: {
-    orderEdge: {
+    restaurant: {
+      type: GraphQLRestaurant,
+      resolve: ({restaurantID, rootValue}) => co(function* () {
+        console.log('mutation:restaurant');
+        return yield getRestaurant(restaurantID, rootValue);
+      })
+    },
+    user: {
+      type: GraphQLUser,
+      resolve: ({rootValue}) => co(function* () {
+        console.log('mutation:user');
+        return yield getUser(rootValue);
+      })
+    },
+    orderRestaurantEdge: {
       type: GraphQLOrderEdge,
-      resolve: () => {
-        return null;
+      resolve: ({orders, order}) => {
+        var offset = orders[0].forEach((cursor, index) => {
+          console.log('mutation:orderRestaurantEdge:cursorIds', cursor.id);
+          if(cursor.id === order.id) return index;
+        });
+        console.log('mutation:orderRestaurantEdge', order);
+        return {
+          cursor: cursorForObjectInConnection(orders[0], order),
+          node: order
+        };
+      }
+    },
+    orderUserEdge: {
+      type: GraphQLOrderEdge,
+      resolve: ({orders, order}) => {
+        var offset;
+        orders[0].forEach((cursor, index) => {
+          console.log('mutation:orderUserEdge:cursorIds', cursor.id === order.id);
+          if(cursor.id === order.id) offset = index;
+        });
+        console.log('mutation:orderUserEdge', order.id, offset);
+        return {
+          //use offsetToCursor on next graphQL-relay release
+          cursor: cursorForObjectInConnection(orders[1], orders[1][offset]),
+          node: order
+        };
       }
     }
   },
-  mutateAndGetPayload: (args, {rootValue}) => co(function*() {
+  mutateAndGetPayload: (args, {
+    rootValue
+  }) => co(function*() {
     console.log('schema:ordermutation', args.order);
     //we need restaurant id plus order
-    var restaurant = fromGlobalId(args.restaurantID);
-    var user = fromGlobalId(args.userID);
-    return yield addOrder(restaurant.id, user.id, args.order, rootValue);
+    var restaurantID = fromGlobalId(args.restaurantID).id;
+    var userID = fromGlobalId(args.userID).id;
+    var order = args.order;
+    //orders[0] = restaurantOrder, orders[1] = userOrder
+    var orders = yield addOrder(restaurantID, userID, order, rootValue);
+    return {restaurantID, userID, orders, order, rootValue};
   })
-});
+})
 
 export var RestaurantMutation = mutationWithClientMutationId({
   name: 'Restaurant',
@@ -195,3 +227,25 @@ export var RestaurantMutation = mutationWithClientMutationId({
     };
   })
 });
+
+export var UpdateCardMutation = mutationWithClientMutationId({
+  name: 'UpdateCard',
+  inputFields: {
+    card: {
+      type: GraphQLInputRestaurant
+    },
+    restaurantID: {
+      type: GraphQLString
+    }
+  },
+  outputFields: {
+    restaurant: {
+      type: GraphQLRestaurant,
+      resolve: (restaurant) => restaurant
+    }
+  },
+  mutateAndGetPayload: ({restaurantID, card}, {rootValue}) => co(function*() {
+    restaurantID = fromGlobalId(restaurantID).id;
+    return yield updateRestaurantCard({restaurantID, card}, rootValue);
+  })
+})

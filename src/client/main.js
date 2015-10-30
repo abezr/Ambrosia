@@ -12,6 +12,7 @@ import ChiefIndex from './components/chiefindex';
 import Login from './components/login';
 import Users from './components/users';
 import Start from './components/start';
+import Card from './components/card';
 import Restaurants from './components/restaurants';
 import Ordering from './components/ordering';
 import Profile from './components/profile';
@@ -44,20 +45,18 @@ var ViewerQuery = {
 var RestaurantQuery = {
   restaurant: (Component) => Relay.QL `
   query {
-    root {
+    root (id: $id) {
       ${Component.getFragment('restaurant')}
     }
   }
   `
 };
 
-var OrdersQuery = {
-  orders: (Component) => Relay.QL `
+var RestaurantsQuery = {
+  restaurant: (Component) => Relay.QL `
   query {
     root {
-      restaurant(id: $id) {
-        ${Component.getFragment('orders')}
-      }
+      ${Component.getFragment('restaurant')}
     }
   }
   `
@@ -66,14 +65,14 @@ var OrdersQuery = {
 var FullQuery = {
   user: (Component) => Relay.QL`
   query {
-    root {
+    root (id: $id) {
       ${Component.getFragment('user')}
     },
   }
   `,
   restaurant: (Component) => Relay.QL`
   query {
-    root {
+    root (id: $id) {
       ${Component.getFragment('restaurant')}
     }
   }
@@ -89,12 +88,10 @@ ReactDom.render(
       <IndexRoute component={Users} queries={ViewerQuery} />
       <Route path='restaurant/:id' component={Ordering} queries={FullQuery}/>
       <Route path='profile' component={Profile} queries={ViewerQuery}/>
-      <Route path="restaurants" component={Restaurants} queries={RestaurantQuery} />
+      <Route path="restaurants" component={Restaurants} queries={RestaurantsQuery} />
       <Route path="start" component={Start} queries={ViewerQuery} />
       <Route path="register" component={Login} queries={ViewerQuery} />
-      <Route path="chief" component={ChiefIndex}>
-        <Route path="board/:id" component = {Board} queries={RestaurantQuery}/>
-        <Route path="card/:id" component = {Start} queries={ViewerQuery}/>
-      </Route>
+      <Route path="board/:id" component = {Board} queries={RestaurantQuery}/>
+      <Route path="card/:id" component = {Card} queries={RestaurantQuery}/>
     </Route>
   </Router>, document.getElementById('app'));

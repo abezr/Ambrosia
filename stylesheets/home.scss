@@ -6,6 +6,19 @@
 @import "timepicker";
 @import "profile";
 @import "board";
+@import "card";
+.text-center {
+  text-align: center;
+}
+.close-icon {
+  background-image: url('/stylesheets/icons/close-black.svg');
+  height: 1em;
+  width: 1em;
+  position: absolute;
+  &:hover {
+    border: 1px solid;
+  }
+}
 body {
   margin: 0;
 }
@@ -20,7 +33,16 @@ body {
     background-color: black;
   }
 }
-div.nav-brand {
+section {
+  background-color: yellow;
+  border: 1px solid;
+  position: relative;
+  .close-icon {
+    right: 1em;
+    top: 1em;
+  }
+}
+nav.nav-brand {
   border-bottom: 1px solid;
   a {
     padding: 1em;
@@ -28,7 +50,7 @@ div.nav-brand {
   }
   div.title {
     a {
-      padding: 0;
+      padding: 0.25em;
     }
   }
   div.session {
@@ -56,6 +78,7 @@ div.nav-brand {
 }
 .button {
   padding: 1em;
+  display: inline-block;
   @include button;
 }
 .hidden {

@@ -1,14 +1,13 @@
 body {
   font-family: 'Osaka';
 }
-
-div.nav {
+.nav {
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
 }
-div.nav-wrap {
-  @extend div.nav;
+.nav-wrap {
+  @extend .nav;
   flex-wrap: wrap;
 }
 @mixin flex-item {
@@ -17,16 +16,14 @@ div.nav-wrap {
   flex-basis: auto;
   align-self: center;
 }
-div {
-  .flex-item-1 {
-    flex-grow: 1;
-    flex-shrink: 1;
-    flex-basis: auto;
-  }
-  .title {
-    font-size: 3em;
-    font-family: inherit;
-  }
+.flex-item-1 {
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: auto;
+}
+.title {
+  font-size: 3em;
+  font-family: inherit;
 }
 @for $i from 2 through 10 {
   .flex-item-#{$i} {

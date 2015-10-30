@@ -97,7 +97,7 @@ class Caddy extends React.Component {
   _order = () => {
     var getTime = () => {
       var d = 0;
-      this.props.caddy.map((item) => {d += item.time*60*1000});
+      this.props.caddy.map((item) => {d += item.time});
       return d;
     };
     var getItems = () => {
@@ -142,7 +142,7 @@ class Caddy extends React.Component {
       <div className='caddy'>
         <div className='nav'>
           {this.props.caddy.map(createItems)}<br/>
-        <div className={classnames('command flex-item-2', {hidden: !sum})} onClick={this._order}><strong>{sum} mɃ</strong><br/>
+        <div className={classnames('command flex-item-2', {hidden: !this.props.caddy.length})} onClick={this._order}><strong>{sum} mɃ</strong><br/>
             Order!
         </div>
         </div>
@@ -247,17 +247,12 @@ class ModalOrder extends React.Component {
     super(props, context);
   }
   _order = () => {
-    console.log(_getTime());
     var getDate = () => {
-      var d = new Date(),
-      d2 = _getTime(),
-      h = d.getHours(),
-      m = d.getMinutes(),
-      h2 = d2.time.hours,
-      m2 = d2.time.minutes;
-      return d.getTime() + ((h2 - h * 60) + (m2 - m)) * 60000;
+      var time = _getTime().time;
+      var midnightTime = new Date().setHours(0, 0, 0, 0);
+      return midnightTime += (time.hours * 60 * 60 * 1000 + time.minutes * 60 * 1000);
     };
-    console.log(getDate());
+    console.log(getDate(), this.props.time);
     var order = {
       id: '_' + Math.random().toString(36).substr(2, 9),
       date: getDate(),
@@ -298,6 +293,9 @@ class ModalOrder extends React.Component {
 }
 
 export default Relay.createContainer(Restaurant, {
+  initialVariables: {
+    midnightTime: new Date().setHours(0, 0, 0, 0)
+  },
   fragments: {
     user: () => Relay.QL`
     fragment on Root {

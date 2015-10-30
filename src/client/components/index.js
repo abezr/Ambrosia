@@ -8,7 +8,7 @@ export class Index extends React.Component {
 
   constructor(props, context) {
     super(props, context);
-    this.state = { login: false };
+    this.state = { add: true };
   }
 
   render() {
@@ -17,15 +17,21 @@ export class Index extends React.Component {
     if (!this.props) return <div>Loading...</div>;
     return (
       <div>
-      <div className='nav nav-brand'>
+      <header>
+      <section className={classnames({hidden: !this.state.add})}>
+        <span className='close-icon' onClick={(e) => {this.setState({add: false})}}></span>
+        <article className='text-center'><h5><div className='button'>Become a Chief</div></h5></article>
+      </section>
+      <nav className='nav nav-brand'>
         <div className='flex-item-1 title'><Link to='/' >Ambrosia</Link></div>
         <Link to='/restaurants' className='flex-item-2'>Restaurants</Link>
         <Link to='/start' className='flex-item-2'>Start!</Link>
         <LoginButton {...user}/>
-      </div>
-      <div className='content'>
+      </nav>
+      </header>
+      <section className='content'>
 
-      </div>
+      </section>
       {this.props.children}
       </div>
     );

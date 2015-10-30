@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Relay from 'react-relay';
+import {Link} from 'react-router';
 import classnames from 'classnames';
 
 var commands = [];
@@ -15,14 +16,20 @@ var id;
  *
  */
 const millisecondsPerDay = 24*60*60*1000;
-const midnightTime = new Date().setHours(0, 0, 0, 0);
-var time = new Date().getTime();
+var midnightTime;
+var time;
+var setVariables;
 
 class Board extends React.Component {
 
   constructor(props, context) {
     super(props, context);
     id = this.props.id;
+    midnightTime = new Date().setHours(0, 0, 0, 0);
+    time = new Date().getTime();
+    setVariables = (variables) => {
+      this.props.relay.setVariables(variables);
+    }
     var updateTime = () => {
       time = new Date().getTime();
       this.forceUpdate();
@@ -34,7 +41,11 @@ class Board extends React.Component {
     var orders = this.props.restaurant.restaurant.orders.edges;
     return (
       <div className='board'>
-        <TimeLine orders= {orders} time ={time} midnightTime= {midnightTime}/>
+        <div className='nav'>
+          <Link to= {'/card/'+this.props.id} className ='flex-item-2'>Your Card</Link>
+          <Link to= {'/board/'+this.props.id} className='flex-item-2 selected'>Dashboard Order</Link>
+        </div>
+        <TimeLine orders= {orders} time ={time}/>
         <Dashboard orders = {orders}/>
       </div>
     );
@@ -48,16 +59,27 @@ class TimeLine extends React.Component {
 
   constructor(props, context) {
     super(props, context);
-    console.log((this.props.time - this.props.midnightTime)/10000);
+    console.log((this.props.time - midnightTime)/10000);
     timeLineDate = new Date();
     this.state = {
-      x: (this.props.time - this.props.midnightTime)/10000,
+      x: (this.props.time - midnightTime)/10000,
       play: true
     }
     timeLineWheel = (event) => {
       event.preventDefault();
-      console.log('Timeline:onWheel', event.currentTarget);
-      timeLineDate.setTime(this.props.midnightTime + (this.state.x * 10000));
+      timeLineDate.setTime(midnightTime + (this.state.x * 10000));
+      if(this.state.x <= 0 && (event.deltaX < 0 || event.deltaY < 0)){
+        console.log('reset x');
+        midnightTime -= millisecondsPerDay;
+        setVariables({midnightTime: midnightTime});
+        this.state.x = 8640;
+      }
+      if(this.state.x >= 8640 && (event.deltaX > 0 || event.deltaY > 0)) {
+        console.log('reset x');
+        midnightTime += millisecondsPerDay;
+        setVariables({midnightTime: midnightTime});
+        this.state.x = 0;
+      }
       this.setState({
         play: false,
         x: this.state.x += event.currentTarget.id === 'timeline' ? event.deltaX : event.deltaY
@@ -71,8 +93,9 @@ class TimeLine extends React.Component {
 
   onPlay = () => {
     timeLineDate = new Date();
+    midnightTime = new Date().setHours(0, 0, 0, 0);
     this.setState({
-      x: (this.props.time - this.props.midnightTime)/10000,
+      x: (this.props.time - midnightTime)/10000,
       play: true
     });
   }
@@ -80,7 +103,7 @@ class TimeLine extends React.Component {
   onClick = (event) => {
     var margin = 8;
     var x = ((event.clientX - margin) / this.width) * 8640;
-    timeLineDate.setTime(this.props.midnightTime + (x * 10000));
+    timeLineDate.setTime(midnightTime + (x * 10000));
     this.setState({
       x: x,
       play: false
@@ -98,17 +121,17 @@ class TimeLine extends React.Component {
       var price = order.price * 10;
       var time = order.time * 6;
       return (
-          <rect x={(order.date - this.props.midnightTime)/10000} y={order.payed ? -price : 0} height={price} width={time} fill ='red'/>
+          <rect x={(order.date - midnightTime)/10000} y={order.payed ? -price : 0} height={price} width={time} fill ='red'/>
       );
     };
-    var time = (this.props.time - this.props.midnightTime)/10000;
+    var time = (this.props.time - midnightTime)/10000;
     return (
     <div className='timeline' ref = {(item) => {this.width = item ? item.clientWidth : time}}>
       <h1>{timeLineDate.getDate()} / {timeLineDate.getMonth() + 1} / {timeLineDate.getFullYear()}</h1>
       <svg id='timeline' className= 'command' viewBox="0 -400 8640 800" onWheel = {timeLineWheel} onClick = {this.onClick}>
-        <rect x='0' y='-400' width={time} height='800' fill = 'rgba(0, 0, 0, 0.8)'/>
-        <rect x={time} y='-400' width={8640 - time} height='800' fill = 'rgba(255, 255, 255, 0.8)'/>
-        <path d='M0,0 H1440' stroke = 'black' strokeWidth = '1'/>
+        <rect x='0' y='-400' width={time < 0 ? 0 : time} height='800' fill = 'rgba(0, 0, 0, 0.8)'/>
+        <rect x={time} y='-400' width={8640 - time < 0 ? 0 : 8640 - time} height='800' fill = 'rgba(255, 255, 255, 0.8)'/>
+        <path d='M0,0 H8640' stroke = 'black' strokeWidth = '1'/>
         <rect className = 'cursor' x={this.state.x} y='-400' width='80' height='800' fill = 'grey'/>
       {this.props.orders.map(createOrders)}
       </svg>
@@ -183,16 +206,15 @@ class Order extends React.Component {
     );
   }
 }
-//we need to figure out how to pass the id in our query
+
 export default Relay.createContainer(Board, {
   initialVariables: {
-    midnightTime: midnightTime,
-    id: 'UmVzdGF1cmFudDpkNGZkYTgxYy1jNGM2LTRmN2YtOTcxNi0zN2MyYTFlNTlmYzE='
+    midnightTime: new Date().setHours(0, 0, 0, 0),
   },
   fragments: {
     restaurant: () => Relay.QL`
     fragment on Root {
-      restaurant(id: $id) {
+      restaurant {
         orders(first: 90, midnightTime: $midnightTime) {
           edges {
             node {

@@ -1,4 +1,17 @@
 div.board {
+  div.nav {
+    a {
+      text-decoration: none;
+      color: black;
+      font-size: 1.5em;
+      padding: 0.5em;
+      cursor: default;
+      &:hover {
+        border: 1px solid;
+        border-radius: 10px;
+      }
+    }
+  }
   div.dashboard {
     position: relative;
     div.order {

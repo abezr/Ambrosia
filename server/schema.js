@@ -37,7 +37,8 @@ import {
   LoginMutation,
   UserMutation,
   RestaurantMutation,
-  OrderMutation
+  OrderMutation,
+  UpdateCardMutation
 }
 from './mutation';
 
@@ -66,18 +67,8 @@ var GraphQLRoot = new GraphQLObjectType({
   fields: {
     restaurant: {
       type: GraphQLRestaurant,
-      args: {
-        id: {
-          type: GraphQLString,
-          description: 'the restaurant\'s rethinkdb\'s id'
-        }
-      },
-      resolve: (root, {
-        id
-      }, {
-        rootValue
-      }) => co(function*() {
-        console.log('schema:Root:getRestaurant', fromGlobalId(id));
+      resolve: (id, args, {rootValue}) => co(function*() {
+        console.log('schema:Root:getRestaurant', id);
         var restaurant = yield getRestaurant(fromGlobalId(id).id, rootValue);
         return restaurant;
       })
@@ -130,12 +121,10 @@ var queryType = new GraphQLObjectType({
       args: {
         id: {
           type: GraphQLString,
-          description: 'it can be either restaurant or user id or null'
+          description: 'most of the time, the restaurant id'
         }
       },
-      resolve: (rootValue, {
-        id
-      }) => {
+      resolve: (rootValue, {id}) => {
         return id || {};
       }
     },
@@ -153,7 +142,8 @@ var mutationType = new GraphQLObjectType({
     Login: LoginMutation,
     User: UserMutation,
     Restaurant: RestaurantMutation,
-    Order: OrderMutation
+    Order: OrderMutation,
+    UpdateCard: UpdateCardMutation
   })
 });
 

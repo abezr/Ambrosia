@@ -1,0 +1,50 @@
+.selected {
+  border: 1px solid;
+  border-radius: 10px;
+}
+div.card {
+  input {
+    border: none;
+    font-size: inherit;
+    text-align: center;
+    margin: 0;
+  }
+  div.food {
+    position: relative;
+    text-align: center;
+    font-size: 1.5em;
+    padding: 1em;
+    border: 3px solid;
+    border-radius: 10px;
+    span.plus {
+      position: absolute;
+      top: 0.25em;
+      left: 0.25em;
+    }
+    div.meal {
+
+    }
+  }
+  div.brand {
+    text-align: center;
+    h1 {
+      margin: 0.5em;
+    }
+    h2 {
+      margin: 0.5em;
+    }
+  }
+  div.nav {
+    a {
+      text-decoration: none;
+      color: black;
+      font-size: 1.5em;
+      padding: 0.5em;
+      cursor: default;
+      &:hover {
+        border: 1px solid;
+        border-radius: 10px;
+      }
+    }
+  }
+}

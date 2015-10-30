@@ -1,42 +1,35 @@
-2015-10-24T15:44:28.791887000 0.386980s notice: Recursively removing directory /Users/belenduchene/Sites/homemade-relay/rethinkdb_data/tmp
-2015-10-24T15:44:28.794216000 0.389315s notice: Initializing directory /Users/belenduchene/Sites/homemade-relay/rethinkdb_data
-2015-10-24T15:44:28.794591000 0.389683s info: Creating a default database for your convenience. (This is because you ran 'rethinkdb' without 'create', 'serve', or '--join', and the directory '/Users/belenduchene/Sites/homemade-relay/rethinkdb_data' did not already exist or is empty.)
-2015-10-24T15:44:28.794635000 0.389726s notice: Running rethinkdb 2.0.2 (CLANG 6.0 (clang-600.0.57))...
-2015-10-24T15:44:28.803428000 0.398521s notice: Running on Darwin 15.0.0 x86_64
-2015-10-24T15:44:28.803515000 0.398606s notice: Loading data from directory /Users/belenduchene/Sites/homemade-relay/rethinkdb_data
-2015-10-24T15:44:30.772657000 2.367840s info: Automatically using cache size of 1028 MB
-2015-10-24T15:44:30.773409000 2.368591s notice: Listening for intracluster connections on port 29015
-2015-10-24T15:44:30.794499000 2.389683s notice: Listening for client driver connections on port 28015
-2015-10-24T15:44:30.794808000 2.389991s notice: Listening for administrative HTTP connections on port 8080
-2015-10-24T15:44:30.794821000 2.390003s notice: Listening on addresses: 127.0.0.1, ::1
-2015-10-24T15:44:30.794828000 2.390010s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
-2015-10-24T15:44:30.794835000 2.390017s notice: Server ready, "MacBook_Pro_de_belen_DUCHENE_local_7uy" d60b1cb8-7201-4dee-9c3c-8ac7fa4eb45e
-2015-10-24T15:44:31.328796000 2.923979s warn: Problem when checking for new versions of RethinkDB: HTTP request to update.rethinkdb.com failed.
-2015-10-25T09:35:36.922920000 2.352583s notice: Running rethinkdb 2.0.2 (CLANG 6.0 (clang-600.0.57))...
-2015-10-25T09:35:37.035611000 2.465268s notice: Running on Darwin 15.0.0 x86_64
-2015-10-25T09:35:37.036576000 2.466232s notice: Loading data from directory /Users/belenduchene/Sites/homemade-relay/rethinkdb_data
-2015-10-25T09:35:38.050590000 3.479798s info: Automatically using cache size of 540 MB
-2015-10-25T09:35:38.051394000 3.480602s notice: Listening for intracluster connections on port 29015
-2015-10-25T09:35:38.073132000 3.502341s notice: Listening for client driver connections on port 28015
-2015-10-25T09:35:38.073303000 3.502511s notice: Listening for administrative HTTP connections on port 8080
-2015-10-25T09:35:38.073307000 3.502515s notice: Listening on addresses: 127.0.0.1, ::1
-2015-10-25T09:35:38.073314000 3.502522s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
-2015-10-25T09:35:38.073321000 3.502529s notice: Server ready, "MacBook_Pro_de_belen_DUCHENE_local_7uy" d60b1cb8-7201-4dee-9c3c-8ac7fa4eb45e
-2015-10-25T09:35:39.379471000 4.808233s notice: A newer version of the RethinkDB server is available: 2.1.5-2. You can read the changelog at <https://github.com/rethinkdb/rethinkdb/releases>.
-2015-10-25T19:27:49.700975000 0.008691s notice: Running rethinkdb 2.0.2 (CLANG 6.0 (clang-600.0.57))...
-2015-10-25T19:27:49.795856000 0.103568s notice: Running on Darwin 15.0.0 x86_64
-2015-10-25T19:27:49.796569000 0.104279s notice: Loading data from directory /Users/belenduchene/Sites/homemade-relay/rethinkdb_data
-2015-10-25T19:27:50.939092000 1.246785s info: Automatically using cache size of 100 MB
-2015-10-25T19:27:50.939106000 1.246799s warn: Cache size is very low and may impact performance.
-2015-10-25T19:27:50.939886000 1.247579s notice: Listening for intracluster connections on port 29015
-2015-10-25T19:27:50.942262000 1.249955s notice: Listening for client driver connections on port 28015
-2015-10-25T19:27:50.942382000 1.250075s notice: Listening for administrative HTTP connections on port 8080
-2015-10-25T19:27:50.942384000 1.250077s notice: Listening on addresses: 127.0.0.1, ::1
-2015-10-25T19:27:50.942389000 1.250082s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
-2015-10-25T19:27:50.942393000 1.250086s notice: Server ready, "MacBook_Pro_de_belen_DUCHENE_local_7uy" d60b1cb8-7201-4dee-9c3c-8ac7fa4eb45e
-2015-10-25T19:27:51.268975000 1.576668s notice: A newer version of the RethinkDB server is available: 2.1.5-2. You can read the changelog at <https://github.com/rethinkdb/rethinkdb/releases>.
-2015-10-25T19:59:38.265650000 1908.611448s notice: Server got SIGINT from pid 9402, uid 501; shutting down...
-2015-10-25T19:59:38.321951000 1908.667750s notice: Shutting down client connections...
-2015-10-25T19:59:38.322394000 1908.668193s notice: All client connections closed.
-2015-10-25T19:59:38.322412000 1908.668210s notice: Shutting down storage engine... (This may take a while if you had a lot of unflushed data in the writeback cache.)
-2015-10-25T19:59:38.416943000 1908.762742s notice: Storage engine shut down.
+2015-10-25T21:14:00.410132000 0.007643s notice: Recursively removing directory /Users/belenduchene/Sites/homemade-relay/rethinkdb_data/tmp
+2015-10-25T21:14:00.411105000 0.008618s notice: Initializing directory /Users/belenduchene/Sites/homemade-relay/rethinkdb_data
+2015-10-25T21:14:00.411172000 0.008682s info: Creating a default database for your convenience. (This is because you ran 'rethinkdb' without 'create', 'serve', or '--join', and the directory '/Users/belenduchene/Sites/homemade-relay/rethinkdb_data' did not already exist or is empty.)
+2015-10-25T21:14:00.411203000 0.008713s notice: Running rethinkdb 2.1.1 (CLANG 6.1.0 (clang-602.0.53))...
+2015-10-25T21:14:00.414420000 0.011931s notice: Running on Darwin 15.0.0 x86_64
+2015-10-25T21:14:00.414462000 0.011972s notice: Loading data from directory /Users/belenduchene/Sites/homemade-relay/rethinkdb_data
+2015-10-25T21:14:01.450747000 1.048348s info: Automatically using cache size of 613 MB
+2015-10-25T21:14:01.451245000 1.048846s notice: Listening for intracluster connections on port 29015
+2015-10-25T21:14:01.452391000 1.049991s notice: Listening for client driver connections on port 28015
+2015-10-25T21:14:01.452504000 1.050105s notice: Listening for administrative HTTP connections on port 8080
+2015-10-25T21:14:01.452507000 1.050108s notice: Listening on addresses: 127.0.0.1, ::1
+2015-10-25T21:14:01.452508000 1.050109s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2015-10-25T21:14:01.452510000 1.050111s notice: Server ready, "iMac_de_Belen_local_o64" 6334b288-8b89-4e04-b6b6-2bff65f5d229
+2015-10-25T21:14:01.996384000 1.593985s notice: A newer version of the RethinkDB server is available: 2.1.5-2. You can read the changelog at <https://github.com/rethinkdb/rethinkdb/releases>.
+2015-10-25T21:14:22.538241000 22.136842s info: Table 891647fe-69d3-456d-922b-d7d22c688916: Added replica on this server.
+2015-10-25T21:14:24.466219000 24.064911s info: Table 891647fe-69d3-456d-922b-d7d22c688916: Starting a new Raft election for term 1.
+2015-10-25T21:14:24.699218000 24.297910s info: Table 891647fe-69d3-456d-922b-d7d22c688916: This server is Raft leader for term 1. Latest log index is 0.
+2015-10-25T21:14:28.274831000 27.873705s info: Table 9d560b7d-bc87-4dd0-a5ff-b487081e9b02: Added replica on this server.
+2015-10-25T21:14:29.885195000 29.484069s info: Table 9d560b7d-bc87-4dd0-a5ff-b487081e9b02: Starting a new Raft election for term 1.
+2015-10-25T21:14:30.159363000 29.758328s info: Table 9d560b7d-bc87-4dd0-a5ff-b487081e9b02: This server is Raft leader for term 1. Latest log index is 0.
+2015-10-28T17:24:37.746853000 0.030420s notice: Running rethinkdb 2.1.1 (CLANG 6.1.0 (clang-602.0.53))...
+2015-10-28T17:24:37.760598000 0.044163s notice: Running on Darwin 15.0.0 x86_64
+2015-10-28T17:24:37.760646000 0.044210s notice: Loading data from directory /Users/belenduchene/Sites/homemade-relay/rethinkdb_data
+2015-10-28T17:24:37.974044000 0.257608s info: Automatically using cache size of 585 MB
+2015-10-28T17:24:37.974553000 0.258117s notice: Listening for intracluster connections on port 29015
+2015-10-28T17:24:38.062236000 0.345801s notice: Listening for client driver connections on port 28015
+2015-10-28T17:24:38.062382000 0.345946s notice: Listening for administrative HTTP connections on port 8080
+2015-10-28T17:24:38.062383000 0.345947s notice: Listening on addresses: 127.0.0.1, ::1
+2015-10-28T17:24:38.062388000 0.345952s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2015-10-28T17:24:38.062389000 0.345953s notice: Server ready, "iMac_de_Belen_local_o64" 6334b288-8b89-4e04-b6b6-2bff65f5d229
+2015-10-28T17:24:38.393463000 0.677028s notice: A newer version of the RethinkDB server is available: 2.1.5-2. You can read the changelog at <https://github.com/rethinkdb/rethinkdb/releases>.
+2015-10-28T17:24:39.855949000 2.139603s info: Table 891647fe-69d3-456d-922b-d7d22c688916: Starting a new Raft election for term 2.
+2015-10-28T17:24:39.888235000 2.171889s info: Table 9d560b7d-bc87-4dd0-a5ff-b487081e9b02: Starting a new Raft election for term 2.
+2015-10-28T17:24:40.028885000 2.312540s info: Table 891647fe-69d3-456d-922b-d7d22c688916: This server is Raft leader for term 2. Latest log index is 2.
+2015-10-28T17:24:40.028930000 2.312584s info: Table 9d560b7d-bc87-4dd0-a5ff-b487081e9b02: This server is Raft leader for term 2. Latest log index is 2.

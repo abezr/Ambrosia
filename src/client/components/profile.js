@@ -37,7 +37,7 @@ class Profile extends React.Component {
     var user = this.props.user.user;
     var createRestaurant = (resto, index) => {
       var bool = this.props.user.user.restaurants.edges.length === index+1;
-      return <Link to ={'/chief/board/'+resto.node.id} className={classnames({'last-restaurant': bool, restaurant: !bool})} key={resto.node.id}>{resto.node.name}</Link>;
+      return <Link to ={'/board/'+resto.node.id} className={classnames({'last-restaurant': bool, restaurant: !bool})} key={resto.node.id}>{resto.node.name}</Link>;
     };
     var createOrder = (order, index) => {
       var date = new Date(order.node.date);
@@ -84,7 +84,7 @@ export default Relay.createContainer(Profile, {
             }
           }
         }
-        orders(first: 10) {
+        orders(first: 30) {
           edges {
             node {
               id,

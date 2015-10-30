@@ -46,7 +46,7 @@
               "args": [
                 {
                   "name": "id",
-                  "description": "it can be either restaurant or user id or null",
+                  "description": "most of the time, the restaurant id",
                   "type": {
                     "kind": "SCALAR",
                     "name": "String",
@@ -1154,18 +1154,7 @@
             {
               "name": "restaurant",
               "description": null,
-              "args": [
-                {
-                  "name": "id",
-                  "description": "the restaurant's rethinkdb's id",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                }
-              ],
+              "args": [],
               "type": {
                 "kind": "OBJECT",
                 "name": "Restaurant",
@@ -1411,6 +1400,33 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "OrderPayload",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "UpdateCard",
+              "description": null,
+              "args": [
+                {
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "UpdateCardInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "UpdateCardPayload",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -2158,12 +2174,132 @@
           "description": null,
           "fields": [
             {
-              "name": "orderEdge",
+              "name": "restaurant",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Restaurant",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "user",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "User",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "orderRestaurantEdge",
               "description": null,
               "args": [],
               "type": {
                 "kind": "OBJECT",
                 "name": "OrderEdge",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "orderUserEdge",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "OrderEdge",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "UpdateCardInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "card",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "InputRestaurant",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "restaurantID",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "UpdateCardPayload",
+          "description": null,
+          "fields": [
+            {
+              "name": "restaurant",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Restaurant",
                 "ofType": null
               },
               "isDeprecated": false,

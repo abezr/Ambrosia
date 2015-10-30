@@ -1,7 +1,7 @@
 import r from 'rethinkdb';
 import co from 'co';
 
-export function getUser(rootValue, id) {
+export function getUser(rootValue) {
   if (!rootValue.cookies.get('userID')) return {
     name: '',
     mail: ''
@@ -14,7 +14,6 @@ export function getUser(rootValue, id) {
       });
     });
     return yield p.then(function(value) {
-      console.log('database:getUser', value);
       if (!value) return {
         mail: '',
         name: ''
@@ -128,7 +127,6 @@ export function getRestaurant(id, rootValue) {
       });
     });
     return yield p.then(function(value) {
-      console.log('database:getRestaurant', id, value);
       var data = value || null;
       return data;
     });
@@ -145,15 +143,18 @@ export function getRestaurants(conn) {
         });
       });
     });
-    return yield p.then(function(value) {
-      console.log('getRestaurant');
-      return value;
-    });
+    return yield p;
   });
 }
-
+/**
+ * [addOrder an user order something => restaurant and user both update]
+ * @param {[string]} restaurantID [description]
+ * @param {[string]} userID       [description]
+ * @param {[object]} order        [description]
+ * @param {[object]} rootValue    [description]
+ * @return {[array]} [array of both changed fields restaurant and user]
+ */
 export function addOrder(restaurantID, userID, order, rootValue) {
-  console.log('database:addOrder', restaurantID, userID, order);
   return co(function*() {
     var p = new Promise(function(resolve, reject) {
       //find a solution to fullfill an agenda
@@ -164,7 +165,7 @@ export function addOrder(restaurantID, userID, order, rootValue) {
         returnChanges: true
       }).run(rootValue.conn, function(err, res) {
         if (err) reject(err);
-        resolve(res.changes[0].new_val);
+        resolve(res.changes[0].new_val.orders);
       });
     });
     var q = new Promise(function(resolve, reject) {
@@ -174,29 +175,22 @@ export function addOrder(restaurantID, userID, order, rootValue) {
         returnChanges: true
       }).run(rootValue.conn, function(err, res) {
         if (err) reject(err);
-        resolve(res.changes[0].new_val);
+        resolve(res.changes[0].new_val.orders);
       });
     });
-    var result = yield [p, q];
-    console.log('database:addOrder', result);
-    return yield p.then(function(value) {
-      return value;
-    });
+    return yield [p, q];
   });
 }
 
 export function getRestaurantOrders(args, rootValue) {
-var endofDay = args.midnightTime + 24*60*60*1000;
-console.log('database:getRestaurantOrders', args.restaurantID);
+//var endofDay = args.midnightTime + 24*60*60*1000;
 return co(function*() {
   var p = new Promise(function(resolve, reject) {
-    r.table('restaurant').get(args.restaurantID)('orders').filter(r.row('date').lt(endofDay).and(r.row("date").gt(args.midnightTime))).orderBy('date').run(rootValue.conn, function(err, res) {
+    r.table('restaurant').get(args.restaurantID)('orders').filter(r.row("date").gt(args.midnightTime)).orderBy('date').run(rootValue.conn, function(err, res) {
         if(err) reject(err);
         resolve(res);
     });
   });
-  var orders = yield p;
-  console.log('database:getRestaurantOrders', orders);
   return yield p;
 });
 }
@@ -209,6 +203,29 @@ export function getUserOrders(userID, rootValue) {
           if (err) reject(err);
           resolve(res);
         });
+      });
+    });
+    return yield p;
+  });
+}
+/**
+ * [updateRestaurantCard function that update restaurant's card]
+ * @param  {[object]} args      [object with id and card value]
+ * @param  {[object]} rootValue [description]
+ * @return {[object]}           [return the updated restaurant object]
+ */
+export function updateRestaurantCard(args, rootValue) {
+  return co(function*() {
+    var p = new Promise(function(resolve, reject) {
+      r.table('restaurant').get(args.restaurantID).update({
+        name: args.card.name,
+        description: args.card.description,
+        foods: args.card.foods
+      }, {
+        returnChanges: true
+      }).run(rootValue.conn, function(err, res) {
+        if (err) reject(err);
+        resolve(res.changes[0].new_val);
       });
     });
     return yield p;

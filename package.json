@@ -25,7 +25,7 @@
     "co-body": "^2.0.0",
     "debug": "^2.2.0",
     "graphql": "0.4.2",
-    "graphql-relay": "^0.3.1",
+    "graphql-relay": "^0.3.4",
     "history": "^1.9.0",
     "koa": "^0.21.0",
     "koa-gql": "^0.1.2",
