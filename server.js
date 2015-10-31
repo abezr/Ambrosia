@@ -131,9 +131,54 @@ server.use(function* (next) {
   yield next;
 });
 
-server.listen(port, () => {
-  console.log('server is listening on ' + port);
+r.connect(config, function(error, conn) {
+  if (error) {
+    console.log('could not connect to rethinkdb');
+    process.exit(1);
+  } else {
+    r.table('user').run(conn, function(err, result) {
+      if (err) {
+        console.log('creating user and restaurant tables');
+        r.dbCreate(config.db).run(conn, function(err, result) {
+          if ((err) && (!err.message.match(/Database `.*` already exists/))) {
+            console.log("Could not create the database `" + config.db + "`");
+            console.log(err);
+            process.exit(1);
+          }
+          console.log('Database `' + config.db + '` created.');
+
+          r.tableCreate('user').run(conn, function(err, result) {
+            if ((err) && (!err.message.match(/Table `.*` already exists/))) {
+              console.log("Could not create the table `users`");
+              console.log(err);
+              process.exit(1);
+            }
+            console.log('Table `users` created.');
+            r.tableCreate('restaurant').run(conn, function(err, result) {
+              if ((err) && (!err.message.match(/Table `.*` already exists/))) {
+                console.log("Could not create the table `users`");
+                console.log(err);
+                process.exit(1);
+              }
+              console.log('Table restaurant created');
+              r.table('restaurant').indexCreate('userID').run(conn, function(err, result) {
+                if(err) console.log(err);
+                conn.close();
+
+              });
+            });
+          });
+        });
+      } else {
+        conn.close();
+        server.listen(port, () => {
+          console.log('server is listening on ' + port);
+        });
+      }
+    });
+  }
 });
+
 
 //require('./rdbConnect');
 

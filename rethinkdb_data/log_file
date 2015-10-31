@@ -33,3 +33,52 @@
 2015-10-28T17:24:39.888235000 2.171889s info: Table 9d560b7d-bc87-4dd0-a5ff-b487081e9b02: Starting a new Raft election for term 2.
 2015-10-28T17:24:40.028885000 2.312540s info: Table 891647fe-69d3-456d-922b-d7d22c688916: This server is Raft leader for term 2. Latest log index is 2.
 2015-10-28T17:24:40.028930000 2.312584s info: Table 9d560b7d-bc87-4dd0-a5ff-b487081e9b02: This server is Raft leader for term 2. Latest log index is 2.
+2015-10-31T17:35:54.357091000 259888.478506s notice: Removing file /Users/belenduchene/Sites/homemade-relay/rethinkdb_data/891647fe-69d3-456d-922b-d7d22c688916
+2015-10-31T17:35:54.604821000 259888.726236s info: Table 891647fe-69d3-456d-922b-d7d22c688916: Deleted the table.
+2015-10-31T17:35:54.775788000 259888.897202s notice: Removing file /Users/belenduchene/Sites/homemade-relay/rethinkdb_data/9d560b7d-bc87-4dd0-a5ff-b487081e9b02
+2015-10-31T17:35:54.966086000 259889.087501s info: Table 9d560b7d-bc87-4dd0-a5ff-b487081e9b02: Deleted the table.
+2015-10-31T17:40:22.075326000 260156.209197s info: Table 3dde50da-2daf-49d2-bbf9-ab59da2841ed: Added replica on this server.
+2015-10-31T17:40:23.111841000 260157.245711s info: Table 3dde50da-2daf-49d2-bbf9-ab59da2841ed: Starting a new Raft election for term 1.
+2015-10-31T17:40:23.327505000 260157.461376s info: Table 3dde50da-2daf-49d2-bbf9-ab59da2841ed: This server is Raft leader for term 1. Latest log index is 0.
+2015-10-31T17:42:27.454009000 260281.593702s notice: Removing file /Users/belenduchene/Sites/homemade-relay/rethinkdb_data/3dde50da-2daf-49d2-bbf9-ab59da2841ed
+2015-10-31T17:42:27.727456000 260281.867149s info: Table 3dde50da-2daf-49d2-bbf9-ab59da2841ed: Deleted the table.
+2015-10-31T17:42:38.759592000 260292.899787s info: Table 53296fd9-6ee1-4d92-b17a-594588c3d121: Added replica on this server.
+2015-10-31T17:42:38.759856000 260292.900041s info: Table 603dc4c1-aba6-453d-9600-74b2ea967fcc: Added replica on this server.
+2015-10-31T17:42:40.000824000 260294.141092s info: Table 53296fd9-6ee1-4d92-b17a-594588c3d121: Starting a new Raft election for term 1.
+2015-10-31T17:42:40.172745000 260294.313013s info: Table 53296fd9-6ee1-4d92-b17a-594588c3d121: This server is Raft leader for term 1. Latest log index is 0.
+2015-10-31T17:42:40.294666000 260294.434934s info: Table 603dc4c1-aba6-453d-9600-74b2ea967fcc: Starting a new Raft election for term 1.
+2015-10-31T17:42:40.332417000 260294.472685s info: Table 603dc4c1-aba6-453d-9600-74b2ea967fcc: This server is Raft leader for term 1. Latest log index is 0.
+2015-10-31T17:42:42.319878000 260296.460228s info: Table 53296fd9-6ee1-4d92-b17a-594588c3d121: Configuration is changing.
+2015-10-31T17:45:29.548743000 260463.696889s notice: Removing file /Users/belenduchene/Sites/homemade-relay/rethinkdb_data/53296fd9-6ee1-4d92-b17a-594588c3d121
+2015-10-31T17:45:29.822839000 260463.970986s info: Table 53296fd9-6ee1-4d92-b17a-594588c3d121: Deleted the table.
+2015-10-31T17:45:30.588714000 260464.736860s notice: Removing file /Users/belenduchene/Sites/homemade-relay/rethinkdb_data/603dc4c1-aba6-453d-9600-74b2ea967fcc
+2015-10-31T17:45:30.853852000 260465.001998s info: Table 603dc4c1-aba6-453d-9600-74b2ea967fcc: Deleted the table.
+2015-10-31T17:45:41.466965000 260475.615604s info: Table d8b061fb-a30e-4534-9ae0-17fb0cc852e7: Added replica on this server.
+2015-10-31T17:45:41.751769000 260475.900408s info: Table 42080e50-68bc-4a29-b669-c65b7b9fcbf9: Added replica on this server.
+2015-10-31T17:45:42.743836000 260476.892557s info: Table d8b061fb-a30e-4534-9ae0-17fb0cc852e7: Starting a new Raft election for term 1.
+2015-10-31T17:45:42.913799000 260477.062520s info: Table d8b061fb-a30e-4534-9ae0-17fb0cc852e7: This server is Raft leader for term 1. Latest log index is 0.
+2015-10-31T17:45:43.569828000 260477.718549s info: Table 42080e50-68bc-4a29-b669-c65b7b9fcbf9: Starting a new Raft election for term 1.
+2015-10-31T17:45:43.677256000 260477.826060s info: Table 42080e50-68bc-4a29-b669-c65b7b9fcbf9: This server is Raft leader for term 1. Latest log index is 0.
+2015-10-31T17:45:47.061201000 260481.210087s info: Table 42080e50-68bc-4a29-b669-c65b7b9fcbf9: Configuration is changing.
+2015-10-31T17:46:21.254259000 260515.404787s notice: Removing file /Users/belenduchene/Sites/homemade-relay/rethinkdb_data/42080e50-68bc-4a29-b669-c65b7b9fcbf9
+2015-10-31T17:46:21.519137000 260515.669666s info: Table 42080e50-68bc-4a29-b669-c65b7b9fcbf9: Deleted the table.
+2015-10-31T17:46:21.681253000 260515.831782s notice: Removing file /Users/belenduchene/Sites/homemade-relay/rethinkdb_data/d8b061fb-a30e-4534-9ae0-17fb0cc852e7
+2015-10-31T17:46:21.872162000 260516.022691s info: Table d8b061fb-a30e-4534-9ae0-17fb0cc852e7: Deleted the table.
+2015-10-31T17:46:34.658013000 260528.809116s info: Table b5098a8c-3b66-46a4-aade-469739b52188: Added replica on this server.
+2015-10-31T17:46:34.767133000 260528.918326s info: Table 60417d9c-07c4-4788-b0e8-3feb9e2c3c7e: Added replica on this server.
+2015-10-31T17:46:35.783572000 260529.934757s info: Table b5098a8c-3b66-46a4-aade-469739b52188: Starting a new Raft election for term 1.
+2015-10-31T17:46:35.954156000 260530.105341s info: Table b5098a8c-3b66-46a4-aade-469739b52188: This server is Raft leader for term 1. Latest log index is 0.
+2015-10-31T17:46:35.957111000 260530.108296s info: Table 60417d9c-07c4-4788-b0e8-3feb9e2c3c7e: Starting a new Raft election for term 1.
+2015-10-31T17:46:36.121802000 260530.272988s info: Table 60417d9c-07c4-4788-b0e8-3feb9e2c3c7e: This server is Raft leader for term 1. Latest log index is 0.
+2015-10-31T17:46:38.410559000 260532.561908s info: Table 60417d9c-07c4-4788-b0e8-3feb9e2c3c7e: Configuration is changing.
+2015-10-31T17:47:40.590270000 260594.744495s notice: Removing file /Users/belenduchene/Sites/homemade-relay/rethinkdb_data/60417d9c-07c4-4788-b0e8-3feb9e2c3c7e
+2015-10-31T17:47:40.799243000 260594.953467s info: Table 60417d9c-07c4-4788-b0e8-3feb9e2c3c7e: Deleted the table.
+2015-10-31T17:47:40.960900000 260595.115124s notice: Removing file /Users/belenduchene/Sites/homemade-relay/rethinkdb_data/b5098a8c-3b66-46a4-aade-469739b52188
+2015-10-31T17:47:41.160034000 260595.314259s info: Table b5098a8c-3b66-46a4-aade-469739b52188: Deleted the table.
+2015-10-31T17:47:53.211078000 260607.365877s info: Table 799c654f-c691-4826-8ce5-e8c9b57e1464: Added replica on this server.
+2015-10-31T17:47:54.945025000 260609.099907s info: Table 799c654f-c691-4826-8ce5-e8c9b57e1464: Starting a new Raft election for term 1.
+2015-10-31T17:47:55.240011000 260609.394893s info: Table 799c654f-c691-4826-8ce5-e8c9b57e1464: This server is Raft leader for term 1. Latest log index is 0.
+2015-10-31T17:47:59.802962000 260613.958090s info: Table 2470cf78-6978-4623-a09a-de35dc51c5d8: Added replica on this server.
+2015-10-31T17:48:01.506185000 260615.661395s info: Table 2470cf78-6978-4623-a09a-de35dc51c5d8: Starting a new Raft election for term 1.
+2015-10-31T17:48:01.663227000 260615.818437s info: Table 2470cf78-6978-4623-a09a-de35dc51c5d8: This server is Raft leader for term 1. Latest log index is 0.
+2015-10-31T17:48:03.360159000 260617.515451s info: Table 2470cf78-6978-4623-a09a-de35dc51c5d8: Configuration is changing.

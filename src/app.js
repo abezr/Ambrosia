@@ -47556,7 +47556,7 @@
 	
 	    this._close = function () {
 	      console.log('close');
-	      _this.props.history.goBack();
+	      _this.props.history.pushState({}, '/');
 	    };
 	
 	    this._login = function (e) {
@@ -47564,6 +47564,7 @@
 	      var onSuccess = function onSuccess(_ref) {
 	        var Login = _ref.Login;
 	
+	        _this.props.history.pushState({}, _this.props.location.state.previousPath);
 	        console.log('Mutation successful!');
 	        //loginRequest(Login.user);
 	      };
@@ -47588,6 +47589,17 @@
 	
 	    this._signup = function (e) {
 	      e.preventDefault();
+	      var onSuccess = function onSuccess(_ref2) {
+	        var Login = _ref2.Login;
+	
+	        console.log('Mutation successful!');
+	        _this.props.location.state ? _this.props.history.pushState({}, _this.props.location.state.previousPath) : _this.props.history.goBack();
+	        //loginRequest(Login.user);
+	      };
+	      var onFailure = function onFailure(transaction) {
+	        var error = transaction.getError() || new Error('Mutation failed.');
+	        console.error(error);
+	      };
 	      var details = {};
 	      details.form = e.target.id;
 	      var el = e.target.getElementsByTagName('INPUT');
@@ -47597,7 +47609,8 @@
 	        }
 	      }
 	      if (!(0, _validate2['default'])(details)) {
-	        _reactRelay2['default'].Store.update(new _mutationsSignupmutation2['default']({ credentials: details, user: _this.props.user.user }));
+	        console.log(_this.props.user.user.id);
+	        _reactRelay2['default'].Store.update(new _mutationsSignupmutation2['default']({ credentials: details, user: _this.props.user.user }), { onFailure: onFailure, onSuccess: onSuccess });
 	      } else {
 	        _this.setState({ errors: details.errors });
 	      }
@@ -49258,6 +49271,10 @@
 	        return new GraphQL.QueryFragment('Signupmutation', 'SignupPayload', [new GraphQL.Field('user', [new GraphQL.Field('id', null, null, null, null, null, {
 	          'parentType': 'User',
 	          'requisite': true
+	        }), new GraphQL.Field('userID', null, null, null, null, null, {
+	          'parentType': 'User'
+	        }), new GraphQL.Field('name', null, null, null, null, null, {
+	          'parentType': 'User'
 	        }), new GraphQL.Field('mail', null, null, null, null, null, {
 	          'parentType': 'User'
 	        })], null, null, null, null, {
@@ -49457,6 +49474,8 @@
 	var midnightTime;
 	var time;
 	var setVariables;
+	//type[string] id returned by setInterval to pass to clearInterval
+	var intervalID;
 	
 	var Board = (function (_React$Component) {
 	  _inherits(Board, _React$Component);
@@ -49477,12 +49496,18 @@
 	      time = new Date().getTime();
 	      _this.forceUpdate();
 	    };
-	    setInterval(updateTime, 1000);
+	    intervalID = setInterval(updateTime, 1000);
 	  }
 	
 	  _createClass(Board, [{
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      clearInterval(intervalID);
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      console.log('render');
 	      var orders = this.props.restaurant.restaurant.orders.edges;
 	      return _react2['default'].createElement(
 	        'div',
@@ -50038,7 +50063,6 @@
 	var card = {
 	  name: 'Your restaurant\'s name',
 	  description: 'Describe your restaurant',
-	  orders: [],
 	  foods: [{
 	    id: '_' + Math.random().toString(36).substr(2, 9),
 	    name: 'the food\'s name',
@@ -50083,50 +50107,42 @@
 	      });
 	    };
 	
-	    this._switchName = function (e) {
-	      console.log('switchName');
-	      e.stopPropagation();
-	      _this.setState({ input: { name: !_this.state.input.name } });
-	      _this.refs.input.focus(); // can't focus display:none element...
-	    };
-	
-	    this._switchDescription = function (e) {
-	      console.log('switchDesrcription');
-	      e.stopPropagation();
-	      _this.setState({ input: { description: !_this.state.input.description } });
-	    };
-	
-	    this._nameChange = function (e) {
-	      card.name = e.target.value;
-	    };
-	
-	    this._descriptionChange = function (e) {
-	      card.description = e.target.value;
-	    };
-	
-	    this._onKeyDown = function (e) {
-	      console.log(e.keyCode);
-	      if (e.keyCode === 13 || e.keyCode === 27) updateClass();
-	    };
-	
 	    this._restaurantMutation = function () {
-	      var resto = {
-	        name: _this.state.name,
-	        description: _this.state.description,
-	        foods: _this.state.foods
+	      console.log('Start:restaurantMutation');
+	      var onSuccess = function onSuccess(restaurant) {
+	        //this.props.history.pushState({}, '/board/'+);
+	        console.log('Mutation successful!', restaurant);
+	        //loginRequest(Login.user);
 	      };
-	      _reactRelay2['default'].Store.update(new _mutationsRestaurantmutation2['default']({ restaurant: resto, user: _this.props.user.user }));
+	      var onFailure = function onFailure(transaction) {
+	        var error = transaction.getError() || new Error('Mutation failed.');
+	        console.error(error);
+	      };
+	      _reactRelay2['default'].Store.update(new _mutationsRestaurantmutation2['default']({ restaurant: card, user: _this.props.user.user }), { onFailure: onFailure, onSuccess: onSuccess });
+	    };
+	
+	    this._onChange = function (e) {
+	      console.log('onChange');
+	      card[e.target.id] = e.target.value;
+	      updateClass();
 	    };
 	
 	    console.log('constructor');
 	    this.state = card;
-	    this.state.input = { name: false, description: false };
 	    updateClass = function () {
 	      _this.setState(card);
 	    };
 	  }
 	
 	  _createClass(Start, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      if (!this.props.user.user.userID) {
+	        console.log('Start:ComponentDidMount');
+	        this.props.history.pushState({ previousPath: '/start' }, '/register');
+	      }
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      console.log(card);
@@ -50141,20 +50157,14 @@
 	          { className: 'brand' },
 	          _react2['default'].createElement(
 	            'h1',
-	            { className: (0, _classnames2['default'])('name', { 'hidden': this.state.input.name }), onClick: this._switchName },
-	            this.state.name
+	            { className: 'name' },
+	            _react2['default'].createElement('input', { type: 'text', id: 'name', value: this.state.name, onChange: this._onChange })
 	          ),
-	          _react2['default'].createElement('input', { ref: 'input', onChange: this._nameChange, onKeyDown: this._onKeyDown, className: (0, _classnames2['default'])('name', { 'hidden': !this.state.input.name }), id: 'name', type: 'text', onClick: function (e) {
-	              return e.stopPropagation();
-	            } }),
 	          _react2['default'].createElement(
 	            'h2',
-	            { className: (0, _classnames2['default'])('description', { 'hidden': this.state.input.description }), onClick: this._switchDescription },
-	            this.state.description
-	          ),
-	          _react2['default'].createElement('textarea', { ref: 'textarea', onChange: this._descriptionChange, onKeyDown: this._onKeyDown, className: (0, _classnames2['default'])('description', { 'hidden': !this.state.input.description }), id: 'description', onClick: function (e) {
-	              return e.stopPropagation();
-	            } })
+	            { className: 'description' },
+	            _react2['default'].createElement('textarea', { type: 'text', id: 'description', value: this.state.description, onChange: this._onChange })
+	          )
 	        ),
 	        _react2['default'].createElement(
 	          'div',
@@ -50212,38 +50222,14 @@
 	      _this2.setState({ expand: !_this2.state.expand });
 	    };
 	
-	    this._switchName = function (e) {
-	      console.log('switchName');
-	      e.stopPropagation();
-	      _this2.setState({ input: { name: !_this2.state.input.name } });
-	      _this2.refs.input.focus(); // can't focus display:none element...
-	    };
-	
-	    this._switchDescription = function (e) {
-	      console.log('switchDesrcription');
-	      e.stopPropagation();
-	      _this2.setState({ input: { description: !_this2.state.input.description } });
-	    };
-	
-	    this._nameChange = function (e) {
-	      console.log(e.target.value, _this2.props.index);
-	      card.foods[_this2.props.index].name = e.target.value;
-	      updateClass();
-	    };
-	
-	    this._descriptionChange = function (e) {
-	      card.foods[_this2.props.index].description = e.target.value;
-	      updateClass();
-	    };
-	
-	    this._onKeyDown = function (e) {
-	      console.log(e.keyCode);
-	      if (e.keyCode === 13 || e.keyCode === 27) e.target.id === 'name' ? _this2._switchName(e) : _this2._switchDescription(e);
-	    };
-	
 	    this._close = function () {
 	      console.log('close');
 	      card.foods.splice(_this2.props.index, 1);
+	      updateClass();
+	    };
+	
+	    this._onChange = function (e) {
+	      card.foods[_this2.props.index][e.target.id] = e.target.value;
 	      updateClass();
 	    };
 	
@@ -50267,21 +50253,11 @@
 	        'div',
 	        { className: 'food flex-item-2', onClick: this._switchExpand },
 	        _react2['default'].createElement('span', { className: 'close', onClick: this._close }),
-	        _react2['default'].createElement(
-	          'span',
-	          { className: (0, _classnames2['default'])('name', { 'hidden': this.state.input.name }), onClick: this._switchName },
-	          food.name
-	        ),
-	        _react2['default'].createElement('input', { ref: 'input', onChange: this._nameChange, onKeyDown: this._onKeyDown, className: (0, _classnames2['default'])('name', { 'hidden': !this.state.input.name }), id: 'name', type: 'text', onClick: function (e) {
+	        _react2['default'].createElement('input', { id: 'name', type: 'text', value: this.props.name, onChange: this._onChange, onClick: function (e) {
 	            return e.stopPropagation();
 	          } }),
 	        _react2['default'].createElement('br', null),
-	        _react2['default'].createElement(
-	          'span',
-	          { className: (0, _classnames2['default'])('description', { 'hidden': this.state.input.description }), onClick: this._switchDescription },
-	          food.description
-	        ),
-	        _react2['default'].createElement('textarea', { ref: 'textarea', onChange: this._descriptionChange, onKeyDown: this._onKeyDown, className: (0, _classnames2['default'])('description', { 'hidden': !this.state.input.description }), id: 'description', onClick: function (e) {
+	        _react2['default'].createElement('input', { id: 'description', type: 'text', value: this.props.description, onChange: this._onChange, onClick: function (e) {
 	            return e.stopPropagation();
 	          } }),
 	        _react2['default'].createElement(
@@ -50311,67 +50287,14 @@
 	
 	    _get(Object.getPrototypeOf(Meal.prototype), 'constructor', this).call(this, props, context);
 	
-	    this._closeInputs = function () {
-	      for (var key in _this4.state.input) {
-	        _this4.state.input[key] = false;
-	      }
-	      _this4.forceUpdate();
-	    };
-	
-	    this._switchName = function (e) {
-	      console.log('switchName');
-	      e.stopPropagation();
-	      _this4.setState({ input: { name: !_this4.state.input.name } });
-	      _this4.refs.input.focus(); // can't focus display:none element...
-	    };
-	
-	    this._switchDescription = function (e) {
-	      e.stopPropagation();
-	      _this4.setState({ input: { description: !_this4.state.input.description } });
-	    };
-	
-	    this._switchPrice = function (e) {
-	      e.stopPropagation();
-	      _this4.setState({ input: { price: !_this4.state.input.price } });
-	    };
-	
-	    this._switchTime = function (e) {
-	      e.stopPropagation();
-	      _this4.setState({ input: { time: !_this4.state.input.time } });
-	    };
-	
-	    this._nameChange = function (e) {
-	      console.log('nameChange');
-	      card.foods[_this4.props.parentIndex].meals[_this4.props.index].name = e.target.value;
-	      updateClass();
-	    };
-	
-	    this._descriptionChange = function (e) {
-	      console.log('descriptionChange');
-	      card.foods[_this4.props.parentIndex].meals[_this4.props.index].description = e.target.value;
-	      updateClass();
-	    };
-	
-	    this._priceChange = function (e) {
-	      console.log('priceChange');
-	      card.foods[_this4.props.parentIndex].meals[_this4.props.index].price = Math.abs(e.target.value);
-	      updateClass();
-	    };
-	
-	    this._timeChange = function (e) {
-	      console.log('timeChange');
-	      card.foods[_this4.props.parentIndex].meals[_this4.props.index].time = Math.abs(e.target.value);
-	      updateClass();
-	    };
-	
-	    this._onKeyDown = function (e) {
-	      console.log(e.keyCode);
-	      if (e.keyCode === 13 || e.keyCode === 27) _this4._closeInputs();
-	    };
-	
 	    this._close = function (e) {
 	      e.stopPropagation();
 	      card.foods[_this4.props.parentIndex].meals.splice(_this4.props.index, 1);
+	      updateClass();
+	    };
+	
+	    this._onChange = function (e) {
+	      card.foods[_this4.props.parentIndex].meals[_this4.props.index][e.target.id] = e.target.type === 'number' ? Math.abs(e.target.value) : e.target.value;
 	      updateClass();
 	    };
 	
@@ -50389,43 +50312,21 @@
 	        'div',
 	        { className: 'meal flex-item-2' },
 	        _react2['default'].createElement('span', { className: 'close', onClick: this._close }),
-	        _react2['default'].createElement(
-	          'span',
-	          { className: (0, _classnames2['default'])('name', { 'hidden': this.state.input.name }), onClick: this._switchName },
-	          food.name
-	        ),
-	        _react2['default'].createElement('input', { ref: 'input', onChange: this._nameChange, onKeyDown: this._onKeyDown, className: (0, _classnames2['default'])({ 'hidden': !this.state.input.name }), id: 'name', type: 'text', onClick: function (e) {
+	        _react2['default'].createElement('input', { type: 'text', id: 'name', value: this.props.name, onChange: this._onChange, onClick: function (e) {
 	            return e.stopPropagation();
 	          } }),
 	        _react2['default'].createElement('br', null),
-	        _react2['default'].createElement(
-	          'span',
-	          { className: (0, _classnames2['default'])('description', { 'hidden': this.state.input.description }), onClick: this._switchDescription },
-	          food.description
-	        ),
-	        _react2['default'].createElement('textarea', { ref: 'textarea', onChange: this._descriptionChange, onKeyDown: this._onKeyDown, className: (0, _classnames2['default'])({ 'hidden': !this.state.input.description }), id: 'description', onClick: function (e) {
+	        _react2['default'].createElement('input', { type: 'text', id: 'description', value: this.props.description, onChange: this._onChange, onClick: function (e) {
 	            return e.stopPropagation();
 	          } }),
 	        _react2['default'].createElement('br', null),
-	        _react2['default'].createElement(
-	          'span',
-	          { className: (0, _classnames2['default'])('price', { 'hidden': this.state.input.price }), onClick: this._switchPrice, min: '0' },
-	          food.price,
-	          ' mɃ'
-	        ),
-	        _react2['default'].createElement('input', { className: (0, _classnames2['default'])('price', { 'hidden': !this.state.input.price }), onChange: this._priceChange, onKeyDown: this._onKeyDown, onClick: function (e) {
+	        _react2['default'].createElement('input', { type: 'number', id: 'price', value: this.props.price, onChange: this._onChange, onClick: function (e) {
 	            return e.stopPropagation();
-	          }, type: 'number' }),
+	          } }),
 	        _react2['default'].createElement('br', null),
-	        _react2['default'].createElement(
-	          'span',
-	          { className: (0, _classnames2['default'])('time', { 'hidden': this.state.input.time }), onClick: this._switchTime, min: '0' },
-	          food.time,
-	          ' min'
-	        ),
-	        _react2['default'].createElement('input', { className: (0, _classnames2['default'])('time', { 'hidden': !this.state.input.time }), onChange: this._timeChange, onKeyDown: this._onKeyDown, onClick: function (e) {
+	        _react2['default'].createElement('input', { type: 'number', id: 'time', value: this.props.time, onChange: this._onChange, onClick: function (e) {
 	            return e.stopPropagation();
-	          }, type: 'number' })
+	          } })
 	      );
 	    }
 	  }]);
@@ -50445,6 +50346,35 @@
 	          'requisite': true
 	        }), new GraphQL.Field('userID', null, null, null, null, null, {
 	          'parentType': 'User'
+	        }), new GraphQL.Field('restaurants', [new GraphQL.Field('edges', [new GraphQL.Field('node', [new GraphQL.Field('id', null, null, null, null, null, {
+	          'parentType': 'Restaurant',
+	          'requisite': true
+	        })], null, null, null, null, {
+	          'parentType': 'RestaurantEdge',
+	          'requisite': true
+	        }), new GraphQL.Field('cursor', null, null, null, null, null, {
+	          'parentType': 'RestaurantEdge',
+	          'generated': true,
+	          'requisite': true
+	        })], null, null, null, null, {
+	          'parentType': 'RestaurantConnection',
+	          'plural': true
+	        }), new GraphQL.Field('pageInfo', [new GraphQL.Field('hasNextPage', null, null, null, null, null, {
+	          'parentType': 'PageInfo',
+	          'generated': true,
+	          'requisite': true
+	        }), new GraphQL.Field('hasPreviousPage', null, null, null, null, null, {
+	          'parentType': 'PageInfo',
+	          'generated': true,
+	          'requisite': true
+	        })], null, null, null, null, {
+	          'parentType': 'RestaurantConnection',
+	          'generated': true,
+	          'requisite': true
+	        })], null, null, null, null, {
+	          'parentType': 'User',
+	          'connection': true,
+	          'nonFindable': true
 	        })], [_reactRelay2['default'].QL.__frag(sub_0)], null, null, null, {
 	          'parentType': 'Root'
 	        })]);
@@ -57406,7 +57336,7 @@
 	
 	
 	// module
-	exports.push([module.id, "div.modal {\n  display: flex;\n  flex-flow: row nowrap;\n  justify-content: center;\n  position: absolute;\n  top: 0;\n  text-align: center;\n  height: 100%;\n  width: 100%;\n  background-color: rgba(10, 10, 10, 0.9); }\n  div.modal div.form {\n    align-self: center;\n    transform-origin: center;\n    border: 2px solid;\n    color: white;\n    padding: 4em; }\n  div.modal span.close-icon {\n    position: absolute;\n    top: 0;\n    width: 4em;\n    height: 4em;\n    top: 1em;\n    right: 1em;\n    background-image: url(\"/stylesheets/icons/close-white.svg\"); }\n    div.modal span.close-icon:hover {\n      border: 2px solid; }\n  div.modal input#submit {\n    font-size: 1em;\n    color: white;\n    background-color: black;\n    padding: 0.5em;\n    border: 2px solid;\n    font-family: inherit;\n    border-radius: 10px; }\n    div.modal input#submit:hover {\n      color: black;\n      background-color: white; }\n  div.modal input {\n    font-size: 1em;\n    color: white;\n    background-color: rgba(10, 10, 10, 0);\n    border: 2px solid;\n    font-family: inherit; }\n  div.modal div.question {\n    margin: 2em;\n    padding: 0.5em; }\n    div.modal div.question:hover {\n      cursor: default;\n      color: black;\n      background-color: white;\n      border-radius: 10px; }\n  div.modal div.log {\n    margin: 1em; }\n  div.modal div.social {\n    cursor: default;\n    border: 2px solid blue;\n    padding: 0.5em;\n    border-radius: 10px; }\n    div.modal div.social:hover {\n      color: black;\n      background-color: white; }\n\nbody {\n  font-family: 'Osaka'; }\n\n.nav, .nav-wrap {\n  display: flex;\n  flex-flow: row nowrap;\n  justify-content: flex-start; }\n\n.nav-wrap {\n  flex-wrap: wrap; }\n\n.flex-item-1 {\n  flex-grow: 1;\n  flex-shrink: 1;\n  flex-basis: auto; }\n\n.title {\n  font-size: 3em;\n  font-family: inherit; }\n\n.flex-item-2, div.modal div.form {\n  margin: 1em;\n  order: 2;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-3 {\n  margin: 1em;\n  order: 3;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-4 {\n  margin: 1em;\n  order: 4;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-5 {\n  margin: 1em;\n  order: 5;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-6 {\n  margin: 1em;\n  order: 6;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-7 {\n  margin: 1em;\n  order: 7;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-8 {\n  margin: 1em;\n  order: 8;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-9 {\n  margin: 1em;\n  order: 9;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-10 {\n  margin: 1em;\n  order: 10;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\nspan.submit {\n  cursor: default;\n  border-radius: 10px;\n  bottom: 1em;\n  right: 1em;\n  font-size: 1em;\n  position: absolute;\n  padding: 1em;\n  background-color: rgba(0, 0, 0, 0.83);\n  color: white; }\n  span.submit:hover {\n    color: black;\n    background-color: white;\n    border: 1px solid; }\n\nspan.plus {\n  cursor: default;\n  margin: 1em;\n  border-radius: 5px;\n  border: 1px solid black;\n  padding: 0.25em; }\n  span.plus:hover {\n    background-color: black;\n    color: white;\n    border: 1px solid white; }\n\nspan.close {\n  position: absolute;\n  width: 1.5em;\n  height: 1.5em;\n  top: 0.5em;\n  right: 0.5em;\n  background-image: url(\"/stylesheets/icons/close-black.svg\"); }\n  span.close:hover {\n    border: 1px solid; }\n\ndiv.openarestaurant {\n  text-align: center; }\n  div.openarestaurant div.brand {\n    margin-top: 3em;\n    text-align: center; }\n    div.openarestaurant div.brand span.name {\n      cursor: default; }\n      div.openarestaurant div.brand span.name:hover {\n        border: 1px solid;\n        padding: 0.1em; }\n    div.openarestaurant div.brand span.description {\n      cursor: default; }\n      div.openarestaurant div.brand span.description:hover {\n        border: 1px solid;\n        padding: 0.1em; }\n    div.openarestaurant div.brand input#name {\n      font-size: 1em;\n      margin: 1em; }\n    div.openarestaurant div.brand textarea#description {\n      font-size: 1em;\n      margin: 1em;\n      width: 50%;\n      height: 4em; }\n  div.openarestaurant .food {\n    cursor: default;\n    position: relative;\n    border-radius: 10px;\n    padding: 1em;\n    border: 3px solid; }\n    div.openarestaurant .food .description {\n      margin: 1em; }\n    div.openarestaurant .food .name {\n      font-size: 1.5em; }\n    div.openarestaurant .food input {\n      font-size: 1em; }\n    div.openarestaurant .food textarea#description {\n      font-size: 1em; }\n    div.openarestaurant .food span.plus {\n      position: absolute;\n      margin: 0;\n      top: 0.5em;\n      left: 0.5em; }\n    div.openarestaurant .food .meals {\n      border-top: 1px solid;\n      cursor: default;\n      padding: 1em; }\n      div.openarestaurant .food .meals .meal {\n        margin: 0;\n        padding: 1em;\n        position: relative;\n        max-width: 20em; }\n        div.openarestaurant .food .meals .meal span.close {\n          position: absolute;\n          width: 1.5em;\n          height: 1.5em;\n          top: 0;\n          right: 0;\n          background-image: url(\"/stylesheets/icons/close-black.svg\"); }\n          div.openarestaurant .food .meals .meal span.close:hover {\n            border: 1px solid; }\n        div.openarestaurant .food .meals .meal .name {\n          font-size: 1.5em; }\n\ndiv.restaurant-list .restaurant {\n  position: relative;\n  padding: 1em;\n  margin: auto;\n  width: 90%;\n  border: 1px solid;\n  margin-bottom: 1em; }\n  div.restaurant-list .restaurant .order-button {\n    font-size: 1.5em;\n    border: 3px solid;\n    position: absolute;\n    top: 0.5em;\n    right: 0.5em;\n    padding: 0.5em;\n    border-radius: 10px;\n    cursor: default;\n    color: black;\n    text-decoration: none; }\n    div.restaurant-list .restaurant .order-button:hover {\n      color: white;\n      background-color: black; }\n  div.restaurant-list .restaurant .restaurant-name {\n    cursor: default;\n    font-size: 1.5em; }\n  div.restaurant-list .restaurant .restaurant-description {\n    cursor: default; }\n  div.restaurant-list .restaurant .foods {\n    margin: 1em; }\n    div.restaurant-list .restaurant .foods .food-name {\n      font-size: 1.5em; }\n    div.restaurant-list .restaurant .foods .meals {\n      padding: 1em;\n      margin: 1em;\n      border: 1px solid; }\n      div.restaurant-list .restaurant .foods .meals .meal {\n        padding-bottom: 1em; }\n  div.restaurant-list .restaurant .food {\n    flex-grow: 0;\n    flex-shrink: 1;\n    flex-basis: auto;\n    align-self: center; }\n\ndiv.shop {\n  text-align: center; }\n  div.shop .modal-order {\n    position: absolute;\n    top: 0;\n    height: 100%;\n    width: 100%;\n    align-items: center;\n    justify-content: center; }\n    div.shop .modal-order .order {\n      background-color: white;\n      position: relative;\n      border: 3px solid;\n      padding: 2em; }\n      div.shop .modal-order .order .close {\n        position: absolute;\n        background-image: url(\"/stylesheets/icons/close-black.svg\");\n        width: 1.5em;\n        height: 1.5em;\n        top: 0.5em;\n        right: 0.5em; }\n        div.shop .modal-order .order .close:hover {\n          border: 1px solid; }\n      div.shop .modal-order .order .price {\n        text-align: left;\n        margin: 1em; }\n      div.shop .modal-order .order .item {\n        margin: 0;\n        padding: 1em;\n        border: 1px solid; }\n      div.shop .modal-order .order .pay {\n        cursor: default;\n        position: absolute;\n        padding: 0.5em;\n        border-radius: 10px;\n        right: 1em;\n        bottom: 1em;\n        border: 1px solid; }\n      div.shop .modal-order .order .nopay {\n        cursor: default;\n        position: absolute;\n        padding: 0.5em;\n        border-radius: 10px;\n        left: 1em;\n        bottom: 1em;\n        border: 1px solid; }\n  div.shop .caddy {\n    position: fixed;\n    bottom: 0; }\n    div.shop .caddy .item {\n      padding: 1em;\n      border-right: 1px solid;\n      margin: 0; }\n    div.shop .caddy .command {\n      padding: 2em;\n      border: 1px solid;\n      border-radius: 10px; }\n      div.shop .caddy .command:hover {\n        background-color: black;\n        color: white; }\n  div.shop .food {\n    cursor: default;\n    border-radius: 10px;\n    padding: 1em;\n    border: 3px solid; }\n    div.shop .food .description {\n      margin: 1em; }\n    div.shop .food .name {\n      font-size: 1.5em; }\n    div.shop .food .meals {\n      border-top: 1px solid; }\n      div.shop .food .meals .meal {\n        cursor: default;\n        padding: 1em; }\n        div.shop .food .meals .meal .name {\n          font-size: 1.5em; }\n        div.shop .food .meals .meal:hover {\n          background-color: black;\n          color: white; }\n\n.timepicker {\n  display: flex;\n  flex-flow: row nowrap;\n  justify-content: center; }\n  .timepicker span.inc-plus {\n    cursor: pointer; }\n  .timepicker span.inc-less {\n    cursor: pointer; }\n  .timepicker input {\n    width: 2em;\n    font-size: 1em; }\n\ndiv.profile {\n  position: relative;\n  padding: 2em; }\n  div.profile img {\n    width: 15em;\n    height: 15em; }\n  div.profile div.save {\n    position: absolute;\n    top: 0;\n    right: 0; }\n  div.profile div.restaurants-list {\n    border: 1px solid; }\n    div.profile div.restaurants-list .restaurant {\n      cursor: default;\n      color: black;\n      text-decoration: none;\n      display: block;\n      padding: 0.5em;\n      border-bottom: 1px solid; }\n      div.profile div.restaurants-list .restaurant:hover {\n        font-size: 1.5em; }\n    div.profile div.restaurants-list .last-restaurant {\n      cursor: default;\n      text-decoration: none;\n      color: black;\n      display: block;\n      padding: 0.5em; }\n      div.profile div.restaurants-list .last-restaurant:hover {\n        font-size: 1.5em; }\n  div.profile div.orders-list {\n    border: 1px solid;\n    padding: 0.5em; }\n    div.profile div.orders-list .last-order, div.profile div.orders-list .order {\n      position: relative; }\n      div.profile div.orders-list .last-order .price, div.profile div.orders-list .order .price {\n        position: absolute;\n        top: 0;\n        right: 0; }\n    div.profile div.orders-list .order {\n      border-bottom: 1px solid; }\n  div.profile .item {\n    padding: 0.5em; }\n  div.profile h1 input, div.profile h2 input {\n    width: 100%;\n    font-size: inherit;\n    font-style: inherit;\n    border: none; }\n\ndiv.board div.nav a, div.board div.nav-wrap a {\n  text-decoration: none;\n  color: black;\n  font-size: 1.5em;\n  padding: 0.5em;\n  cursor: default; }\n  div.board div.nav a:hover, div.board div.nav-wrap a:hover {\n    border: 1px solid;\n    border-radius: 10px; }\n\ndiv.board div.dashboard {\n  position: relative; }\n  div.board div.dashboard div.order {\n    border: 1px solid;\n    margin: 1em;\n    text-align: center; }\n    div.board div.dashboard div.order h1 {\n      margin: 0; }\n      div.board div.dashboard div.order h1 span.price {\n        float: right; }\n      div.board div.dashboard div.order h1 span.time {\n        float: left; }\n\ndiv.board div.timeline {\n  text-align: center; }\n  div.board div.timeline span.play {\n    margin: 0.5em auto;\n    float: left;\n    width: 2em;\n    height: 2em;\n    background-image: url(\"/stylesheets/icons/play.svg\"); }\n  div.board div.timeline span.time {\n    font-size: 2em; }\n  div.board div.timeline span.pause {\n    margin: 0.5em;\n    float: left;\n    width: 2em;\n    height: 2em;\n    background-image: url(\"/stylesheets/icons/pause.svg\"); }\n\n.selected {\n  border: 1px solid;\n  border-radius: 10px; }\n\ndiv.card input {\n  border: none;\n  font-size: inherit;\n  text-align: center;\n  margin: 0; }\n\ndiv.card div.food {\n  position: relative;\n  text-align: center;\n  font-size: 1.5em;\n  padding: 1em;\n  border: 3px solid;\n  border-radius: 10px; }\n  div.card div.food span.plus {\n    position: absolute;\n    top: 0.25em;\n    left: 0.25em; }\n\ndiv.card div.brand {\n  text-align: center; }\n  div.card div.brand h1 {\n    margin: 0.5em; }\n  div.card div.brand h2 {\n    margin: 0.5em; }\n\ndiv.card div.nav a, div.card div.nav-wrap a {\n  text-decoration: none;\n  color: black;\n  font-size: 1.5em;\n  padding: 0.5em;\n  cursor: default; }\n  div.card div.nav a:hover, div.card div.nav-wrap a:hover {\n    border: 1px solid;\n    border-radius: 10px; }\n\n.text-center {\n  text-align: center; }\n\n.close-icon {\n  background-image: url(\"/stylesheets/icons/close-black.svg\");\n  height: 1em;\n  width: 1em;\n  position: absolute; }\n  .close-icon:hover {\n    border: 1px solid; }\n\nbody {\n  margin: 0; }\n\nsection {\n  background-color: yellow;\n  border: 1px solid;\n  position: relative; }\n  section .close-icon {\n    right: 1em;\n    top: 1em; }\n\nnav.nav-brand {\n  border-bottom: 1px solid; }\n  nav.nav-brand a {\n    padding: 1em;\n    padding: 0.5;\n    border-radius: 10px;\n    cursor: default;\n    color: black;\n    text-decoration: none; }\n    nav.nav-brand a:hover {\n      color: white;\n      background-color: black; }\n  nav.nav-brand div.title a {\n    padding: 0.25em; }\n  nav.nav-brand div.session {\n    position: relative; }\n    nav.nav-brand div.session .menu {\n      border-left: 1px solid;\n      border-bottom: 1px solid;\n      border-right: 1px solid;\n      width: 100%;\n      position: absolute;\n      background-color: white;\n      z-index: 1; }\n      nav.nav-brand div.session .menu .profile-link {\n        margin: 1em; }\n        nav.nav-brand div.session .menu .profile-link a {\n          margin-top: 2em;\n          width: 100%; }\n      nav.nav-brand div.session .menu .button {\n        margin: 1em; }\n\n.button {\n  padding: 1em;\n  display: inline-block;\n  padding: 0.5;\n  border-radius: 10px;\n  cursor: default;\n  color: black;\n  text-decoration: none; }\n  .button:hover {\n    color: white;\n    background-color: black; }\n\n.hidden {\n  display: none; }\n", ""]);
+	exports.push([module.id, "div.modal {\n  display: flex;\n  flex-flow: row nowrap;\n  justify-content: center;\n  position: absolute;\n  top: 0;\n  text-align: center;\n  height: 100%;\n  width: 100%;\n  background-color: rgba(10, 10, 10, 0.9); }\n  div.modal div.form {\n    align-self: center;\n    transform-origin: center;\n    border: 2px solid;\n    color: white;\n    padding: 4em; }\n  div.modal span.close-icon {\n    position: absolute;\n    top: 0;\n    width: 4em;\n    height: 4em;\n    top: 1em;\n    right: 1em;\n    background-image: url(\"/stylesheets/icons/close-white.svg\"); }\n    div.modal span.close-icon:hover {\n      border: 2px solid; }\n  div.modal input#submit {\n    font-size: 1em;\n    color: white;\n    background-color: black;\n    padding: 0.5em;\n    border: 2px solid;\n    font-family: inherit;\n    border-radius: 10px; }\n    div.modal input#submit:hover {\n      color: black;\n      background-color: white; }\n  div.modal input {\n    font-size: 1em;\n    color: white;\n    background-color: rgba(10, 10, 10, 0);\n    border: 2px solid;\n    font-family: inherit; }\n  div.modal div.question {\n    margin: 2em;\n    padding: 0.5em; }\n    div.modal div.question:hover {\n      cursor: default;\n      color: black;\n      background-color: white;\n      border-radius: 10px; }\n  div.modal div.log {\n    margin: 1em; }\n  div.modal div.social {\n    cursor: default;\n    border: 2px solid blue;\n    padding: 0.5em;\n    border-radius: 10px; }\n    div.modal div.social:hover {\n      color: black;\n      background-color: white; }\n\nbody {\n  font-family: 'Osaka'; }\n\n.nav, .nav-wrap {\n  display: flex;\n  flex-flow: row nowrap;\n  justify-content: flex-start; }\n\n.nav-wrap {\n  flex-wrap: wrap; }\n\n.flex-item-1 {\n  flex-grow: 1;\n  flex-shrink: 1;\n  flex-basis: auto; }\n\n.title {\n  font-size: 3em;\n  font-family: inherit; }\n\n.flex-item-2, div.modal div.form {\n  margin: 1em;\n  order: 2;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-3 {\n  margin: 1em;\n  order: 3;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-4 {\n  margin: 1em;\n  order: 4;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-5 {\n  margin: 1em;\n  order: 5;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-6 {\n  margin: 1em;\n  order: 6;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-7 {\n  margin: 1em;\n  order: 7;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-8 {\n  margin: 1em;\n  order: 8;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-9 {\n  margin: 1em;\n  order: 9;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-10 {\n  margin: 1em;\n  order: 10;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\nspan.submit {\n  cursor: default;\n  border-radius: 10px;\n  bottom: 1em;\n  right: 1em;\n  font-size: 1em;\n  position: absolute;\n  padding: 1em;\n  background-color: rgba(0, 0, 0, 0.83);\n  color: white; }\n  span.submit:hover {\n    color: black;\n    background-color: white;\n    border: 1px solid; }\n\nspan.plus {\n  cursor: default;\n  margin: 1em;\n  border-radius: 5px;\n  border: 1px solid black;\n  padding: 0.25em; }\n  span.plus:hover {\n    background-color: black;\n    color: white;\n    border: 1px solid white; }\n\nspan.close {\n  position: absolute;\n  width: 1.5em;\n  height: 1.5em;\n  top: 0.5em;\n  right: 0.5em;\n  background-image: url(\"/stylesheets/icons/close-black.svg\"); }\n  span.close:hover {\n    border: 1px solid; }\n\ndiv.openarestaurant {\n  text-align: center; }\n  div.openarestaurant input {\n    border: none;\n    font-size: inherit;\n    text-align: center;\n    margin: 0; }\n  div.openarestaurant textarea {\n    border: none;\n    font-size: inherit;\n    text-align: center;\n    margin: 0;\n    width: 80%;\n    height: 4em; }\n  div.openarestaurant div.brand {\n    text-align: center; }\n    div.openarestaurant div.brand h1 {\n      margin: 0.5em; }\n    div.openarestaurant div.brand h2 {\n      margin: 0.5em; }\n  div.openarestaurant div.food {\n    position: relative;\n    text-align: center;\n    font-size: 1.5em;\n    padding: 1em;\n    border: 3px solid;\n    border-radius: 10px; }\n    div.openarestaurant div.food span.plus {\n      position: absolute;\n      top: 0.25em;\n      left: 0.25em; }\n\ndiv.restaurant-list .restaurant {\n  position: relative;\n  padding: 1em;\n  margin: auto;\n  width: 90%;\n  border: 1px solid;\n  margin-bottom: 1em; }\n  div.restaurant-list .restaurant .order-button {\n    font-size: 1.5em;\n    border: 3px solid;\n    position: absolute;\n    top: 0.5em;\n    right: 0.5em;\n    padding: 0.5em;\n    border-radius: 10px;\n    cursor: default;\n    color: black;\n    text-decoration: none; }\n    div.restaurant-list .restaurant .order-button:hover {\n      color: white;\n      background-color: black; }\n  div.restaurant-list .restaurant .restaurant-name {\n    cursor: default;\n    font-size: 1.5em; }\n  div.restaurant-list .restaurant .restaurant-description {\n    cursor: default; }\n  div.restaurant-list .restaurant .foods {\n    margin: 1em; }\n    div.restaurant-list .restaurant .foods .food-name {\n      font-size: 1.5em; }\n    div.restaurant-list .restaurant .foods .meals {\n      padding: 1em;\n      margin: 1em;\n      border: 1px solid; }\n      div.restaurant-list .restaurant .foods .meals .meal {\n        padding-bottom: 1em; }\n  div.restaurant-list .restaurant .food {\n    flex-grow: 0;\n    flex-shrink: 1;\n    flex-basis: auto;\n    align-self: center; }\n\ndiv.shop {\n  text-align: center; }\n  div.shop .modal-order {\n    position: absolute;\n    top: 0;\n    height: 100%;\n    width: 100%;\n    align-items: center;\n    justify-content: center; }\n    div.shop .modal-order .order {\n      background-color: white;\n      position: relative;\n      border: 3px solid;\n      padding: 2em; }\n      div.shop .modal-order .order .close {\n        position: absolute;\n        background-image: url(\"/stylesheets/icons/close-black.svg\");\n        width: 1.5em;\n        height: 1.5em;\n        top: 0.5em;\n        right: 0.5em; }\n        div.shop .modal-order .order .close:hover {\n          border: 1px solid; }\n      div.shop .modal-order .order .price {\n        text-align: left;\n        margin: 1em; }\n      div.shop .modal-order .order .item {\n        margin: 0;\n        padding: 1em;\n        border: 1px solid; }\n      div.shop .modal-order .order .pay {\n        cursor: default;\n        position: absolute;\n        padding: 0.5em;\n        border-radius: 10px;\n        right: 1em;\n        bottom: 1em;\n        border: 1px solid; }\n      div.shop .modal-order .order .nopay {\n        cursor: default;\n        position: absolute;\n        padding: 0.5em;\n        border-radius: 10px;\n        left: 1em;\n        bottom: 1em;\n        border: 1px solid; }\n  div.shop .caddy {\n    position: fixed;\n    bottom: 0; }\n    div.shop .caddy .item {\n      padding: 1em;\n      border-right: 1px solid;\n      margin: 0; }\n    div.shop .caddy .command {\n      padding: 2em;\n      border: 1px solid;\n      border-radius: 10px; }\n      div.shop .caddy .command:hover {\n        background-color: black;\n        color: white; }\n  div.shop .food {\n    cursor: default;\n    border-radius: 10px;\n    padding: 1em;\n    border: 3px solid; }\n    div.shop .food .description {\n      margin: 1em; }\n    div.shop .food .name {\n      font-size: 1.5em; }\n    div.shop .food .meals {\n      border-top: 1px solid; }\n      div.shop .food .meals .meal {\n        cursor: default;\n        padding: 1em; }\n        div.shop .food .meals .meal .name {\n          font-size: 1.5em; }\n        div.shop .food .meals .meal:hover {\n          background-color: black;\n          color: white; }\n\n.timepicker {\n  display: flex;\n  flex-flow: row nowrap;\n  justify-content: center; }\n  .timepicker span.inc-plus {\n    cursor: pointer; }\n  .timepicker span.inc-less {\n    cursor: pointer; }\n  .timepicker input {\n    width: 2em;\n    font-size: 1em; }\n\ndiv.profile {\n  position: relative;\n  padding: 2em; }\n  div.profile img {\n    width: 15em;\n    height: 15em; }\n  div.profile div.save {\n    position: absolute;\n    top: 0;\n    right: 0; }\n  div.profile div.restaurants-list {\n    border: 1px solid; }\n    div.profile div.restaurants-list .restaurant {\n      cursor: default;\n      color: black;\n      text-decoration: none;\n      display: block;\n      padding: 0.5em;\n      border-bottom: 1px solid; }\n      div.profile div.restaurants-list .restaurant:hover {\n        font-size: 1.5em; }\n    div.profile div.restaurants-list .last-restaurant {\n      cursor: default;\n      text-decoration: none;\n      color: black;\n      display: block;\n      padding: 0.5em; }\n      div.profile div.restaurants-list .last-restaurant:hover {\n        font-size: 1.5em; }\n  div.profile div.orders-list {\n    border: 1px solid;\n    padding: 0.5em; }\n    div.profile div.orders-list .last-order, div.profile div.orders-list .order {\n      position: relative; }\n      div.profile div.orders-list .last-order .price, div.profile div.orders-list .order .price {\n        position: absolute;\n        top: 0;\n        right: 0; }\n    div.profile div.orders-list .order {\n      border-bottom: 1px solid; }\n  div.profile .item {\n    padding: 0.5em; }\n  div.profile h1 input, div.profile h2 input {\n    width: 100%;\n    font-size: inherit;\n    font-style: inherit;\n    border: none; }\n\ndiv.board div.nav a, div.board div.nav-wrap a {\n  text-decoration: none;\n  color: black;\n  font-size: 1.5em;\n  padding: 0.5em;\n  cursor: default; }\n  div.board div.nav a:hover, div.board div.nav-wrap a:hover {\n    border: 1px solid;\n    border-radius: 10px; }\n\ndiv.board div.dashboard {\n  position: relative; }\n  div.board div.dashboard div.order {\n    border: 1px solid;\n    margin: 1em;\n    text-align: center; }\n    div.board div.dashboard div.order h1 {\n      margin: 0; }\n      div.board div.dashboard div.order h1 span.price {\n        float: right; }\n      div.board div.dashboard div.order h1 span.time {\n        float: left; }\n\ndiv.board div.timeline {\n  text-align: center; }\n  div.board div.timeline span.play {\n    margin: 0.5em auto;\n    float: left;\n    width: 2em;\n    height: 2em;\n    background-image: url(\"/stylesheets/icons/play.svg\"); }\n  div.board div.timeline span.time {\n    font-size: 2em; }\n  div.board div.timeline span.pause {\n    margin: 0.5em;\n    float: left;\n    width: 2em;\n    height: 2em;\n    background-image: url(\"/stylesheets/icons/pause.svg\"); }\n\n.selected {\n  border: 1px solid;\n  border-radius: 10px; }\n\ndiv.card input {\n  border: none;\n  font-size: inherit;\n  text-align: center;\n  margin: 0; }\n\ndiv.card div.food {\n  position: relative;\n  text-align: center;\n  font-size: 1.5em;\n  padding: 1em;\n  border: 3px solid;\n  border-radius: 10px; }\n  div.card div.food span.plus {\n    position: absolute;\n    top: 0.25em;\n    left: 0.25em; }\n\ndiv.card div.brand {\n  text-align: center; }\n  div.card div.brand h1 {\n    margin: 0.5em; }\n  div.card div.brand h2 {\n    margin: 0.5em; }\n\ndiv.card div.nav a, div.card div.nav-wrap a {\n  text-decoration: none;\n  color: black;\n  font-size: 1.5em;\n  padding: 0.5em;\n  cursor: default; }\n  div.card div.nav a:hover, div.card div.nav-wrap a:hover {\n    border: 1px solid;\n    border-radius: 10px; }\n\n.text-center {\n  text-align: center; }\n\n.close-icon {\n  background-image: url(\"/stylesheets/icons/close-black.svg\");\n  height: 1em;\n  width: 1em;\n  position: absolute; }\n  .close-icon:hover {\n    border: 1px solid; }\n\nbody {\n  margin: 0; }\n\nsection {\n  background-color: yellow;\n  border: 1px solid;\n  position: relative; }\n  section .close-icon {\n    right: 1em;\n    top: 1em; }\n\nnav.nav-brand {\n  border-bottom: 1px solid; }\n  nav.nav-brand a {\n    padding: 1em;\n    padding: 0.5;\n    border-radius: 10px;\n    cursor: default;\n    color: black;\n    text-decoration: none; }\n    nav.nav-brand a:hover {\n      color: white;\n      background-color: black; }\n  nav.nav-brand div.title a {\n    padding: 0.25em; }\n  nav.nav-brand div.session {\n    position: relative; }\n    nav.nav-brand div.session .menu {\n      border-left: 1px solid;\n      border-bottom: 1px solid;\n      border-right: 1px solid;\n      width: 100%;\n      position: absolute;\n      background-color: white;\n      z-index: 1; }\n      nav.nav-brand div.session .menu .profile-link {\n        margin: 1em; }\n        nav.nav-brand div.session .menu .profile-link a {\n          margin-top: 2em;\n          width: 100%; }\n      nav.nav-brand div.session .menu .button {\n        margin: 1em; }\n\n.button {\n  padding: 1em;\n  display: inline-block;\n  padding: 0.5;\n  border-radius: 10px;\n  cursor: default;\n  color: black;\n  text-decoration: none; }\n  .button:hover {\n    color: white;\n    background-color: black; }\n\n.hidden {\n  display: none; }\n", ""]);
 	
 	// exports
 

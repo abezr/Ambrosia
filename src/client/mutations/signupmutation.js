@@ -39,6 +39,8 @@ export default class SignupMutation extends Relay.Mutation {
     fragment on SignupPayload {
       user {
         id,
+        userID,
+        name,
         mail
       }
     }

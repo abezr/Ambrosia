@@ -91,7 +91,7 @@ var GraphQLRoot = new GraphQLObjectType({
       }, {
         rootValue
       }) => co(function*() {
-        var user = yield getUser(rootValue, id);
+        var user = yield getUser(rootValue);
         return user;
       })
     }

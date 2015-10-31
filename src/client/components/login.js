@@ -75,12 +75,13 @@ class Login extends React.Component {
 
   _close = () => {
     console.log('close');
-    this.props.history.goBack();
+    this.props.history.pushState({}, '/');
   }
 
   _login = (e) => {
       e.preventDefault();
       var onSuccess = ({Login}) => {
+        this.props.history.pushState({}, this.props.location.state.previousPath);
         console.log('Mutation successful!');
         //loginRequest(Login.user);
       };
@@ -106,6 +107,15 @@ class Login extends React.Component {
 
   _signup = (e) => {
     e.preventDefault();
+    var onSuccess = ({Login}) => {
+      console.log('Mutation successful!');
+      this.props.location.state ? this.props.history.pushState({}, this.props.location.state.previousPath) : this.props.history.goBack();
+      //loginRequest(Login.user);
+    };
+    var onFailure = (transaction) => {
+      var error = transaction.getError() || new Error('Mutation failed.');
+      console.error(error);
+    };
     var details = {};
     details.form = e.target.id;
     var el = e.target.getElementsByTagName('INPUT');
@@ -115,7 +125,8 @@ class Login extends React.Component {
       }
     }
     if(!validate(details)) {
-      Relay.Store.update( new SignupMutation({credentials: details, user: this.props.user.user}) );
+      console.log(this.props.user.user.id);
+      Relay.Store.update( new SignupMutation({credentials: details, user: this.props.user.user}), {onFailure, onSuccess});
     } else {
       this.setState({errors: details.errors});
     }

@@ -111,8 +111,9 @@ export var GraphQLUser = new GraphQLObjectType({
       resolve: (user, args, {
         rootValue
       }) => co(function*() {
+        console.log('type:user:restaurants', user);
+        if(!user.id) return null;
         var restaurants = yield getRestaurants(rootValue.conn);
-        console.log('type:user', user);
         return connectionFromArray(restaurants, args);
       })
     }

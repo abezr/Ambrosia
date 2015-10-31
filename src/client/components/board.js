@@ -19,6 +19,8 @@ const millisecondsPerDay = 24*60*60*1000;
 var midnightTime;
 var time;
 var setVariables;
+//type[string] id returned by setInterval to pass to clearInterval
+var intervalID;
 
 class Board extends React.Component {
 
@@ -34,10 +36,15 @@ class Board extends React.Component {
       time = new Date().getTime();
       this.forceUpdate();
     }
-    setInterval(updateTime, 1000);
+    intervalID = setInterval(updateTime, 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(intervalID);
   }
 
   render() {
+    console.log('render');
     var orders = this.props.restaurant.restaurant.orders.edges;
     return (
       <div className='board'>

@@ -39,82 +39,43 @@ span.close {
 }
 div.openarestaurant {
   text-align: center;
-  div.brand {
-    span.name {
-      cursor: default;
-      &:hover {
-        border: 1px solid;
-        padding: 0.1em;
-      }
-    }
-    span.description {
-      cursor: default;
-      &:hover {
-        border: 1px solid;
-        padding: 0.1em;
-      }
-    }
-    margin-top: 3em;
+  input {
+    border: none;
+    font-size: inherit;
     text-align: center;
-    input#name {
-      font-size: 1em;
-      margin: 1em;
+    margin: 0;
+  }
+  textarea {
+    border: none;
+    font-size: inherit;
+    text-align: center;
+    margin: 0;
+    width: 80%;
+    height: 4em;
+  }
+  div.brand {
+    text-align: center;
+    h1 {
+      margin: 0.5em;
     }
-    textarea#description {
-      font-size: 1em;
-      margin: 1em;
-      width: 50%;
-      height: 4em;
+    h2 {
+      margin: 0.5em;
     }
   }
-  .food {
-    cursor: default;
+  div.food {
     position: relative;
-    border-radius: 10px;
+    text-align: center;
+    font-size: 1.5em;
     padding: 1em;
     border: 3px solid;
-    .description {
-      margin: 1em;
-    }
-    .name {
-      font-size: 1.5em;
-    }
-    input {
-      font-size: 1em;
-    }
-    textarea#description {
-      font-size: 1em;
-    }
+    border-radius: 10px;
     span.plus {
       position: absolute;
-      margin: 0;
-      top: 0.5em;
-      left: 0.5em;
+      top: 0.25em;
+      left: 0.25em;
     }
-    .meals {
-      border-top: 1px solid;
-      cursor: default;
-      padding: 1em;
-      .meal {
-        margin: 0;
-        padding: 1em;
-        position: relative;
-        max-width: 20em;
-        span.close {
-          position: absolute;
-          width: 1.5em;
-          height: 1.5em;
-          top: 0;
-          right: 0;
-          background-image: url("/stylesheets/icons/close-black.svg");
-          &:hover {
-            border: 1px solid;
-          }
-        }
-        .name {
-          font-size: 1.5em;
-        }
-      }
+    div.meal {
+
     }
   }
 }

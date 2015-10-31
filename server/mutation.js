@@ -49,6 +49,8 @@ export var SignupMutation = mutationWithClientMutationId({
   }) => co(function*() {
     var conn = rootValue;
     var newUser = yield addUser(credentials, rootValue);
+    delete newUser.id;
+    console.log('mutation:signup', newUser);
     return newUser;
   })
 });
@@ -201,11 +203,20 @@ export var RestaurantMutation = mutationWithClientMutationId({
     restaurantEdge: {
       type: GraphQLRestaurantEdge,
       resolve: ({
-        newRestaurant, rootValue
-      }) => {
+        newRestaurant, userID, rootValue
+      }) => co(function* () {
         console.log('restaurantMutation:getRestaurant', newRestaurant);
-        return null;
-      }
+        //TODO replace getRestaurants with GetUserRestaurants ASAP
+        var restaurants = yield getRestaurants(userID, rootValue.conn);
+        var offset;
+        restaurants.forEach((cursor, index) => {
+          if(cursor.id === order.id) offset = index;
+        })
+        return {
+          cursor: offsetToCursor(offset),
+          node: newRestaurant
+        }
+      })
     },
     user: {
       type: GraphQLUser,
@@ -221,7 +232,7 @@ export var RestaurantMutation = mutationWithClientMutationId({
   }, {
     rootValue
   }) => co(function*() {
-    var newRestaurant = yield addRestaurant(restaurant, rootValue);
+    var newRestaurant = yield addRestaurant({restaurant, userID}, rootValue);
     return {
       newRestaurant, userID, rootValue
     };

@@ -74,17 +74,22 @@ export function addUser(credentials, rootValue) {
     // }).run(conn, function (err, result) {
     //   console.log('database:addUser', err, result);
     // });
-    var user = yield r.table('user').insert({
-      mail: credentials.mail,
-      password: credentials.password,
-      orders: []
-    }, {
-      returnChanges: true
-    }).run(rootValue.conn, function(err, result) {
-      console.log('database:addUser', result.changes[0].new_val, result);
+    var p = new Promise(function(resolve, reject) {
+      r.table('user').insert({
+        mail: credentials.mail,
+        password: credentials.password,
+        orders: [],
+        restaurants: []
+      }, {
+        returnChanges: true
+      }).run(rootValue.conn, function(err, result) {
+        rootValue.cookies.set('userID', result.changes[0].new_val.id);
+        result.changes[0].new_val.userID = result.changes[0].new_val.id;
+        resolve(result.changes[0].new_val);
+      });
     });
-    rootValue.session.user = user.changes[0].new_val;
-    return user.changes[0].new_val;
+    console.log('database:addUser');
+    return yield p;
   });
 }
 /**
@@ -108,9 +113,10 @@ export function updateUser(id, user, rootValue) {
   });
 }
 
-export function addRestaurant(restaurant, rootValue) {
+export function addRestaurant({restaurant, userID}, rootValue) {
   return co(function*() {
     restaurant.orders = [];
+    restaurant.userID = userID;
     var data = yield r.table('restaurant').insert(restaurant, {
       returnChanges: true
     }).run(rootValue.conn, function(err, result) {});
@@ -133,10 +139,10 @@ export function getRestaurant(id, rootValue) {
   });
 }
 
-export function getRestaurants(conn) {
+export function getRestaurants(userID, conn) {
   return co(function*() {
     var p = new Promise(function(resolve, reject) {
-      r.table('restaurant').run(conn, function(err, result) {
+      r.table('restaurant').getAll(userID, {index:'userID'}).run(conn, function(err, result) {
         result.toArray(function(err, res) {
           if (err) reject(err);
           resolve(res);

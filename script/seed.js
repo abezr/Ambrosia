@@ -1,40 +1,41 @@
 import r from 'rethinkdb';
 import config from '../config';
-// seed users
-
-var users = [
-
-  {
-    id: '559645cd1a38532d14349240',
-    name: 'Han Solo',
-    friends: []
-  },
-
-  {
-    id: '559645cd1a38532d14349241',
-    name: 'Chewbacca',
-    friends: ['559645cd1a38532d14349240']
-  },
-
-  {
-    id: '559645cd1a38532d14349242',
-    name: 'R2D2',
-    friends: ['559645cd1a38532d14349246']
-  },
-
-  {
-    id: '559645cd1a38532d14349246',
-    name: 'Luke Skywalker',
-    friends: ['559645cd1a38532d14349240', '559645cd1a38532d14349242']
-  }
-];
 
 r.connect(config.rethinkdb, function(error, conn) {
   if (error) {
-    throw(error);
+    console.log('could not connect to rethinkdb');
+    process.exit(1);
   } else {
-    r.table('user').insert(users).run(conn, function(err, result) {
-      if(err) console.log(err);
+    r.table('user').run(conn, function(err, result) {
+      if (err) {
+        console.log('create user db and table');
+        r.dbCreate(config.rethinkdb.db).run(conn, function(err, result) {
+          if ((err) && (!err.message.match(/Database `.*` already exists/))) {
+            console.log("Could not create the database `" + config.rethinkdb.db + "`");
+            console.log(err);
+            process.exit(1);
+          }
+          console.log('Database `' + config.rethinkdb.db + '` created.');
+
+          r.tableCreate('user').run(conn, function(err, result) {
+            if ((err) && (!err.message.match(/Table `.*` already exists/))) {
+              console.log("Could not create the table `users`");
+              console.log(err);
+              process.exit(1);
+            }
+            console.log('Table `users` created.');
+          });
+          r.tableCreate('restaurant').run(conn, function(err, result) {
+            if ((err) && (!err.message.match(/Table `.*` already exists/))) {
+              console.log("Could not create the table `users`");
+              console.log(err);
+              process.exit(1);
+            }
+            console.log('Table restaurant created');
+            r.table('restaurant').indexCreate('userID').run(conn);
+          });
+        });
+      }
       conn.close();
     });
   }
