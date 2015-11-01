@@ -78,7 +78,7 @@ var GraphQLRoot = new GraphQLObjectType({
       args: connectionArgs,
       description: 'The restaurants of the user',
       resolve: (root, args, {rootValue}) => co(function*() {
-        var restaurants = yield getRestaurants(rootValue.conn);
+        var restaurants = yield getRestaurants(rootValue);
         console.log('root:resolve restaurants', restaurants);
         return connectionFromArray(restaurants, args);
       })

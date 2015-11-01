@@ -33,7 +33,6 @@ class Restaurant extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     var restaurant = this.props.node;
     //this.props.node.id is a global id!!!
     var path = '/restaurant/' + this.props.node.id;

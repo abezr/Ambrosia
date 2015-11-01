@@ -25,7 +25,7 @@ import {
 from 'graphql-relay';
 
 import {
-  getRestaurants,
+  getUserRestaurants,
   getUserOrders,
   getUsers
 }
@@ -88,7 +88,7 @@ export var GraphQLUser = new GraphQLObjectType({
       description: 'The orders of the user',
       resolve: (user, args, {rootValue}) => co(function*() {
         console.log('schema:UserType:getUserOrders', user);
-        var orders = yield getUserOrders(user.id, rootValue);
+        var orders = yield getUserOrders(user.userID, rootValue);
         return connectionFromArray(orders, args);
       })
     },
@@ -113,7 +113,7 @@ export var GraphQLUser = new GraphQLObjectType({
       }) => co(function*() {
         console.log('type:user:restaurants', user);
         if(!user.id) return null;
-        var restaurants = yield getRestaurants(rootValue.conn);
+        var restaurants = yield getUserRestaurants(user.userID, rootValue);
         return connectionFromArray(restaurants, args);
       })
     }

@@ -9,7 +9,6 @@ import LoginMutation from '../mutations/loginmutation';
 
 class Auth extends React.Component {
   render() {
-    console.log(this.props);
     return (
       <div className='modal'>
         <Login {...this.props}/>
@@ -26,7 +25,6 @@ class Login extends React.Component {
   }
 
   render() {
-    console.log('login', this.props);
     const {user} = this.props.user;
     return (
       <div className='form'>
@@ -81,7 +79,7 @@ class Login extends React.Component {
   _login = (e) => {
       e.preventDefault();
       var onSuccess = ({Login}) => {
-        this.props.history.pushState({}, this.props.location.state.previousPath);
+        this.props.location.state ? this.props.history.pushState({}, this.props.location.state.previousPath) : this.props.history.goBack();
         console.log('Mutation successful!');
         //loginRequest(Login.user);
       };

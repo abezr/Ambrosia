@@ -3,6 +3,7 @@ import Relay from 'react-relay';
 import classnames from 'classnames';
 import {Link} from 'react-router';
 import Login from './login.js';
+import LoginMutation from '../mutations/loginmutation';
 
 export class Index extends React.Component {
 
@@ -44,7 +45,9 @@ class LoginButton extends React.Component {
     this.state = {expand: false};
   }
   _logout = () => {
-    console.log('must implement a logout mutation');
+    console.log('LoginButton:Logout', this.props);
+    //the easiest way to logout is to login with unknown user
+    Relay.Store.update(new LoginMutation({credentials: {pseudo:'', password:''}, user: this.props}));
   }
   _expand = () => {
     this.setState({expand: true});
@@ -74,6 +77,7 @@ export default Relay.createContainer(Index, {
     user: () => Relay.QL`
     fragment on Root {
       user {
+        ${LoginMutation.getFragment('user')}
         mail,
         name,
         id

@@ -36,7 +36,7 @@ class Start extends React.Component {
 
   componentDidMount () {
     if(!this.props.user.user.userID) {
-      console.log('Start:ComponentDidMount');
+      console.log('Start:ComponentDidMount', this.props.user.user.userID);
       this.props.history.pushState({previousPath: '/start'}, '/register');
     }
   }
@@ -205,13 +205,6 @@ export default Relay.createContainer(Start, {
       user {
         id,
         userID,
-        restaurants {
-          edges {
-            node {
-              id
-            }
-          }
-        }
         ${RestaurantMutation.getFragment('user')}
       }
     }

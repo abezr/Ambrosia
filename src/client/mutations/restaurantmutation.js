@@ -44,19 +44,17 @@ export default class RestaurantMutation extends Relay.Mutation {
       user: {
         id: user.id,
       },
-      restaurantEdge: user.restaurant
+      restaurantEdge: {
+        node: this.props.restaurant
+      }
     };
   }
   //Note Relay will throw back restaurants and restaurantEdge only if you need it meaning if you only ask for first 4 restaurants and relay got them in memory, restaurants and restaurantsedge payload will be missing
   getFatQuery() {
     return Relay.QL`
     fragment on RestaurantPayload {
-      restaurantEdge {
-        node,
-        cursor
-      }
+      restaurantEdge,
       user {
-        id,
         restaurants
       }
     }

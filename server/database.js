@@ -1,10 +1,13 @@
 import r from 'rethinkdb';
 import co from 'co';
 
+const logID = 'qldfjbe2434RZRFeerg';
+
 export function getUser(rootValue) {
   if (!rootValue.cookies.get('userID')) return {
     name: '',
-    mail: ''
+    mail: '',
+    id: logID
   };
   return co(function*() {
     var p = new Promise(function(resolve, reject) {
@@ -19,6 +22,7 @@ export function getUser(rootValue) {
         name: ''
       };
       value.userID = value.id;
+      value.id = logID;
       return value;
     });
   });
@@ -27,6 +31,16 @@ export function getUser(rootValue) {
 export function getUserByCredentials(credentials, rootValue) {
   return co(function*() {
     var result;
+    if(credentials.mail === '') {
+      rootValue.cookies.set('userID', '');
+      return {
+        name: '',
+        mail: '',
+        userID: '',
+        profilePicture: '',
+        id: logID
+      };
+    }
     yield r.table('user').filter(function(user) {
       return (user('mail').eq(credentials.mail)
           .or(user('pseudo').eq(credentials.mail)))
@@ -36,8 +50,6 @@ export function getUserByCredentials(credentials, rootValue) {
       if (cursor.length === 0) {
         console.log('database:cursor.length=0');
         return {
-          mail: '',
-          pseudo: '',
           error: 'mail or password incorrect'
         };
       }
@@ -47,10 +59,16 @@ export function getUserByCredentials(credentials, rootValue) {
         result = row;
       });
     });
-    result.userID = result.id;
-    rootValue.cookies.set('userID', result.id);
-    console.log('database:getUserByCredentials:session', result);
-    return result;
+    var user = {
+      name: result.name || null,
+      mail: result.mail || null,
+      userID: result.id,
+      profilePicture: result.profilePicture || null,
+      id: logID,
+    };
+    rootValue.cookies.set('userID', user.userID);
+    console.log('database:getUserByCredentials:session', user);
+    return user;
   });
 }
 
@@ -83,9 +101,15 @@ export function addUser(credentials, rootValue) {
       }, {
         returnChanges: true
       }).run(rootValue.conn, function(err, result) {
-        rootValue.cookies.set('userID', result.changes[0].new_val.id);
-        result.changes[0].new_val.userID = result.changes[0].new_val.id;
-        resolve(result.changes[0].new_val);
+        var new_val = result.changes[0].new_val;
+        var user = {
+          mail: new_val.mail,
+          userID: new_val.id,
+          id: logID,
+          profilePicture: new_val.profilePicture || '',
+        };
+        rootValue.cookies.set('userID', new_val.id);
+        resolve(user);
       });
     });
     console.log('database:addUser');
@@ -139,14 +163,39 @@ export function getRestaurant(id, rootValue) {
   });
 }
 
-export function getRestaurants(userID, conn) {
+export function getRestaurants(rootValue) {
   return co(function*() {
     var p = new Promise(function(resolve, reject) {
-      r.table('restaurant').getAll(userID, {index:'userID'}).run(conn, function(err, result) {
-        result.toArray(function(err, res) {
+      r.table('restaurant').run(rootValue.conn, function (err, res) {
+        if(err) reject(err);
+        if(res) {
+          res.toArray(function(err, res) {
+            if(err) reject(err);
+            console.log('database:getRestaurants', res);
+            resolve(res);
+          });
+        } else {
+          resolve([]);
+        }
+      });
+    });
+    return yield p;
+  });
+}
+
+export function getUserRestaurants(userID, rootValue) {
+  if(!userID) return [];
+  return co(function*() {
+    var p = new Promise(function(resolve, reject) {
+      r.table('restaurant').getAll(userID, {index:'userID'}).run(rootValue.conn, function(err, result) {
+        if (result) {
+          result.toArray(function(err, res) {
           if (err) reject(err);
           resolve(res);
         });
+      } else {
+        resolve([]);
+      }
       });
     });
     return yield p;
@@ -202,13 +251,18 @@ return co(function*() {
 }
 
 export function getUserOrders(userID, rootValue) {
+  if(!userID) return [];
   return co(function*() {
     var p = new Promise(function(resolve, reject) {
       r.table('user').get(userID)('orders').run(rootValue.conn, function(err, res) {
-        res.toArray(function(err, res) {
+        if(res) {
+          res.toArray(function(err, res) {
           if (err) reject(err);
           resolve(res);
         });
+      } else {
+        resolve([]);
+      }
       });
     });
     return yield p;

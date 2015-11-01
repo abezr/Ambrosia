@@ -9,17 +9,32 @@ import UserMutation from '../mutations/usermutation';
 //Restaurant owned
 //an history of orders made as a user
 class Profile extends React.Component {
+
   constructor(props, context) {
     super(props, context);
+    var user = this.props.user.user;
     this.state = {
       update: {
-        name: this.props.user.user.name ? this.props.user.user.name : 'Your name here',
-        mail: this.props.user.user.mail,
-        profilePicture: this.props.user.user.profilePicture || '/stylesheets/icons/profile.jpeg',
+        name: user.name ? user.name : 'Your name here',
+        mail: user.mail ? user.mail : 'Your mail here',
+        profilePicture: user.profilePicture || '/stylesheets/icons/profile.jpeg',
       },
       save: false
     };
   }
+
+  componentWillReceiveProps(nextProps) {
+    var user = nextProps.user.user;
+    this.setState({
+      update: {
+        name: user.name ? user.name : 'Your name here',
+        mail: user.mail ? user.mail : 'Your mail here',
+        profilePicture: user.profilePicture || '/stylesheets/icons/profile.jpeg',
+      },
+      save: false
+    });
+  }
+
   _onChange = (e) => {
     console.log('onchange');
     this.state.update[e.target.id] = e.target.value;
@@ -36,12 +51,12 @@ class Profile extends React.Component {
   render() {
     var user = this.props.user.user;
     var createRestaurant = (resto, index) => {
-      var bool = this.props.user.user.restaurants.edges.length === index+1;
+      var bool = user.restaurants.edges.length === index+1;
       return <Link to ={'/board/'+resto.node.id} className={classnames({'last-restaurant': bool, restaurant: !bool})} key={resto.node.id}>{resto.node.name}</Link>;
     };
     var createOrder = (order, index) => {
       var date = new Date(order.node.date);
-      var bool = !(this.props.user.user.orders.edges.length === index+1);
+      var bool = !(user.orders.edges.length === index+1);
       return (
         <div className={classnames({'order': bool, 'last-order': !bool})} key={order.node.id}>
           <div>{date.toLocaleDateString()}</div>

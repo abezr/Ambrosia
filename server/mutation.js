@@ -9,7 +9,7 @@ import {
 from 'graphql-relay';
 
 import {
-  addUser, getUser, updateUser, newUser, getUserByCredentials, addOrder, getRestaurant, addRestaurant, updateRestaurantCard
+  addUser, getUser, updateUser, newUser, getUserByCredentials, addOrder, getRestaurant, getUserRestaurants, addRestaurant, updateRestaurantCard
 }
 from './database';
 
@@ -24,36 +24,6 @@ import {
 from './type/restaurant';
 
 import co from 'co';
-
-export var SignupMutation = mutationWithClientMutationId({
-  name: 'Signup',
-  inputFields: {
-    mail: {
-      type: new GraphQLNonNull(GraphQLString)
-    },
-    password: {
-      type: new GraphQLNonNull(GraphQLString)
-    },
-    id: {
-      type: new GraphQLNonNull(GraphQLID)
-    },
-  },
-  outputFields: {
-    user: {
-      type: GraphQLUser,
-      resolve: (newUser) => newUser
-    }
-  },
-  mutateAndGetPayload: (credentials, {
-    rootValue
-  }) => co(function*() {
-    var conn = rootValue;
-    var newUser = yield addUser(credentials, rootValue);
-    delete newUser.id;
-    console.log('mutation:signup', newUser);
-    return newUser;
-  })
-});
 
 export var UserMutation = mutationWithClientMutationId({
   name: 'UserMutation',
@@ -87,6 +57,45 @@ export var UserMutation = mutationWithClientMutationId({
   })
 });
 
+export var SignupMutation = mutationWithClientMutationId({
+  name: 'Signup',
+  inputFields: {
+    mail: {
+      type: new GraphQLNonNull(GraphQLString)
+    },
+    password: {
+      type: new GraphQLNonNull(GraphQLString)
+    },
+    id: {
+      type: new GraphQLNonNull(GraphQLID)
+    },
+  },
+  outputFields: {
+    user: {
+      type: GraphQLUser,
+      resolve: (newUser) => newUser
+    }
+  },
+  mutateAndGetPayload: (credentials, {
+    rootValue
+  }) => co(function*() {
+    var conn = rootValue;
+    var newUser = yield addUser(credentials, rootValue);
+    console.log('mutation:signup', newUser);
+    return newUser;
+  })
+});
+//
+// export var LogoutMutation = mutationWithClientMutationId({
+//   name: 'Logout',
+//   outputFields: {
+//     user: {
+//       type: GraphQLUser,
+//       resolve: (newUser) => newUser
+//     }
+//   }
+//   mutateAndGetPayload:
+// })
 export var LoginMutation = mutationWithClientMutationId({
   name: 'Login',
   inputFields: {
@@ -94,6 +103,9 @@ export var LoginMutation = mutationWithClientMutationId({
       type: new GraphQLNonNull(GraphQLString)
     },
     password: {
+      type: new GraphQLNonNull(GraphQLString)
+    },
+    id: {
       type: new GraphQLNonNull(GraphQLString)
     }
   },
@@ -107,8 +119,7 @@ export var LoginMutation = mutationWithClientMutationId({
     rootValue
   }) => co(function*() {
     var newUser = yield getUserByCredentials(credentials, rootValue);
-    console.log('schema:loginmutation');
-    delete newUser.id;
+    console.log('schema:loginmutation', newUser);
     return newUser;
   })
 });
@@ -207,10 +218,10 @@ export var RestaurantMutation = mutationWithClientMutationId({
       }) => co(function* () {
         console.log('restaurantMutation:getRestaurant', newRestaurant);
         //TODO replace getRestaurants with GetUserRestaurants ASAP
-        var restaurants = yield getRestaurants(userID, rootValue.conn);
+        var restaurants = yield getUserRestaurants(userID, rootValue);
         var offset;
         restaurants.forEach((cursor, index) => {
-          if(cursor.id === order.id) offset = index;
+          if(cursor.id === newRestaurant.id) offset = index;
         })
         return {
           cursor: offsetToCursor(offset),
@@ -220,10 +231,8 @@ export var RestaurantMutation = mutationWithClientMutationId({
     },
     user: {
       type: GraphQLUser,
-      resolve: ({
-        newRestaurant, userID, rootValue
-      }) => {
-        return getUser(rootValue, userID);
+      resolve: ({rootValue}) => {
+        return getUser(rootValue);
       }
     }
   },

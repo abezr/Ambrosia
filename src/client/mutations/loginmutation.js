@@ -17,6 +17,7 @@ export default class LoginMutation extends Relay.Mutation {
     return {
       mail: this.props.credentials.pseudo,
       password: this.props.credentials.password,
+      id: this.props.user.id
     };
   }
   getConfigs() {
@@ -30,6 +31,7 @@ export default class LoginMutation extends Relay.Mutation {
   getOptimisticResponse() {
     return {
       mail: this.props.credentials.pseudo,
+      id: this.props.user.id
     };
   }
   getFatQuery() {
@@ -37,7 +39,11 @@ export default class LoginMutation extends Relay.Mutation {
     fragment on LoginPayload {
       user {
         userID,
-        mail
+        profilePicture,
+        mail,
+        name,
+        restaurants,
+        orders
       }
     }
     `;

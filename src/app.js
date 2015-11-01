@@ -24079,6 +24079,10 @@
 	
 	var _loginJs2 = _interopRequireDefault(_loginJs);
 	
+	var _mutationsLoginmutation = __webpack_require__(/*! ../mutations/loginmutation */ 469);
+	
+	var _mutationsLoginmutation2 = _interopRequireDefault(_mutationsLoginmutation);
+	
 	var Index = (function (_React$Component) {
 	  _inherits(Index, _React$Component);
 	
@@ -24174,7 +24178,9 @@
 	    _get(Object.getPrototypeOf(LoginButton.prototype), 'constructor', this).call(this, props, context);
 	
 	    this._logout = function () {
-	      console.log('must implement a logout mutation');
+	      console.log('LoginButton:Logout', _this2.props);
+	      //the easiest way to logout is to login with unknown user
+	      _reactRelay2['default'].Store.update(new _mutationsLoginmutation2['default']({ credentials: { pseudo: '', password: '' }, user: _this2.props }));
 	    };
 	
 	    this._expand = function () {
@@ -24240,7 +24246,7 @@
 	exports['default'] = _reactRelay2['default'].createContainer(Index, {
 	  fragments: {
 	    user: function user() {
-	      return (function () {
+	      return (function (sub_0) {
 	        var GraphQL = _reactRelay2['default'].QL.__GraphQL;
 	        return new GraphQL.QueryFragment('Index', 'Root', [new GraphQL.Field('user', [new GraphQL.Field('mail', null, null, null, null, null, {
 	          'parentType': 'User'
@@ -24249,10 +24255,10 @@
 	        }), new GraphQL.Field('id', null, null, null, null, null, {
 	          'parentType': 'User',
 	          'requisite': true
-	        })], null, null, null, null, {
+	        })], [_reactRelay2['default'].QL.__frag(sub_0)], null, null, null, {
 	          'parentType': 'Root'
 	        })]);
-	      })();
+	      })(_mutationsLoginmutation2['default'].getFragment('user'));
 	    }
 	  }
 	});
@@ -47528,7 +47534,6 @@
 	  _createClass(Auth, [{
 	    key: 'render',
 	    value: function render() {
-	      console.log(this.props);
 	      return _react2['default'].createElement(
 	        'div',
 	        { className: 'modal' },
@@ -47564,7 +47569,7 @@
 	      var onSuccess = function onSuccess(_ref) {
 	        var Login = _ref.Login;
 	
-	        _this.props.history.pushState({}, _this.props.location.state.previousPath);
+	        _this.props.location.state ? _this.props.history.pushState({}, _this.props.location.state.previousPath) : _this.props.history.goBack();
 	        console.log('Mutation successful!');
 	        //loginRequest(Login.user);
 	      };
@@ -47622,7 +47627,6 @@
 	  _createClass(Login, [{
 	    key: 'render',
 	    value: function render() {
-	      console.log('login', this.props);
 	      var user = this.props.user.user;
 	
 	      return _react2['default'].createElement(
@@ -49361,7 +49365,8 @@
 	    value: function getVariables() {
 	      return {
 	        mail: this.props.credentials.pseudo,
-	        password: this.props.credentials.password
+	        password: this.props.credentials.password,
+	        id: this.props.user.id
 	      };
 	    }
 	  }, {
@@ -49378,7 +49383,8 @@
 	    key: 'getOptimisticResponse',
 	    value: function getOptimisticResponse() {
 	      return {
-	        mail: this.props.credentials.pseudo
+	        mail: this.props.credentials.pseudo,
+	        id: this.props.user.id
 	      };
 	    }
 	  }, {
@@ -49388,8 +49394,20 @@
 	        var GraphQL = _reactRelay2['default'].QL.__GraphQL;
 	        return new GraphQL.QueryFragment('Loginmutation', 'LoginPayload', [new GraphQL.Field('user', [new GraphQL.Field('userID', null, null, null, null, null, {
 	          'parentType': 'User'
+	        }), new GraphQL.Field('profilePicture', null, null, null, null, null, {
+	          'parentType': 'User'
 	        }), new GraphQL.Field('mail', null, null, null, null, null, {
 	          'parentType': 'User'
+	        }), new GraphQL.Field('name', null, null, null, null, null, {
+	          'parentType': 'User'
+	        }), new GraphQL.Field('restaurants', null, null, null, null, null, {
+	          'parentType': 'User',
+	          'connection': true,
+	          'nonFindable': true
+	        }), new GraphQL.Field('orders', null, null, null, null, null, {
+	          'parentType': 'User',
+	          'connection': true,
+	          'nonFindable': true
 	        }), new GraphQL.Field('id', null, null, null, null, null, {
 	          'parentType': 'User',
 	          'generated': true,
@@ -50138,7 +50156,7 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      if (!this.props.user.user.userID) {
-	        console.log('Start:ComponentDidMount');
+	        console.log('Start:ComponentDidMount', this.props.user.user.userID);
 	        this.props.history.pushState({ previousPath: '/start' }, '/register');
 	      }
 	    }
@@ -50346,35 +50364,6 @@
 	          'requisite': true
 	        }), new GraphQL.Field('userID', null, null, null, null, null, {
 	          'parentType': 'User'
-	        }), new GraphQL.Field('restaurants', [new GraphQL.Field('edges', [new GraphQL.Field('node', [new GraphQL.Field('id', null, null, null, null, null, {
-	          'parentType': 'Restaurant',
-	          'requisite': true
-	        })], null, null, null, null, {
-	          'parentType': 'RestaurantEdge',
-	          'requisite': true
-	        }), new GraphQL.Field('cursor', null, null, null, null, null, {
-	          'parentType': 'RestaurantEdge',
-	          'generated': true,
-	          'requisite': true
-	        })], null, null, null, null, {
-	          'parentType': 'RestaurantConnection',
-	          'plural': true
-	        }), new GraphQL.Field('pageInfo', [new GraphQL.Field('hasNextPage', null, null, null, null, null, {
-	          'parentType': 'PageInfo',
-	          'generated': true,
-	          'requisite': true
-	        }), new GraphQL.Field('hasPreviousPage', null, null, null, null, null, {
-	          'parentType': 'PageInfo',
-	          'generated': true,
-	          'requisite': true
-	        })], null, null, null, null, {
-	          'parentType': 'RestaurantConnection',
-	          'generated': true,
-	          'requisite': true
-	        })], null, null, null, null, {
-	          'parentType': 'User',
-	          'connection': true,
-	          'nonFindable': true
 	        })], [_reactRelay2['default'].QL.__frag(sub_0)], null, null, null, {
 	          'parentType': 'Root'
 	        })]);
@@ -50470,7 +50459,9 @@
 	        user: {
 	          id: user.id
 	        },
-	        restaurantEdge: user.restaurant
+	        restaurantEdge: {
+	          node: this.props.restaurant
+	        }
 	      };
 	    }
 	
@@ -50480,25 +50471,28 @@
 	    value: function getFatQuery() {
 	      return (function () {
 	        var GraphQL = _reactRelay2['default'].QL.__GraphQL;
-	        return new GraphQL.QueryFragment('Restaurantmutation', 'RestaurantPayload', [new GraphQL.Field('restaurantEdge', [new GraphQL.Field('node', [new GraphQL.Field('id', null, null, null, null, null, {
+	        return new GraphQL.QueryFragment('Restaurantmutation', 'RestaurantPayload', [new GraphQL.Field('restaurantEdge', [new GraphQL.Field('cursor', null, null, null, null, null, {
+	          'parentType': 'RestaurantEdge',
+	          'generated': true,
+	          'requisite': true
+	        }), new GraphQL.Field('node', [new GraphQL.Field('id', null, null, null, null, null, {
 	          'parentType': 'Restaurant',
 	          'generated': true,
 	          'requisite': true
 	        })], null, null, null, null, {
 	          'parentType': 'RestaurantEdge',
-	          'requisite': true
-	        }), new GraphQL.Field('cursor', null, null, null, null, null, {
-	          'parentType': 'RestaurantEdge',
+	          'generated': true,
 	          'requisite': true
 	        })], null, null, null, null, {
 	          'parentType': 'RestaurantPayload'
-	        }), new GraphQL.Field('user', [new GraphQL.Field('id', null, null, null, null, null, {
-	          'parentType': 'User',
-	          'requisite': true
-	        }), new GraphQL.Field('restaurants', null, null, null, null, null, {
+	        }), new GraphQL.Field('user', [new GraphQL.Field('restaurants', null, null, null, null, null, {
 	          'parentType': 'User',
 	          'connection': true,
 	          'nonFindable': true
+	        }), new GraphQL.Field('id', null, null, null, null, null, {
+	          'parentType': 'User',
+	          'generated': true,
+	          'requisite': true
 	        })], null, null, null, null, {
 	          'parentType': 'RestaurantPayload'
 	        })]);
@@ -51132,7 +51126,6 @@
 	  _createClass(Restaurant, [{
 	    key: 'render',
 	    value: function render() {
-	      console.log(this.props);
 	      var restaurant = this.props.node;
 	      //this.props.node.id is a global id!!!
 	      var path = '/restaurant/' + this.props.node.id;
@@ -52129,24 +52122,36 @@
 	      new _reactRelay2['default'].Store.update(new _mutationsUsermutation2['default']({ user: _this.props.user.user, update: _this.state.update }));
 	    };
 	
+	    var user = this.props.user.user;
 	    this.state = {
 	      update: {
-	        name: this.props.user.user.name ? this.props.user.user.name : 'Your name here',
-	        mail: this.props.user.user.mail,
-	        profilePicture: this.props.user.user.profilePicture || '/stylesheets/icons/profile.jpeg'
+	        name: user.name ? user.name : 'Your name here',
+	        mail: user.mail ? user.mail : 'Your mail here',
+	        profilePicture: user.profilePicture || '/stylesheets/icons/profile.jpeg'
 	      },
 	      save: false
 	    };
 	  }
 	
 	  _createClass(Profile, [{
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      var user = nextProps.user.user;
+	      this.setState({
+	        update: {
+	          name: user.name ? user.name : 'Your name here',
+	          mail: user.mail ? user.mail : 'Your mail here',
+	          profilePicture: user.profilePicture || '/stylesheets/icons/profile.jpeg'
+	        },
+	        save: false
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this2 = this;
-	
 	      var user = this.props.user.user;
 	      var createRestaurant = function createRestaurant(resto, index) {
-	        var bool = _this2.props.user.user.restaurants.edges.length === index + 1;
+	        var bool = user.restaurants.edges.length === index + 1;
 	        return _react2['default'].createElement(
 	          _reactRouter.Link,
 	          { to: '/board/' + resto.node.id, className: (0, _classnames2['default'])({ 'last-restaurant': bool, restaurant: !bool }), key: resto.node.id },
@@ -52155,7 +52160,7 @@
 	      };
 	      var createOrder = function createOrder(order, index) {
 	        var date = new Date(order.node.date);
-	        var bool = !(_this2.props.user.user.orders.edges.length === index + 1);
+	        var bool = !(user.orders.edges.length === index + 1);
 	        return _react2['default'].createElement(
 	          'div',
 	          { className: (0, _classnames2['default'])({ 'order': bool, 'last-order': !bool }), key: order.node.id },
