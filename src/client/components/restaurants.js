@@ -7,6 +7,17 @@ class Restaurants extends React.Component {
 
   constructor(props, context) {
     super(props, context);
+    if(!window.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+      window.geolocation = [position.coords.longitude, position.coords.latitude];
+      this.props.relay.setVariables({location: geolocation});
+      });
+    }
+    window.onContentScrollEnd = () => {
+      if(this.props.restaurant.restaurants.pageInfo.hasNextPage){
+        this.props.relay.setVariables({count: this.props.relay.variables.count + 10});
+      }
+    }
   }
 
   render() {
@@ -17,9 +28,9 @@ class Restaurants extends React.Component {
           );
     };
     return (
-      <div>
+      <div onScroll = {this.checkBottom}>
         <h1>List of all restaurants</h1>
-        <div className='restaurant-list'>{restaurants.edges.map(createRestaurant)}</div>
+        <div className='restaurant-list'>{restaurants.edges.length ? restaurants.edges.map(createRestaurant) : 'Geolocalization... Please Wait'}</div>
       </div>
     );
   }
@@ -59,6 +70,7 @@ class Restaurant extends React.Component {
             <div>
               <span className='restaurant-name'>{restaurant.name}</span><br/>
               <span className='restaurant-description'>{restaurant.description}</span>
+              <span className='restaurant-distance'>à {Math.round(restaurant.distance)/1000} Km</span>
               <Link className='order-button' to={path}>Order this one!</Link>
             </div>
             <div className={classnames('foods', {'nav-wrap': this.state.expand}, {hidden: !this.state.expand})}>
@@ -76,16 +88,23 @@ class Restaurant extends React.Component {
 }
 
 export default Relay.createContainer(Restaurants, {
-
+  initialVariables: {
+    location: window.geolocation || null,
+    count: 20
+  },
+  prepareVariables: (prev) => {
+    return {location: window.geolocation || null, count: prev.count};
+  },
   fragments: {
     restaurant: () => Relay.QL`
     fragment on Root {
-      restaurants(first: 10) {
+      restaurants(first: $count, location: $location) {
           edges {
             node {
               id,
               name,
               description,
+              distance,
               foods {
                 name,
                 description
@@ -95,6 +114,9 @@ export default Relay.createContainer(Restaurants, {
                 }
               }
             }
+          }
+          pageInfo {
+            hasNextPage
           }
         }
       }

@@ -41,6 +41,13 @@ class Start extends React.Component {
     }
   }
 
+  componentWillReceiveProps (newProps) {
+    if(!newProps.user.user.userID) {
+      console.log('Start:ComponentDidMount', newProps.user.user.userID);
+      this.props.history.pushState({previousPath: '/start'}, '/register');
+    }
+  }
+
   _add = () => {
     this.state.foods.push({
       id: '_' + Math.random().toString(36).substr(2, 9),

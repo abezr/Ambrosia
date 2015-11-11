@@ -180,16 +180,6 @@
               "description": "The orders of the user",
               "args": [
                 {
-                  "name": "before",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
                   "name": "after",
                   "description": null,
                   "type": {
@@ -205,6 +195,16 @@
                   "type": {
                     "kind": "SCALAR",
                     "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "before",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
                     "ofType": null
                   },
                   "defaultValue": null
@@ -233,16 +233,6 @@
               "description": "The friends of the user, for now everybody is friends with user",
               "args": [
                 {
-                  "name": "before",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
                   "name": "after",
                   "description": null,
                   "type": {
@@ -258,6 +248,16 @@
                   "type": {
                     "kind": "SCALAR",
                     "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "before",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
                     "ofType": null
                   },
                   "defaultValue": null
@@ -286,16 +286,6 @@
               "description": "The restaurants of the user",
               "args": [
                 {
-                  "name": "before",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
                   "name": "after",
                   "description": null,
                   "type": {
@@ -311,6 +301,16 @@
                   "type": {
                     "kind": "SCALAR",
                     "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "before",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
                     "ofType": null
                   },
                   "defaultValue": null
@@ -934,6 +934,74 @@
               "deprecationReason": null
             },
             {
+              "name": "distance",
+              "description": "distance between the user and the restaurant",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "scorable",
+              "description": "is the restaurant scorable",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "score",
+              "description": "restaurant score",
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "open",
+              "description": "is your restaurant open",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "schedule",
+              "description": "restaurant schedule on a week basis",
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Day",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "orders",
               "description": "all the orders of the restaurant",
               "args": [
@@ -943,16 +1011,6 @@
                   "type": {
                     "kind": "SCALAR",
                     "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "before",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
                     "ofType": null
                   },
                   "defaultValue": null
@@ -973,6 +1031,16 @@
                   "type": {
                     "kind": "SCALAR",
                     "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "before",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
                     "ofType": null
                   },
                   "defaultValue": null
@@ -1148,6 +1216,80 @@
         },
         {
           "kind": "OBJECT",
+          "name": "Day",
+          "description": null,
+          "fields": [
+            {
+              "name": "day",
+              "description": "day of the week",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "openHours",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "OpenHours",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "OpenHours",
+          "description": null,
+          "fields": [
+            {
+              "name": "from",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "to",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
           "name": "Root",
           "description": null,
           "fields": [
@@ -1165,15 +1307,19 @@
             },
             {
               "name": "restaurants",
-              "description": "The restaurants of the user",
+              "description": "The nearest restaurants",
               "args": [
                 {
-                  "name": "before",
-                  "description": null,
+                  "name": "location",
+                  "description": "array with longitude and latitude",
                   "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Float",
+                      "ofType": null
+                    }
                   },
                   "defaultValue": null
                 },
@@ -1193,6 +1339,16 @@
                   "type": {
                     "kind": "SCALAR",
                     "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "before",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
                     "ofType": null
                   },
                   "defaultValue": null
@@ -1826,6 +1982,54 @@
               "defaultValue": null
             },
             {
+              "name": "scorable",
+              "description": "is restaurant scorable",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "open",
+              "description": "is your restaurant open",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "score",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "schedule",
+              "description": "restaurant schedule on a week basis",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "InputDay",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
               "name": "foods",
               "description": "List of foods",
               "type": {
@@ -1836,6 +2040,72 @@
                   "name": "InputFood",
                   "ofType": null
                 }
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "InputDay",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "day",
+              "description": "day of the week",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "openHours",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "InputOpenHours",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "InputOpenHours",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "from",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "to",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
               },
               "defaultValue": null
             }

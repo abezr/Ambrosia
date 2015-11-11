@@ -31,7 +31,7 @@ export function getUser(rootValue) {
 export function getUserByCredentials(credentials, rootValue) {
   return co(function*() {
     var result;
-    if(credentials.mail === '') {
+    if (credentials.mail === '') {
       rootValue.cookies.set('userID', '');
       return {
         name: '',
@@ -125,7 +125,7 @@ export function addUser(credentials, rootValue) {
  */
 export function updateUser(id, user, rootValue) {
   var data = {};
-  for(var key in user) {
+  for (var key in user) {
     if (user[key] !== null && key !== 'id') data[key] = user[key];
   }
   console.log('database:updateUser:data', data);
@@ -137,7 +137,9 @@ export function updateUser(id, user, rootValue) {
   });
 }
 
-export function addRestaurant({restaurant, userID}, rootValue) {
+export function addRestaurant({
+  restaurant, userID
+}, rootValue) {
   return co(function*() {
     restaurant.orders = [];
     restaurant.userID = userID;
@@ -166,11 +168,11 @@ export function getRestaurant(id, rootValue) {
 export function getRestaurants(rootValue) {
   return co(function*() {
     var p = new Promise(function(resolve, reject) {
-      r.table('restaurant').run(rootValue.conn, function (err, res) {
-        if(err) reject(err);
-        if(res) {
+      r.table('restaurant').run(rootValue.conn, function(err, res) {
+        if (err) reject(err);
+        if (res) {
           res.toArray(function(err, res) {
-            if(err) reject(err);
+            if (err) reject(err);
             console.log('database:getRestaurants', res);
             resolve(res);
           });
@@ -183,19 +185,48 @@ export function getRestaurants(rootValue) {
   });
 }
 
-export function getUserRestaurants(userID, rootValue) {
-  if(!userID) return [];
+export function getNearestRestaurants(location, rootValue) {
+  if(!location) return [];
   return co(function*() {
     var p = new Promise(function(resolve, reject) {
-      r.table('restaurant').getAll(userID, {index:'userID'}).run(rootValue.conn, function(err, result) {
+      r.table('restaurant').getNearest(r.point(location[0], location[1]), {
+        index: 'location',
+        maxDist: 500000
+      }).run(rootValue.conn, function(err, res) {
+        if (err) reject(err);
+        if (res) {
+          res.toArray(function(err, res) {
+            if (err) reject(err);
+            var newResult = res.map((raw) => {
+              delete raw.doc.location['$reql_type$'];
+              var resto = raw.doc;
+              resto.distance = raw.dist;
+              return resto;
+            });
+            resolve(newResult);
+          });
+        }
+      });
+    });
+    return yield p;
+  });
+}
+
+export function getUserRestaurants(userID, rootValue) {
+  if (!userID) return [];
+  return co(function*() {
+    var p = new Promise(function(resolve, reject) {
+      r.table('restaurant').getAll(userID, {
+        index: 'userID'
+      }).run(rootValue.conn, function(err, result) {
         if (result) {
           result.toArray(function(err, res) {
-          if (err) reject(err);
-          resolve(res);
-        });
-      } else {
-        resolve([]);
-      }
+            if (err) reject(err);
+            resolve(res);
+          });
+        } else {
+          resolve([]);
+        }
       });
     });
     return yield p;
@@ -238,31 +269,31 @@ export function addOrder(restaurantID, userID, order, rootValue) {
 }
 
 export function getRestaurantOrders(args, rootValue) {
-//var endofDay = args.midnightTime + 24*60*60*1000;
-return co(function*() {
-  var p = new Promise(function(resolve, reject) {
-    r.table('restaurant').get(args.restaurantID)('orders').filter(r.row("date").gt(args.midnightTime)).orderBy('date').run(rootValue.conn, function(err, res) {
-        if(err) reject(err);
+  //var endofDay = args.midnightTime + 24*60*60*1000;
+  return co(function*() {
+    var p = new Promise(function(resolve, reject) {
+      r.table('restaurant').get(args.restaurantID)('orders').filter(r.row("date").gt(args.midnightTime)).orderBy('date').run(rootValue.conn, function(err, res) {
+        if (err) reject(err);
         resolve(res);
+      });
     });
+    return yield p;
   });
-  return yield p;
-});
 }
 
 export function getUserOrders(userID, rootValue) {
-  if(!userID) return [];
+  if (!userID) return [];
   return co(function*() {
     var p = new Promise(function(resolve, reject) {
       r.table('user').get(userID)('orders').run(rootValue.conn, function(err, res) {
-        if(res) {
+        if (res) {
           res.toArray(function(err, res) {
-          if (err) reject(err);
-          resolve(res);
-        });
-      } else {
-        resolve([]);
-      }
+            if (err) reject(err);
+            resolve(res);
+          });
+        } else {
+          resolve([]);
+        }
       });
     });
     return yield p;

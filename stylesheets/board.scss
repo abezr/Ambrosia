@@ -29,14 +29,14 @@ div.board {
       }
     }
   }
-  div.timeline{
+  div.timeline {
     text-align: center;
     span.play {
-      margin: 0.5em auto;
+      margin: 0.5em;
       float: left;
       width: 2em;
       height: 2em;
-      background-image: url('/stylesheets/icons/play.svg');
+      background-image: url("/stylesheets/icons/play.svg");
     }
     span.time {
       font-size: 2em;
@@ -46,7 +46,60 @@ div.board {
       float: left;
       width: 2em;
       height: 2em;
-      background-image: url('/stylesheets/icons/pause.svg');
+      background-image: url("/stylesheets/icons/pause.svg");
+    }
+  }
+}
+div.settings {
+  margin: 2em;
+  .setting {
+    font-size: 1.5em;
+    margin: 1em auto;
+    width: 75%;
+    position: relative;
+    padding: 0.75em;
+    border: 1px solid;
+    .cursor {
+      cursor: pointer;
+      height: 2em;
+      top: 0.5em;
+      right: 0.5em;
+      position: absolute;
+    }
+  }
+  .close-icon {
+    top: 0em;
+    right: 0em;
+  }
+  .opening-hours {
+    text-align: center;
+    .day-title {
+      margin-bottom: 0.75em;
+      text-align: left;
+      display: inline-block;
+      padding: 0.5em;
+      border: 1px solid;
+    }
+    .picker-wrapper {
+      background-color: rgb(171, 171, 168);
+      position: relative;
+      margin: 0.5em;
+      padding: 1em;
+    }
+    .to {
+      margin: 0.5em;
+    }
+    .day {
+      height: 2em;
+      border: 1px solid;
+      margin: 1em;
+      #from,
+      #to {
+        cursor: col-resize;
+      }
+      text {
+        font-size: 0.75em;
+      }
     }
   }
 }

@@ -52,7 +52,7 @@ class Profile extends React.Component {
     var user = this.props.user.user;
     var createRestaurant = (resto, index) => {
       var bool = user.restaurants.edges.length === index+1;
-      return <Link to ={'/board/'+resto.node.id} className={classnames({'last-restaurant': bool, restaurant: !bool})} key={resto.node.id}>{resto.node.name}</Link>;
+      return <Link to ={'/timeline/'+resto.node.id} className={classnames({'last-restaurant': bool, restaurant: !bool})} key={resto.node.id}>{resto.node.name}</Link>;
     };
     var createOrder = (order, index) => {
       var date = new Date(order.node.date);
@@ -67,13 +67,23 @@ class Profile extends React.Component {
     };
     return (
       <div className='profile'>
-        <img src={user.profilePicture ? user.profilePicture : '/stylesheets/icons/profile.jpeg'} alt="Profile-Picture"/>
-        <h1><input id='name' type='text' onChange={this._onChange} value = {this.state.update.name} /></h1>
-        <h2><input id='mail' type='text' onChange={this._onChange} value = {this.state.update.mail} /></h2>
-        <h3>Your Restaurants</h3>
-        <div className='restaurants-list'>{user.restaurants.edges.map(createRestaurant)}</div>
-        <h3>Your Orders</h3>
-        <div className='orders-list'>{user.orders.edges.map(createOrder)}</div>
+        <div className='flex'>
+          <img src={user.profilePicture ? user.profilePicture : '/stylesheets/icons/profile.jpeg'} alt="Profile-Picture"/>
+          <div className='marged'>
+            <h1><input id='name' type='text' onChange={this._onChange} value = {this.state.update.name} /></h1>
+            <h2><input id='mail' type='text' onChange={this._onChange} value = {this.state.update.mail} /></h2>
+          </div>
+        </div>
+        <div className='flex'>
+          <div className='width-2'>
+            <h3>Your Restaurants</h3>
+            <div className='restaurants-list'>{user.restaurants.edges.map(createRestaurant)}</div>
+          </div>
+          <div className='width-2'>
+            <h3>Your Orders</h3>
+            <div className='orders-list'>{user.orders.edges.map(createOrder)}</div>
+          </div>
+        </div>
         <div className={classnames('button save', {hidden: !this.state.save})} onClick={this._onSave}>Save Changes</div>
       </div>
     );

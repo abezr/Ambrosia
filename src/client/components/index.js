@@ -5,11 +5,25 @@ import {Link} from 'react-router';
 import Login from './login.js';
 import LoginMutation from '../mutations/loginmutation';
 
+<section ref = 'header'>
+  <article className='text-center'><h5><div className='button'>Become a Chief</div></h5></article>
+</section>
+
 export class Index extends React.Component {
 
   constructor(props, context) {
     super(props, context);
-    this.state = { add: true };
+  }
+
+  componentDidMount() {
+    this.refs.content.style.height = (window.innerHeight - this.refs.header.offsetHeight) + 'px';
+    console.log(this.refs.offsetHeight, this.refs.content.style.height);
+  }
+
+  contentScroll = (e) => {
+    if (e.target.scrollHeight === e.target.scrollTop + e.target.clientHeight) {
+      window.onContentScrollEnd ? window.onContentScrollEnd() : console.log('scrollEnd');
+    }
   }
 
   render() {
@@ -18,11 +32,7 @@ export class Index extends React.Component {
     if (!this.props) return <div>Loading...</div>;
     return (
       <div>
-      <header>
-      <section className={classnames({hidden: !this.state.add})}>
-        <span className='close-icon' onClick={(e) => {this.setState({add: false})}}></span>
-        <article className='text-center'><h5><div className='button'>Become a Chief</div></h5></article>
-      </section>
+      <header ref = 'header'>
       <nav className='nav nav-brand'>
         <div className='flex-item-1 title'><Link to='/' >Ambrosia</Link></div>
         <Link to='/restaurants' className='flex-item-2'>Restaurants</Link>
@@ -30,10 +40,9 @@ export class Index extends React.Component {
         <LoginButton {...user}/>
       </nav>
       </header>
-      <section className='content'>
-
+      <section ref = 'content' onScroll = {this.contentScroll} className='content'>
+        {this.props.children}
       </section>
-      {this.props.children}
       </div>
     );
   }

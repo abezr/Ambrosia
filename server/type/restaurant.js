@@ -29,6 +29,20 @@ import {getRestaurantOrders} from '../database';
 
 import co from 'co';
 
+export var GraphQLGeoJSON = new GraphQLObjectType({
+  name: 'GeoJson',
+  fields: {
+    type: {
+      type: GraphQLString,
+      description: 'What kind of geoJSON object'
+    },
+    coordinates: {
+      type: new GraphQLList(GraphQLFloat),
+      description: 'geoJSON object location'
+    }
+  }
+})
+
 export var GraphQLMeal = new GraphQLObjectType({
   name: 'Meal',
   fields: {
@@ -209,6 +223,27 @@ var orderConnection = connectionDefinitions({
 export var ordersConnection = orderConnection.connectionType;
 export var GraphQLOrderEdge = orderConnection.edgeType;
 
+var GraphQLOpenHours = new GraphQLObjectType({
+  name: 'OpenHours',
+  fields: {
+    from: {type: GraphQLInt},
+    to: {type: GraphQLInt}
+  }
+});
+
+var GraphQLDay = new GraphQLObjectType({
+  name: 'Day',
+  fields: {
+    day: {
+      type: GraphQLString,
+      description: 'day of the week'
+    },
+    openHours: {
+      type: new GraphQLList(GraphQLOpenHours)
+    }
+  }
+});
+
 export var GraphQLRestaurant = new GraphQLObjectType({
   name: 'Restaurant',
   fields: {
@@ -224,6 +259,26 @@ export var GraphQLRestaurant = new GraphQLObjectType({
     foods: {
       type: new GraphQLList(GraphQLFood),
       description: 'List of foods'
+    },
+    distance: {
+      type: GraphQLFloat,
+      description: 'distance between the user and the restaurant'
+    },
+    scorable: {
+      type: GraphQLBoolean,
+      description: 'is the restaurant scorable'
+    },
+    score: {
+      type: new GraphQLList(GraphQLInt),
+      description: 'restaurant score'
+    },
+    open: {
+      type: GraphQLBoolean,
+      description: 'is your restaurant open'
+    },
+    schedule: {
+      type: new GraphQLList(GraphQLDay),
+      description: 'restaurant schedule on a week basis'
     },
     orders: {
       type: ordersConnection,
@@ -242,6 +297,27 @@ export var GraphQLRestaurant = new GraphQLObjectType({
   }
 });
 
+var GraphQLInputOpenHours = new GraphQLInputObjectType({
+  name: 'InputOpenHours',
+  fields: {
+    from: {type: GraphQLInt},
+    to: {type: GraphQLInt}
+  }
+});
+
+var GraphQLInputDay = new GraphQLInputObjectType({
+  name: 'InputDay',
+  fields: {
+    day: {
+      type: GraphQLString,
+      description: 'day of the week'
+    },
+    openHours: {
+      type: new GraphQLList(GraphQLInputOpenHours)
+    }
+  }
+})
+
 export var GraphQLInputRestaurant = new GraphQLInputObjectType({
   name: 'InputRestaurant',
   fields: {
@@ -252,6 +328,21 @@ export var GraphQLInputRestaurant = new GraphQLInputObjectType({
     description: {
       type: GraphQLString,
       description: 'restaurant\'s description'
+    },
+    scorable: {
+      type: GraphQLBoolean,
+      description: 'is restaurant scorable'
+    },
+    open: {
+      type: GraphQLBoolean,
+      description: 'is your restaurant open'
+    },
+    score: {
+      type: new GraphQLList(GraphQLInt),
+    },
+    schedule: {
+      type: new GraphQLList(GraphQLInputDay),
+      description: 'restaurant schedule on a week basis'
     },
     foods: {
       type: new GraphQLList(GraphQLInputFood),

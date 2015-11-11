@@ -1,7 +1,7 @@
 {
-  "name": "graphql-server",
+  "name": "Homemade-Relay",
   "version": "1.0.0",
-  "description": "GraphQL server with Mongoose (MongoDB) and Node.js",
+  "description": "App using relay",
   "main": "index.js",
   "scripts": {
     "start": "babel-node --harmony server.js",
@@ -18,7 +18,7 @@
       "babelify"
     ]
   },
-  "author": "RisingStack",
+  "author": "Ticruz38",
   "license": "ISC",
   "dependencies": {
     "co": "^4.5.4",
@@ -35,11 +35,11 @@
     "koa-serve": "^0.1.4",
     "koa-session": "^3.3.1",
     "koa-static": "^1.4.9",
-    "react": "^0.14.0",
-    "react-dom": "^0.14.0",
-    "react-relay": "0.4.0",
+    "react": "0.14.0",
+    "react-dom": "0.14.0",
+    "react-relay": "/Users/belenduchene/Sites/relay",
     "react-router": "1.0.0-rc1",
-    "react-router-relay": "0.6.1",
+    "react-router-relay": "^0.7.0",
     "rethinkdb": "^2.0.2",
     "superagent": "^1.2.0"
   },

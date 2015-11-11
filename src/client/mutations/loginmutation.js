@@ -1,3 +1,6 @@
+/**
+ * @flow
+ */
 import Relay from 'react-relay';
 
 export default class LoginMutation extends Relay.Mutation {
@@ -9,18 +12,18 @@ export default class LoginMutation extends Relay.Mutation {
       }
     `,
   };
-  getMutation() {
+  getMutation(): any {
     return Relay.QL`mutation{Login}`;
   }
 
-  getVariables() {
+  getVariables(): any {
     return {
       mail: this.props.credentials.pseudo,
       password: this.props.credentials.password,
       id: this.props.user.id
     };
   }
-  getConfigs() {
+  getConfigs(): any {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
@@ -28,13 +31,13 @@ export default class LoginMutation extends Relay.Mutation {
       }
     }];
   }
-  getOptimisticResponse() {
+  getOptimisticResponse(): any {
     return {
       mail: this.props.credentials.pseudo,
       id: this.props.user.id
     };
   }
-  getFatQuery() {
+  getFatQuery(): any {
     return Relay.QL`
     fragment on LoginPayload {
       user {

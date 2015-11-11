@@ -1,5 +1,7 @@
 import {
   GraphQLNonNull,
+  GraphQLList,
+  GraphQLFloat,
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString
@@ -15,7 +17,7 @@ import {
 from 'graphql-relay';
 
 import {
-  getRestaurants,
+  getNearestRestaurants,
   getRestaurant,
   getUser
 }
@@ -75,11 +77,17 @@ var GraphQLRoot = new GraphQLObjectType({
     },
     restaurants: {
       type: restaurantsConnection,
-      args: connectionArgs,
-      description: 'The restaurants of the user',
+      args: {
+        location: {
+          type: new GraphQLList(GraphQLFloat),
+          description: 'array with longitude and latitude'
+        },
+        ...connectionArgs
+      },
+      description: 'The nearest restaurants',
       resolve: (root, args, {rootValue}) => co(function*() {
-        var restaurants = yield getRestaurants(rootValue);
-        console.log('root:resolve restaurants', restaurants);
+        var restaurants = yield getNearestRestaurants(args.location, rootValue);
+        console.log('root:resolve restaurants', args.location, restaurants);
         return connectionFromArray(restaurants, args);
       })
     },
@@ -117,6 +125,7 @@ var queryType = new GraphQLObjectType({
       })
     },
     root: {
+      name:'name',
       type: GraphQLRoot,
       args: {
         id: {
@@ -125,6 +134,7 @@ var queryType = new GraphQLObjectType({
         }
       },
       resolve: (rootValue, {id}) => {
+        console.log('schema:root', id);
         return id || {};
       }
     },

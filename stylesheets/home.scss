@@ -10,6 +10,23 @@
 .text-center {
   text-align: center;
 }
+.flex-center {
+  justify-content: center;
+}
+.flex {
+  display: flex;
+}
+.marged {
+  margin: 1em;
+}
+svg {
+  overflow: visible;
+}
+@for $i from 2 through 10 {
+  .width-#{$i} {
+    width: 100%/$i;
+  }
+}
 .close-icon {
   background-image: url('/stylesheets/icons/close-black.svg');
   height: 1em;
@@ -21,6 +38,7 @@
 }
 body {
   margin: 0;
+  overflow: hidden;
 }
 @mixin button {
   padding: 0.5;
@@ -34,9 +52,9 @@ body {
   }
 }
 section {
-  background-color: yellow;
   border: 1px solid;
   position: relative;
+  overflow-y: scroll;
   .close-icon {
     right: 1em;
     top: 1em;

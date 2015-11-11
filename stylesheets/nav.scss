@@ -27,6 +27,8 @@ body {
 }
 @for $i from 2 through 10 {
   .flex-item-#{$i} {
+    text-decoration: none;
+    color: black;
     margin: 1em;
     order: $i;
     @include flex-item;
