@@ -2,6 +2,7 @@ import React from 'react';
 import Relay from 'react-relay';
 import {Link} from 'react-router';
 import classnames from 'classnames';
+import UpdateSettingsMutation from '../../mutations/updatesettingsmutation';
 
 var defaultSettings;
 var _update;
@@ -23,6 +24,18 @@ class Settings extends React.Component {
     this.state = {save: false};
   }
 
+  _settingsUpdateMutation = () => {
+    var scorable = defaultSettings.scorable;
+    var open = defaultSettings.open;
+    var schedule = defaultSettings.schedule;
+    schedule.map((schedule) => {
+      delete schedule.__dataID__
+      schedule.openHours.map((hours) => delete hours.__dataID__);
+    });
+    console.log(this.props.restaurant.restaurant);
+    Relay.Store.update(new UpdateSettingsMutation({schedule: schedule, scorable: scorable, open: open, restaurant: this.props.restaurant.restaurant}));
+  }
+
   render() {
     midnightDate = new Date().setHours(0,0,0,0);
     var createWeek = (day, index) => {
@@ -32,13 +45,13 @@ class Settings extends React.Component {
     }
     return (
       <div className='settings'>
-        <span className={classnames('submit', {hidden: !this.state.save})}>Save Changes</span>
+        <span className={classnames('submit', {hidden: !this.state.save})} onClick={this._settingsUpdateMutation}>Save Changes</span>
         <h1 className='intro'>
           Check the settings you wish to settle for your restaurant.
         </h1>
         <div>
-          <div className='setting'>Let clients note your Restaurant ?<Cursor state={defaultSettings.scorable} cursor='scorable'/></div>
-          <div className='setting'>Is your restaurant open right now ? <Cursor state={defaultSettings.open} cursor='open'/></div>
+          <div className='setting'>let clients note your restaurant<Cursor state={defaultSettings.scorable} cursor='scorable'/></div>
+          <div className='setting'>is your restaurant open <Cursor state={defaultSettings.open} cursor='open'/></div>
         </div>
         <h2>Check out your opening hours</h2>
         <div className='opening-hours nav-wrap'>
@@ -210,6 +223,8 @@ export default Relay.createContainer(Settings, {
     restaurant: () => Relay.QL`
     fragment on Root {
       restaurant {
+        ${UpdateSettingsMutation.getFragment('restaurant')}
+        id,
         scorable,
         score,
         open,

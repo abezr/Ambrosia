@@ -59,13 +59,13 @@ class Card extends React.Component {
       delete food.__dataID__
       food.meals.map((meal) => delete meal.__dataID__);
     });
-    var resto: object = {
-      name: string = this.state.name,
-      description: string = this.state.description,
-      foods: object = this.state.foods
+    var resto = {
+      name : this.state.name,
+      description : this.state.description,
+      foods : this.state.foods
     };
     console.log(this.state.foods);
-    Relay.Store.update(new UpdateCardMutation({card: object = resto, restaurant: object = this.props.restaurant.restaurant}));
+    Relay.Store.update(new UpdateCardMutation({card: resto, restaurant: this.props.restaurant.restaurant}));
   }
 
   render () {

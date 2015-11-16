@@ -9,7 +9,7 @@ import {
 from 'graphql-relay';
 
 import {
-  addUser, getUser, updateUser, newUser, getUserByCredentials, addOrder, getRestaurant, getUserRestaurants, addRestaurant, updateRestaurantCard
+  addUser, getUser, updateUser, newUser, getUserByCredentials, addOrder, getRestaurant, getUserRestaurants, addRestaurant, updateRestaurantCard, updateRestaurantSettings
 }
 from './database';
 
@@ -19,7 +19,7 @@ import {
 from './type/user';
 
 import {
-  GraphQLRestaurant, GraphQLInputRestaurant, GraphQLRestaurantEdge, GraphQLInputOrder, GraphQLOrderEdge, GraphQLInputFood
+  GraphQLRestaurant, GraphQLInputRestaurant, GraphQLRestaurantEdge, GraphQLInputOrder, GraphQLOrderEdge, GraphQLInputFood, GraphQLInputDay
 }
 from './type/restaurant';
 
@@ -267,5 +267,33 @@ export var UpdateCardMutation = mutationWithClientMutationId({
   mutateAndGetPayload: ({restaurantID, card}, {rootValue}) => co(function*() {
     restaurantID = fromGlobalId(restaurantID).id;
     return yield updateRestaurantCard({restaurantID, card}, rootValue);
+  })
+})
+
+export var UpdateSettingsMutation = mutationWithClientMutationId({
+  name: 'UpdateSettings',
+  inputFields: {
+    restaurantID: {
+      type: GraphQLString
+    },
+    scorable: {
+      type: GraphQLBoolean
+    },
+    open: {
+      type: GraphQLBoolean
+    },
+    schedule: {
+      type: new GraphQLList(GraphQLInputDay)
+    }
+  },
+  outputFields: {
+    restaurant: {
+      type: GraphQLRestaurant,
+      resolve: (restaurant) => restaurant
+    }
+  },
+  mutateAndGetPayload: (args, {rootValue}) => co(function*() {
+    args.restaurantID = fromGlobalId(args.restaurantID).id;
+    return yield updateRestaurantSettings(args, rootValue);
   })
 })

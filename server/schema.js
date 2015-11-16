@@ -40,7 +40,8 @@ import {
   UserMutation,
   RestaurantMutation,
   OrderMutation,
-  UpdateCardMutation
+  UpdateCardMutation,
+  UpdateSettingsMutation
 }
 from './mutation';
 
@@ -153,7 +154,8 @@ var mutationType = new GraphQLObjectType({
     User: UserMutation,
     Restaurant: RestaurantMutation,
     Order: OrderMutation,
-    UpdateCard: UpdateCardMutation
+    UpdateCard: UpdateCardMutation,
+    UpdateSettings: UpdateSettingsMutation
   })
 });
 

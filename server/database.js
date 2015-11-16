@@ -316,6 +316,26 @@ export function updateRestaurantCard(args, rootValue) {
         returnChanges: true
       }).run(rootValue.conn, function(err, res) {
         if (err) reject(err);
+        if(!res.changes[0]) return null;
+        resolve(res.changes[0].new_val);
+      });
+    });
+    return yield p;
+  });
+}
+
+export function updateRestaurantSettings(args, rootValue) {
+  return co(function*() {
+    var p = new Promise(function(resolve, reject) {
+      r.table('restaurant').get(args.restaurantID).update({
+        scorable: args.scorable,
+        open: args.open,
+        schedule: args.schedule
+      }, {
+        returnChanges: true
+      }).run(rootValue.conn, function(err, res) {
+        if (err) reject(err);
+        if(!res.changes[0]) return null;
         resolve(res.changes[0].new_val);
       });
     });

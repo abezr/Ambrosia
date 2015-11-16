@@ -28,8 +28,8 @@ class Restaurants extends React.Component {
           );
     };
     return (
-      <div onScroll = {this.checkBottom}>
-        <h1>List of all restaurants</h1>
+      <div className='center-text' onScroll = {this.checkBottom}>
+        <h1>Restaurants-list</h1>
         <div className='restaurant-list'>{restaurants.edges.length ? restaurants.edges.map(createRestaurant) : 'Geolocalization... Please Wait'}</div>
       </div>
     );

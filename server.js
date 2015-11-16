@@ -109,6 +109,9 @@ server.use(function* (next) {
   yield next;
   this.body = `<!doctype html>
                 <html>
+                  <head>
+                    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+                  </head
                   <body>
                     <div id = "app" data-userid= "${userID}"></div>
                   </body>

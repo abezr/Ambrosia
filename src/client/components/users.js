@@ -22,7 +22,7 @@ class Users extends React.Component {
     };
     return (
       <div>
-        <h1>List of all users</h1>
+        <h1>Users-list</h1>
         <div>{user.user.friends.edges.map(createUser)}</div>
       </div>
     );

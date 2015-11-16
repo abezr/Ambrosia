@@ -244,6 +244,18 @@ var GraphQLDay = new GraphQLObjectType({
   }
 });
 
+var GraphQLLocation = new GraphQLObjectType({
+  name: 'Location',
+  fields: {
+    coordinates: {
+      type: new GraphQLList(GraphQLFloat)
+    },
+    type: {
+      type: GraphQLString
+    }
+  }
+});
+
 export var GraphQLRestaurant = new GraphQLObjectType({
   name: 'Restaurant',
   fields: {
@@ -256,9 +268,17 @@ export var GraphQLRestaurant = new GraphQLObjectType({
       type: GraphQLString,
       description: 'restaurant\'s description'
     },
+    userID: {
+      type: GraphQLString,
+      description: 'userID of the owner'
+    },
     foods: {
       type: new GraphQLList(GraphQLFood),
       description: 'List of foods'
+    },
+    location: {
+      type: GraphQLLocation,
+      description: 'the restaurant location object'
     },
     distance: {
       type: GraphQLFloat,
@@ -305,7 +325,7 @@ var GraphQLInputOpenHours = new GraphQLInputObjectType({
   }
 });
 
-var GraphQLInputDay = new GraphQLInputObjectType({
+export var GraphQLInputDay = new GraphQLInputObjectType({
   name: 'InputDay',
   fields: {
     day: {

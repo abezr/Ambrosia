@@ -8,7 +8,8 @@ import {
 import IndexContainer from './components/index';
 import {Index} from './components/index';
 import Login from './components/login';
-import Users from './components/users';
+import Home from './components/home';
+// import Users from './components/users';
 import Start from './components/start';
 import Card from './components/board/card';
 import Board from './components/board/timeline';
@@ -84,8 +85,8 @@ ReactDom.render(
     createElement={ReactRouterRelay.createElement}
     history={histori}
   >
-    <Route path='/' component={IndexContainer}  queries={ViewerQuery}>
-      <IndexRoute component={Users} queries={ViewerQuery} />
+    <Route path='/' component={IndexContainer} queries={ViewerQuery}>
+      <IndexRoute component={Home} queries={RestaurantsQuery}/>
       <Route path='restaurant/:id' component={Ordering} queries={FullQuery}/>
       <Route path='profile' component={Profile} queries={ViewerQuery}/>
       <Route path="restaurants" component={Restaurants} queries={RestaurantsQuery} />

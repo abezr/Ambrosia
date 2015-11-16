@@ -8,8 +8,7 @@ module.exports = {
         stage: 0,
         plugins: ['./build/BabelGraphQLPlugin']
       }
-    },
-    {
+    }, {
       test: /\.scss$/,
       loader: 'style!css!sass'
     }]

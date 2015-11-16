@@ -7,6 +7,7 @@
 @import "profile";
 @import "board";
 @import "card";
+@import "leaflet";
 .text-center {
   text-align: center;
 }
@@ -19,6 +20,9 @@
 .marged {
   margin: 1em;
 }
+.center-text {
+  text-align: center;
+}
 svg {
   overflow: visible;
 }
@@ -26,6 +30,12 @@ svg {
   .width-#{$i} {
     width: 100%/$i;
   }
+}
+.restaurant-popup {
+  text-align: center;
+}
+#map {
+  height: 1000px;
 }
 .close-icon {
   background-image: url('/stylesheets/icons/close-black.svg');
