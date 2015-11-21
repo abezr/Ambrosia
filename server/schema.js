@@ -18,6 +18,7 @@ from 'graphql-relay';
 
 import {
   getNearestRestaurants,
+  getRestaurantsByName,
   getRestaurant,
   getUser
 }
@@ -83,12 +84,22 @@ var GraphQLRoot = new GraphQLObjectType({
           type: new GraphQLList(GraphQLFloat),
           description: 'array with longitude and latitude'
         },
+        name: {
+          type: GraphQLString,
+          description: 'the name you are looking for'
+        },
         ...connectionArgs
       },
       description: 'The nearest restaurants',
       resolve: (root, args, {rootValue}) => co(function*() {
-        var restaurants = yield getNearestRestaurants(args.location, rootValue);
-        console.log('root:resolve restaurants', args.location, restaurants);
+        var restaurants;
+        if (args.name) {
+          console.log('schema:restaurants:name', args);
+          restaurants = yield getRestaurantsByName(args, rootValue);
+        } else {
+          console.log('schema:restaurants:location');
+          restaurants = yield getNearestRestaurants(args.location, rootValue);
+        }
         return connectionFromArray(restaurants, args);
       })
     },
@@ -143,8 +154,6 @@ var queryType = new GraphQLObjectType({
     node: nodeField
   })
 });
-
-
 
 var mutationType = new GraphQLObjectType({
   name: 'Mutation',

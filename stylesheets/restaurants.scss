@@ -1,4 +1,32 @@
-
+div.restaurants-index {
+  .search-input {
+    margin: 0 0.25em;
+    font-size: 1.5em;
+  }
+  .search-container {
+    margin: 0.5em 0;
+    position: relative;
+    height: 2em;
+    padding: 1em;
+  }
+  .search-icon {
+    position:absolute;
+    width: 2em;
+    height: 2em;
+    background-image: url("/stylesheets/icons/search.svg");
+    &:hover {
+      background-color: gainsboro;
+    }
+  }
+}
+div.restaurants-map {
+  text-align: center;
+  .geolocalization {
+    z-index: 1;
+    position: absolute;
+    top: 500px;
+  }
+}
 div.restaurant-list {
   .restaurant {
     position: relative;

@@ -212,6 +212,36 @@ export function getNearestRestaurants(location, rootValue) {
   });
 }
 
+export function getRestaurantsByName(args, rootValue) {
+  console.log('database:getRestaurantsByName', args);
+  if(!args.name) return [];
+  return co(function*() {
+    var p = new Promise(function(resolve, reject) {
+      r.table('restaurant').getNearest(r.point(args.location[0], args.location[1]), {
+        index: 'location',
+        maxDist: 1000000
+        //filter is'nt working with that regex
+      }).filter({doc: {name: `(?i)^${args.name}$`}}).run(rootValue.conn, function(err, res) {
+        if (err) reject(err);
+        if (res) {
+          res.toArray(function(err, res) {
+            console.log('database:getResraurantsByName:res', res);
+            if (err) reject(err);
+            var newResult = res.map((raw) => {
+              delete raw.doc.location['$reql_type$'];
+              var resto = raw.doc;
+              resto.distance = raw.dist;
+              return resto;
+            });
+            resolve(newResult);
+          });
+        }
+      });
+    });
+    return yield p;
+  });
+}
+
 export function getUserRestaurants(userID, rootValue) {
   if (!userID) return [];
   return co(function*() {

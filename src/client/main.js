@@ -8,14 +8,16 @@ import {
 import IndexContainer from './components/index';
 import {Index} from './components/index';
 import Login from './components/login';
-import Home from './components/home';
-// import Users from './components/users';
+import RestaurantsIndex, {RestaurantsIndexComponent} from './components/restaurantsindex';
+
+import RestaurantsMap from './components/restaurantsmap';
+import RestaurantsList from './components/restaurantslist';
+import Users from './components/users';
 import Start from './components/start';
 import Card from './components/board/card';
 import Board from './components/board/timeline';
 import Settings from './components/board/settings';
 import ChiefIndex from './components/board/chiefindex';
-import Restaurants from './components/restaurants';
 import Ordering from './components/ordering';
 import Profile from './components/profile';
 import React from 'react';
@@ -32,6 +34,9 @@ Relay.injectNetworkLayer(
 );
 
 const histori = createHistory();
+
+window.variables = {};
+console.log('main', window.variables);
 
 var ViewerQuery = {
   user: (Component) => Relay.QL `
@@ -86,10 +91,13 @@ ReactDom.render(
     history={histori}
   >
     <Route path='/' component={IndexContainer} queries={ViewerQuery}>
-      <IndexRoute component={Home} queries={RestaurantsQuery}/>
+      <IndexRoute component={Users} queries={ViewerQuery}/>
       <Route path='restaurant/:id' component={Ordering} queries={FullQuery}/>
       <Route path='profile' component={Profile} queries={ViewerQuery}/>
-      <Route path="restaurants" component={Restaurants} queries={RestaurantsQuery} />
+      <Route path="restaurants" component={RestaurantsIndex} queries={RestaurantsQuery}>
+        <Route path='map' component={RestaurantsMap} />
+        <Route path='list' component={RestaurantsList} />
+      </Route>
       <Route path="start" component={Start} queries={ViewerQuery} />
       <Route path="register" component={Login} queries={ViewerQuery} />
       <Route path="board/:id" component={ChiefIndex} queries={FullQuery}>

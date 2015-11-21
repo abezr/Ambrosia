@@ -21,7 +21,7 @@ export class Index extends React.Component {
   }
 
   contentScroll = (e) => {
-    if (e.target.scrollHeight === e.target.scrollTop + e.target.clientHeight) {
+    if (e.target.scrollHeight <= e.target.scrollTop + e.target.clientHeight) {
       window.onContentScrollEnd ? window.onContentScrollEnd() : console.log('scrollEnd');
     }
   }
@@ -35,7 +35,7 @@ export class Index extends React.Component {
       <header ref = 'header'>
       <nav className='nav nav-brand'>
         <div className='flex-item-1 title'><Link to='/' >Ambrosia</Link></div>
-        <Link to='/restaurants' className='flex-item-2'>Restaurants</Link>
+        <Link to='/restaurants/list' className='flex-item-2'>Restaurants</Link>
         <Link to='/start' className='flex-item-2'>Start!</Link>
         <LoginButton {...user}/>
       </nav>

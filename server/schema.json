@@ -1387,6 +1387,16 @@
                   "defaultValue": null
                 },
                 {
+                  "name": "name",
+                  "description": "the name you are looking for",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
                   "name": "after",
                   "description": null,
                   "type": {
