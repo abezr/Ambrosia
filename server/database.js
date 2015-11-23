@@ -19,7 +19,8 @@ export function getUser(rootValue) {
     return yield p.then(function(value) {
       if (!value) return {
         mail: '',
-        name: ''
+        name: '',
+        id: logID
       };
       value.userID = value.id;
       value.id = logID;
@@ -27,45 +28,49 @@ export function getUser(rootValue) {
     });
   });
 }
-//to use it with relay use rootValue.conn as run arguments
+
 export function getUserByCredentials(credentials, rootValue) {
   return co(function*() {
-    var result;
     if (credentials.mail === '') {
       rootValue.cookies.set('userID', '');
-      return {
+      return ({
         name: '',
         mail: '',
         userID: '',
         profilePicture: '',
         id: logID
+      });
+    }
+    var p = new Promise((resolve, reject) => {
+        r.table('user').filter(function(user) {
+          return (user('mail').eq(credentials.mail)
+              .or(user('pseudo').eq(credentials.mail)))
+            .and(user('password').eq(credentials.password));
+        }).run(rootValue.conn, function(error, cursor) {
+          if (error) reject(error);
+          if (cursor.length === 0) {
+            console.log('database:cursor.length=0');
+            reject ({
+              error: 'mail or password incorrect'
+            });
+          }
+          cursor.each(function(err, row) {
+            console.log('database:cursor.each', row);
+            if (err) throw err;
+            resolve(row);
+          });
+        });
+    });
+    var result = yield p;
+    if(result) {
+      var user = {
+        name: result.name || '',
+        mail: result.mail || '',
+        userID: result.id,
+        id: logID,
+        profilePicture: result.profilePicture || null,
       };
     }
-    yield r.table('user').filter(function(user) {
-      return (user('mail').eq(credentials.mail)
-          .or(user('pseudo').eq(credentials.mail)))
-        .and(user('password').eq(credentials.password));
-    }).run(rootValue.conn, function(error, cursor) {
-      if (error) throw error;
-      if (cursor.length === 0) {
-        console.log('database:cursor.length=0');
-        return {
-          error: 'mail or password incorrect'
-        };
-      }
-      cursor.each(function(err, row) {
-        console.log('database:cursor.each', row);
-        if (err) throw err;
-        result = row;
-      });
-    });
-    var user = {
-      name: result.name || null,
-      mail: result.mail || null,
-      userID: result.id,
-      profilePicture: result.profilePicture || null,
-      id: logID,
-    };
     rootValue.cookies.set('userID', user.userID);
     console.log('database:getUserByCredentials:session', user);
     return user;
@@ -123,14 +128,14 @@ export function addUser(credentials, rootValue) {
  * @param  {[object]} rootValue [graphQL rootValue object]
  * @return {[object]}      [a GrapQLUser object]
  */
-export function updateUser(id, user, rootValue) {
+export function updateUser(args, rootValue) {
   var data = {};
-  for (var key in user) {
-    if (user[key] !== null && key !== 'id') data[key] = user[key];
+  for (var key in args) {
+    if (args[key] !== null && key !== 'id' && key !== 'clientMutationId' && key !== 'userID') data[key] = args[key];
   }
   console.log('database:updateUser:data', data);
   return co(function*() {
-    var res = yield r.table('user').get(id).update(data, {
+    var res = yield r.table('user').get(args.userID).update(data, {
       returnChanges: true
     }).run(rootValue.conn);
     return res.changes[0].new_val;

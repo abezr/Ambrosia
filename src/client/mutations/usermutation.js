@@ -4,7 +4,8 @@ export default class UserMutation extends Relay.Mutation {
   static fragments = {
     user: () => Relay.QL`
       fragment on User {
-        id
+        id,
+        userID
       }
     `,
   };
@@ -15,6 +16,7 @@ export default class UserMutation extends Relay.Mutation {
   getVariables() {
     return {
       id: this.props.user.id,
+      userID: this.props.user.userID,
       name: this.props.update.name,
       mail: this.props.update.mail,
       profilePicture: this.props.update.profilePicture
@@ -43,6 +45,7 @@ export default class UserMutation extends Relay.Mutation {
     fragment on UserMutationPayload {
       user {
         id,
+        userID,
         name,
         mail,
         profilePicture

@@ -96,6 +96,7 @@ class Login extends React.Component {
         }
       }
       if(!validate(details)) {
+        console.log('login', this.props.user.user.id);
         Relay.Store.update( new LoginMutation({credentials: details, user: this.props.user.user}), {onFailure, onSuccess});
       } else {
         this.setState({errors: details.errors});

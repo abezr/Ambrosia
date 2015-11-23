@@ -27,7 +27,6 @@ class Start extends React.Component {
 
   constructor (props, context) {
     super(props, context);
-    console.log('constructor');
     this.state = card;
     updateClass = () => {
       this.setState(card);
@@ -42,8 +41,8 @@ class Start extends React.Component {
   }
 
   componentWillReceiveProps (newProps) {
+    console.log('Start:componentWillReceiveProps', newProps.user.user.userID);
     if(!newProps.user.user.userID) {
-      console.log('Start:ComponentDidMount', newProps.user.user.userID);
       this.props.history.pushState({previousPath: '/start'}, '/register');
     }
   }
@@ -87,7 +86,6 @@ class Start extends React.Component {
   }
 
   render () {
-    console.log(card);
     var createFood = (food, index) => {
       return (
         <Food {...food} index={index} key={food.id}/>

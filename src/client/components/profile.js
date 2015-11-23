@@ -23,8 +23,19 @@ class Profile extends React.Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    var user = nextProps.user.user;
+  componentDidMount () {
+    if(!this.props.user.user.userID) {
+      console.log('Start:ComponentDidMount', this.props.user.user.userID);
+      this.props.history.pushState({previousPath: '/start'}, '/register');
+    }
+  }
+
+  componentWillReceiveProps(newProps) {
+    var user = newProps.user.user;
+    console.log('Start:componentWillReceiveProps', newProps.user.user.userID);
+    if(!newProps.user.user.userID) {
+      this.props.history.pushState({previousPath: '/start'}, '/register');
+    }
     this.setState({
       update: {
         name: user.name ? user.name : 'Your name here',
@@ -44,7 +55,7 @@ class Profile extends React.Component {
     });
   }
   _onSave = (e) => {
-    console.log('onsave');
+    console.log('onsave', this.props.user.user.id);
     new Relay.Store.update(new UserMutation({user: this.props.user.user, update: this.state.update}))
 
   }
@@ -98,6 +109,7 @@ export default Relay.createContainer(Profile, {
       user {
         ${UserMutation.getFragment('user')}
         id,
+        userID,
         name,
         mail,
         profilePicture,

@@ -89,7 +89,8 @@ export default Relay.createContainer(Index, {
         ${LoginMutation.getFragment('user')}
         mail,
         name,
-        id
+        id,
+        userID
       }
     }
     `

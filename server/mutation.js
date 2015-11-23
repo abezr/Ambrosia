@@ -31,6 +31,9 @@ export var UserMutation = mutationWithClientMutationId({
     id: {
       type: GraphQLString
     },
+    userID: {
+      type: GraphQLString
+    },
     name: {
       type: GraphQLString
     },
@@ -50,9 +53,11 @@ export var UserMutation = mutationWithClientMutationId({
   mutateAndGetPayload: (args, {
     rootValue
   }) => co(function*() {
-    console.log('mutation:UserMutation', args);
-    var id = fromGlobalId(args.id).id;
-    var user = yield updateUser(id, args, rootValue);
+    var user = yield updateUser(args, rootValue);
+    console.log('mutation:UserMutation', user, args);
+    user.id = fromGlobalId(args.id).id;
+    user.userID = args.userID;
+    console.log('mutztion:UserMutation:afterChanges', user, args);
     return user;
   })
 });
@@ -118,8 +123,8 @@ export var LoginMutation = mutationWithClientMutationId({
   mutateAndGetPayload: (credentials, {
     rootValue
   }) => co(function*() {
+    console.log('schema:loginmutation', credentials);
     var newUser = yield getUserByCredentials(credentials, rootValue);
-    console.log('schema:loginmutation', newUser);
     return newUser;
   })
 });

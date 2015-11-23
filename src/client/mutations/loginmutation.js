@@ -12,18 +12,18 @@ export default class LoginMutation extends Relay.Mutation {
       }
     `,
   };
-  getMutation(): any {
+  getMutation() {
     return Relay.QL`mutation{Login}`;
   }
 
-  getVariables(): any {
+  getVariables() {
     return {
       mail: this.props.credentials.pseudo,
       password: this.props.credentials.password,
       id: this.props.user.id
     };
   }
-  getConfigs(): any {
+  getConfigs() {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
@@ -31,13 +31,13 @@ export default class LoginMutation extends Relay.Mutation {
       }
     }];
   }
-  getOptimisticResponse(): any {
+  getOptimisticResponse() {
     return {
       mail: this.props.credentials.pseudo,
       id: this.props.user.id
     };
   }
-  getFatQuery(): any {
+  getFatQuery() {
     return Relay.QL`
     fragment on LoginPayload {
       user {

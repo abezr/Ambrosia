@@ -37,7 +37,7 @@
     "koa-static": "^1.4.9",
     "react": "0.14.0",
     "react-dom": "0.14.0",
-    "react-relay": "/Users/belenduchene/Sites/relay",
+    "react-relay": "0.5.0",
     "react-router": "1.0.0-rc1",
     "react-router-relay": "^0.7.0",
     "rethinkdb": "^2.0.2",
@@ -57,6 +57,7 @@
     "node-sass": "^3.3.2",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
+    "react-relay": "^0.3.2",
     "sass-loader": "^2.0.1",
     "style-loader": "^0.12.3",
     "webpack": "1.11.0"
