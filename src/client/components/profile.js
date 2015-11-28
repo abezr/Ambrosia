@@ -54,10 +54,16 @@ class Profile extends React.Component {
       save: true
     });
   }
-  _onSave = (e) => {
-    console.log('onsave', this.props.user.user.id);
-    new Relay.Store.update(new UserMutation({user: this.props.user.user, update: this.state.update}))
 
+  _onKeyUp = (e) => {
+    console.log('onkeyUp', e.keyCode);
+    if(e.keyCode === 13) {
+      new Relay.Store.update(new UserMutation({user: this.props.user.user, update: this.state.update}));
+      e.target.blur();
+    }
+    if(e.keyCode === 27) {
+      e.target.blur();
+    }
   }
   render() {
     var user = this.props.user.user;
@@ -80,13 +86,14 @@ class Profile extends React.Component {
       <div className='profile'>
         <div className='flex'>
           <img src={user.profilePicture ? user.profilePicture : '/stylesheets/icons/profile.jpeg'} alt="Profile-Picture"/>
-          <div className='marged'>
-            <h1><input id='name' type='text' onChange={this._onChange} value = {this.state.update.name} /></h1>
-            <h2><input id='mail' type='text' onChange={this._onChange} value = {this.state.update.mail} /></h2>
+          <div className='credentials marged'>
+            <h1><input id='name' type='text' onChange={this._onChange} onKeyUp={this._onKeyUp} value = {this.state.update.name} /></h1>
+            <h2><input id='mail' type='text' onChange={this._onChange} onKeyUp={this._onKeyUp} value = {this.state.update.mail} /></h2>
+            <Link className='openarestaurant-link button' to = {'/start/card'}>Open a restaurant.</Link>
           </div>
         </div>
         <div className='flex'>
-          <div className='width-2'>
+          <div className={classnames('width-2', {hidden: !user.restaurants.edges.length})}>
             <h3>Your Restaurants</h3>
             <div className='restaurants-list'>{user.restaurants.edges.map(createRestaurant)}</div>
           </div>
@@ -95,7 +102,6 @@ class Profile extends React.Component {
             <div className='orders-list'>{user.orders.edges.map(createOrder)}</div>
           </div>
         </div>
-        <div className={classnames('button save', {hidden: !this.state.save})} onClick={this._onSave}>Save Changes</div>
       </div>
     );
   }

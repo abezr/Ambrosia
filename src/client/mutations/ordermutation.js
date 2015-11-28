@@ -9,7 +9,8 @@ export default class OrderMutation extends Relay.Mutation {
     `,
     user: () => Relay.QL `
       fragment on User {
-        id
+        id,
+        userID
       }
     `
   };
@@ -21,7 +22,7 @@ export default class OrderMutation extends Relay.Mutation {
       return {
         order: this.props.order,
         restaurantID: this.props.restaurant.id,
-        userID: this.props.user.id
+        userID: this.props.user.userID
       };
     }
     //remember that the fat query return only allready used field

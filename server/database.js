@@ -42,27 +42,27 @@ export function getUserByCredentials(credentials, rootValue) {
       });
     }
     var p = new Promise((resolve, reject) => {
-        r.table('user').filter(function(user) {
-          return (user('mail').eq(credentials.mail)
-              .or(user('pseudo').eq(credentials.mail)))
-            .and(user('password').eq(credentials.password));
-        }).run(rootValue.conn, function(error, cursor) {
-          if (error) reject(error);
-          if (cursor.length === 0) {
-            console.log('database:cursor.length=0');
-            reject ({
-              error: 'mail or password incorrect'
-            });
-          }
-          cursor.each(function(err, row) {
-            console.log('database:cursor.each', row);
-            if (err) throw err;
-            resolve(row);
+      r.table('user').filter(function(user) {
+        return (user('mail').eq(credentials.mail)
+            .or(user('pseudo').eq(credentials.mail)))
+          .and(user('password').eq(credentials.password));
+      }).run(rootValue.conn, function(error, cursor) {
+        if (error) reject(error);
+        if (cursor.length === 0) {
+          console.log('database:cursor.length=0');
+          reject({
+            error: 'mail or password incorrect'
           });
+        }
+        cursor.each(function(err, row) {
+          console.log('database:cursor.each', row);
+          if (err) throw err;
+          resolve(row);
         });
+      });
     });
     var result = yield p;
-    if(result) {
+    if (result) {
       var user = {
         name: result.name || '',
         mail: result.mail || '',
@@ -191,7 +191,7 @@ export function getRestaurants(rootValue) {
 }
 
 export function getNearestRestaurants(location, rootValue) {
-  if(!location) return [];
+  if (!location) return [];
   return co(function*() {
     var p = new Promise(function(resolve, reject) {
       r.table('restaurant').getNearest(r.point(location[0], location[1]), {
@@ -219,27 +219,31 @@ export function getNearestRestaurants(location, rootValue) {
 
 export function getRestaurantsByName(args, rootValue) {
   console.log('database:getRestaurantsByName', args);
-  if(!args.name) return [];
+  if (!args.name) return [];
   return co(function*() {
     var p = new Promise(function(resolve, reject) {
       r.table('restaurant').getNearest(r.point(args.location[0], args.location[1]), {
         index: 'location',
         maxDist: 1000000
-        //filter is'nt working with that regex
-      }).filter({doc: {name: `(?i)^${args.name}$`}}).run(rootValue.conn, function(err, res) {
+          //filter is'nt working with that regex
+      }).run(rootValue.conn, (err, res) => {
         if (err) reject(err);
         if (res) {
-          res.toArray(function(err, res) {
-            console.log('database:getResraurantsByName:res', res);
+          res.toArray((err, res) => {
+            var filtre = res.filter((restaurant) => {
+              var re = new RegExp(`${args.name}`, 'gi');
+              console.log(restaurant.doc['name'].match(re), args.name, restaurant.doc.name);
+              return restaurant.doc['name'].match(re);
+            });
             if (err) reject(err);
-            var newResult = res.map((raw) => {
+            var newResult = filtre.map((raw) => {
               delete raw.doc.location['$reql_type$'];
               var resto = raw.doc;
               resto.distance = raw.dist;
               return resto;
             });
             resolve(newResult);
-          });
+          })
         }
       });
     });
@@ -289,6 +293,7 @@ export function addOrder(restaurantID, userID, order, rootValue) {
         resolve(res.changes[0].new_val.orders);
       });
     });
+    //TODO we do not get the right userID here, we got logID instead
     var q = new Promise(function(resolve, reject) {
       r.table('user').get(userID).update({
         orders: r.row('orders').append(order)
@@ -351,7 +356,7 @@ export function updateRestaurantCard(args, rootValue) {
         returnChanges: true
       }).run(rootValue.conn, function(err, res) {
         if (err) reject(err);
-        if(!res.changes[0]) return null;
+        if (!res.changes[0]) return null;
         resolve(res.changes[0].new_val);
       });
     });
@@ -370,7 +375,7 @@ export function updateRestaurantSettings(args, rootValue) {
         returnChanges: true
       }).run(rootValue.conn, function(err, res) {
         if (err) reject(err);
-        if(!res.changes[0]) return null;
+        if (!res.changes[0]) return null;
         resolve(res.changes[0].new_val);
       });
     });

@@ -77,31 +77,39 @@
 	
 	var _componentsUsers2 = _interopRequireDefault(_componentsUsers);
 	
-	var _componentsStart = __webpack_require__(/*! ./components/start */ 478);
+	var _componentsStartStart = __webpack_require__(/*! ./components/start/start */ 478);
 	
-	var _componentsStart2 = _interopRequireDefault(_componentsStart);
+	var _componentsStartStart2 = _interopRequireDefault(_componentsStartStart);
 	
-	var _componentsBoardCard = __webpack_require__(/*! ./components/board/card */ 480);
+	var _componentsStartCard = __webpack_require__(/*! ./components/start/card */ 480);
 	
-	var _componentsBoardCard2 = _interopRequireDefault(_componentsBoardCard);
+	var _componentsStartCard2 = _interopRequireDefault(_componentsStartCard);
 	
-	var _componentsBoardTimeline = __webpack_require__(/*! ./components/board/timeline */ 482);
+	var _componentsStartSettings = __webpack_require__(/*! ./components/start/settings */ 481);
+	
+	var _componentsStartSettings2 = _interopRequireDefault(_componentsStartSettings);
+	
+	var _componentsBoardBoard = __webpack_require__(/*! ./components/board/board */ 482);
+	
+	var _componentsBoardBoard2 = _interopRequireDefault(_componentsBoardBoard);
+	
+	var _componentsBoardTimeline = __webpack_require__(/*! ./components/board/timeline */ 483);
 	
 	var _componentsBoardTimeline2 = _interopRequireDefault(_componentsBoardTimeline);
 	
-	var _componentsBoardSettings = __webpack_require__(/*! ./components/board/settings */ 483);
+	var _componentsBoardCard = __webpack_require__(/*! ./components/board/card */ 484);
+	
+	var _componentsBoardCard2 = _interopRequireDefault(_componentsBoardCard);
+	
+	var _componentsBoardSettings = __webpack_require__(/*! ./components/board/settings */ 486);
 	
 	var _componentsBoardSettings2 = _interopRequireDefault(_componentsBoardSettings);
 	
-	var _componentsBoardChiefindex = __webpack_require__(/*! ./components/board/chiefindex */ 485);
-	
-	var _componentsBoardChiefindex2 = _interopRequireDefault(_componentsBoardChiefindex);
-	
-	var _componentsOrdering = __webpack_require__(/*! ./components/ordering */ 486);
+	var _componentsOrdering = __webpack_require__(/*! ./components/ordering */ 488);
 	
 	var _componentsOrdering2 = _interopRequireDefault(_componentsOrdering);
 	
-	var _componentsProfile = __webpack_require__(/*! ./components/profile */ 488);
+	var _componentsProfile = __webpack_require__(/*! ./components/profile */ 490);
 	
 	var _componentsProfile2 = _interopRequireDefault(_componentsProfile);
 	
@@ -113,7 +121,7 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _history = __webpack_require__(/*! history */ 490);
+	var _history = __webpack_require__(/*! history */ 492);
 	
 	var _reactRelay = __webpack_require__(/*! react-relay */ 200);
 	
@@ -121,11 +129,11 @@
 	
 	// import rootQuery from '../indexroute.js';
 	
-	var _reactRouterRelay = __webpack_require__(/*! react-router-relay */ 520);
+	var _reactRouterRelay = __webpack_require__(/*! react-router-relay */ 522);
 	
 	var _reactRouterRelay2 = _interopRequireDefault(_reactRouterRelay);
 	
-	__webpack_require__(/*! ../../stylesheets/home.scss */ 605);
+	__webpack_require__(/*! ../../stylesheets/home.scss */ 607);
 	
 	_reactRelay2['default'].injectNetworkLayer(new _reactRelay2['default'].DefaultNetworkLayer('/graphql', {
 	  credentials: 'same-origin'
@@ -206,11 +214,16 @@
 	      _react2['default'].createElement(_reactRouter.Route, { path: 'map', component: _componentsRestaurantsmap2['default'] }),
 	      _react2['default'].createElement(_reactRouter.Route, { path: 'list', component: _componentsRestaurantslist2['default'] })
 	    ),
-	    _react2['default'].createElement(_reactRouter.Route, { path: 'start', component: _componentsStart2['default'], queries: ViewerQuery }),
+	    _react2['default'].createElement(
+	      _reactRouter.Route,
+	      { path: 'start', component: _componentsStartStart2['default'], queries: ViewerQuery },
+	      _react2['default'].createElement(_reactRouter.Route, { path: 'card', component: _componentsStartCard2['default'] }),
+	      _react2['default'].createElement(_reactRouter.Route, { path: 'settings', component: _componentsStartSettings2['default'] })
+	    ),
 	    _react2['default'].createElement(_reactRouter.Route, { path: 'register', component: _componentsLogin2['default'], queries: ViewerQuery }),
 	    _react2['default'].createElement(
 	      _reactRouter.Route,
-	      { path: 'board/:id', component: _componentsBoardChiefindex2['default'], queries: FullQuery },
+	      { path: 'board/:id', component: _componentsBoardBoard2['default'], queries: FullQuery },
 	      _react2['default'].createElement(_reactRouter.Route, { path: '/settings/:id', component: _componentsBoardSettings2['default'], queries: RestaurantQuery }),
 	      _react2['default'].createElement(_reactRouter.Route, { path: '/timeline/:id', component: _componentsBoardTimeline2['default'], queries: RestaurantQuery }),
 	      _react2['default'].createElement(_reactRouter.Route, { path: '/card/:id', component: _componentsBoardCard2['default'], queries: RestaurantQuery })
@@ -24355,7 +24368,7 @@
 	            ),
 	            _react2['default'].createElement(
 	              _reactRouter.Link,
-	              { to: '/start', className: 'flex-item-2' },
+	              { to: '/start/card', className: 'flex-item-2' },
 	              'Start!'
 	            ),
 	            _react2['default'].createElement(LoginButton, user)
@@ -49809,7 +49822,11 @@
 	            'div',
 	            { className: 'search-container' },
 	            _react2['default'].createElement('input', { type: 'text', ref: 'name', className: 'search-input', value: this.state.search, onChange: this._onChange }),
-	            _react2['default'].createElement('span', { className: 'search-icon', onClick: this._submit })
+	            _react2['default'].createElement(
+	              'button',
+	              { className: 'search-icon-wrapper' },
+	              _react2['default'].createElement('span', { className: 'search-icon', onClick: this._submit })
+	            )
 	          )
 	        ),
 	        this.renderChildren()
@@ -51152,9 +51169,9 @@
 
 /***/ },
 /* 478 */
-/*!****************************************!*\
-  !*** ./src/client/components/start.js ***!
-  \****************************************/
+/*!**********************************************!*\
+  !*** ./src/client/components/start/start.js ***!
+  \**********************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51162,8 +51179,6 @@
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 	
@@ -51179,36 +51194,21 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _reactAddonsCloneWithProps = __webpack_require__(/*! react-addons-clone-with-props */ 470);
+	
+	var _reactAddonsCloneWithProps2 = _interopRequireDefault(_reactAddonsCloneWithProps);
+	
 	var _reactRelay = __webpack_require__(/*! react-relay */ 200);
 	
 	var _reactRelay2 = _interopRequireDefault(_reactRelay);
 	
-	var _classnames = __webpack_require__(/*! classnames */ 461);
+	var _reactRouter = __webpack_require__(/*! react-router */ 1);
 	
-	var _classnames2 = _interopRequireDefault(_classnames);
-	
-	var _mutationsRestaurantmutation = __webpack_require__(/*! ../mutations/restaurantmutation */ 479);
+	var _mutationsRestaurantmutation = __webpack_require__(/*! ../../mutations/restaurantmutation */ 479);
 	
 	var _mutationsRestaurantmutation2 = _interopRequireDefault(_mutationsRestaurantmutation);
 	
-	var card = {
-	  name: 'Your restaurant\'s name',
-	  description: 'Describe your restaurant',
-	  foods: [{
-	    id: '_' + Math.random().toString(36).substr(2, 9),
-	    name: 'the food\'s name',
-	    description: 'the food\'s description',
-	    meals: [{
-	      id: '_' + Math.random().toString(36).substr(2, 9),
-	      name: 'the meal\'s name',
-	      description: 'the meal\'s description',
-	      price: 0,
-	      time: 0
-	    }]
-	  }]
-	};
-	//list of var to be used on each component
-	var updateClass;
+	var route = { card: { name: { left: '', right: 'settings' }, path: { left: '', right: '/start/settings' } }, settings: { name: { left: 'card', right: 'map' }, path: { left: '/start/card', right: '/start/map' } }, map: { name: { left: 'settings', right: '' }, path: { left: '/start/settings', right: '' } } };
 	
 	var Start = (function (_React$Component) {
 	  _inherits(Start, _React$Component);
@@ -51220,47 +51220,24 @@
 	
 	    _get(Object.getPrototypeOf(Start.prototype), 'constructor', this).call(this, props, context);
 	
-	    this._add = function () {
-	      _this.state.foods.push({
-	        id: '_' + Math.random().toString(36).substr(2, 9),
-	        name: 'the food\'s name',
-	        description: 'the food\'s description',
-	        meals: [{
-	          id: '_' + Math.random().toString(36).substr(2, 9),
-	          name: 'the meal\'s name',
-	          description: 'the meal\'s description',
-	          price: 0,
-	          time: 0
-	        }]
-	      });
-	      _this.setState({
-	        foods: _this.state.foods
+	    this._findLocation = function () {
+	      var match = _this.props.location.pathname.match(/card|settings|map/);
+	      console.log(match);
+	      if (match === null) return route['card'];
+	      return route[match[0]];
+	    };
+	
+	    this.renderChildren = function () {
+	      return _react2['default'].Children.map(_this.props.children, function (child) {
+	        return (0, _reactAddonsCloneWithProps2['default'])(child, {
+	          submit: _this._submit
+	        });
 	      });
 	    };
 	
-	    this._restaurantMutation = function () {
-	      console.log('Start:restaurantMutation');
-	      var onSuccess = function onSuccess(restaurant) {
-	        //this.props.history.pushState({}, '/board/'+);
-	        console.log('Mutation successful!', restaurant);
-	        //loginRequest(Login.user);
-	      };
-	      var onFailure = function onFailure(transaction) {
-	        var error = transaction.getError() || new Error('Mutation failed.');
-	        console.error(error);
-	      };
-	      _reactRelay2['default'].Store.update(new _mutationsRestaurantmutation2['default']({ restaurant: card, user: _this.props.user.user }), { onFailure: onFailure, onSuccess: onSuccess });
-	    };
-	
-	    this._onChange = function (e) {
-	      console.log('onChange');
-	      card[e.target.id] = e.target.value;
-	      updateClass();
-	    };
-	
-	    this.state = card;
-	    updateClass = function () {
-	      _this.setState(card);
+	    this._submit = function (name, value) {
+	      console.log('submit');
+	      _this.setState({ name: value });
 	    };
 	  }
 	
@@ -51269,7 +51246,9 @@
 	    value: function componentDidMount() {
 	      if (!this.props.user.user.userID) {
 	        console.log('Start:ComponentDidMount', this.props.user.user.userID);
-	        this.props.history.pushState({ previousPath: '/start' }, '/register');
+	        this.props.history.pushState({
+	          previousPath: '/start'
+	        }, '/register');
 	      }
 	    }
 	  }, {
@@ -51277,54 +51256,36 @@
 	    value: function componentWillReceiveProps(newProps) {
 	      console.log('Start:componentWillReceiveProps', newProps.user.user.userID);
 	      if (!newProps.user.user.userID) {
-	        this.props.history.pushState({ previousPath: '/start' }, '/register');
+	        this.props.history.pushState({
+	          previousPath: '/start'
+	        }, '/register');
 	      }
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var createFood = function createFood(food, index) {
-	        return _react2['default'].createElement(Food, _extends({}, food, { index: index, key: food.id }));
-	      };
+	      var location = this._findLocation();
+	      var pathName = this.props.location.pathname.match(/card|settings|map/)[0];
 	      return _react2['default'].createElement(
 	        'div',
-	        { className: 'openarestaurant' },
+	        { className: 'start-index' },
+	        this.renderChildren(),
 	        _react2['default'].createElement(
-	          'div',
-	          { className: 'brand' },
-	          _react2['default'].createElement(
-	            'h1',
-	            { className: 'name' },
-	            _react2['default'].createElement('input', { type: 'text', id: 'name', value: this.state.name, onChange: this._onChange })
-	          ),
-	          _react2['default'].createElement(
-	            'h2',
-	            { className: 'description' },
-	            _react2['default'].createElement('textarea', { type: 'text', id: 'description', value: this.state.description, onChange: this._onChange })
-	          )
+	          'svg',
+	          { className: 'circles', viewBox: '0 0 100 40' },
+	          _react2['default'].createElement('circle', { cx: '10', cy: '20', r: '10', stroke: pathName === 'card' ? 'black' : 'black', sbluetrokeWidth: '2', fill: pathName === 'card' ? 'black' : 'white' }),
+	          _react2['default'].createElement('circle', { cx: '50', cy: '20', r: '10', stroke: pathName === 'settings' ? 'black' : 'black', strokeWidth: '2', fill: pathName === 'settings' ? 'black' : 'white' }),
+	          _react2['default'].createElement('circle', { cx: '90', cy: '20', r: '10', stroke: pathName === 'map' ? 'black' : 'black', strokeWidth: '2', fill: pathName === 'map' ? 'black' : 'white' })
 	        ),
 	        _react2['default'].createElement(
-	          'div',
-	          { className: 'nav' },
-	          _react2['default'].createElement(
-	            'div',
-	            { className: 'flex-item-2' },
-	            _react2['default'].createElement(
-	              'span',
-	              { className: 'plus', onClick: this._add },
-	              'Plus'
-	            )
-	          )
+	          _reactRouter.Link,
+	          { to: location.path.right, className: 'link-right' },
+	          location.name.right
 	        ),
 	        _react2['default'].createElement(
-	          'div',
-	          { className: 'foods nav-wrap' },
-	          this.state.foods.map(createFood)
-	        ),
-	        _react2['default'].createElement(
-	          'span',
-	          { className: 'submit', onClick: this._restaurantMutation },
-	          'Let\'s Start!'
+	          _reactRouter.Link,
+	          { to: location.path.left, className: 'link-left' },
+	          location.name.left
 	        )
 	      );
 	    }
@@ -51333,144 +51294,7 @@
 	  return Start;
 	})(_react2['default'].Component);
 	
-	var Food = (function (_React$Component2) {
-	  _inherits(Food, _React$Component2);
-	
-	  function Food(props, context) {
-	    var _this2 = this;
-	
-	    _classCallCheck(this, Food);
-	
-	    _get(Object.getPrototypeOf(Food.prototype), 'constructor', this).call(this, props, context);
-	
-	    this._addMeal = function (e) {
-	      e.stopPropagation();
-	      card.foods[_this2.props.index].meals.push({
-	        id: '_' + Math.random().toString(36).substr(2, 9),
-	        name: 'the meal\'s name',
-	        description: 'the meal\'s description',
-	        price: 0,
-	        time: 0
-	      });
-	      updateClass();
-	    };
-	
-	    this._switchExpand = function (e) {
-	      _this2.setState({ expand: !_this2.state.expand });
-	    };
-	
-	    this._close = function () {
-	      console.log('close');
-	      card.foods.splice(_this2.props.index, 1);
-	      updateClass();
-	    };
-	
-	    this._onChange = function (e) {
-	      card.foods[_this2.props.index][e.target.id] = e.target.value;
-	      updateClass();
-	    };
-	
-	    this.state = {
-	      expand: false,
-	      food: this.props,
-	      input: { name: false, description: false }
-	    };
-	  }
-	
-	  _createClass(Food, [{
-	    key: 'render',
-	    value: function render() {
-	      var _this3 = this;
-	
-	      var food = this.props;
-	      var createMeal = function createMeal(meal, index) {
-	        return _react2['default'].createElement(Meal, _extends({}, meal, { parentIndex: _this3.props.index, index: index, key: meal.id }));
-	      };
-	      return _react2['default'].createElement(
-	        'div',
-	        { className: 'food flex-item-2', onClick: this._switchExpand },
-	        _react2['default'].createElement('span', { className: 'close', onClick: this._close }),
-	        _react2['default'].createElement('input', { id: 'name', type: 'text', value: this.props.name, onChange: this._onChange, onClick: function (e) {
-	            return e.stopPropagation();
-	          } }),
-	        _react2['default'].createElement('br', null),
-	        _react2['default'].createElement('input', { id: 'description', type: 'text', value: this.props.description, onChange: this._onChange, onClick: function (e) {
-	            return e.stopPropagation();
-	          } }),
-	        _react2['default'].createElement(
-	          'div',
-	          { className: (0, _classnames2['default'])('meals', { 'nav-wrap': this.state.expand, 'hidden': !this.state.expand }) },
-	          _react2['default'].createElement(
-	            'span',
-	            { className: 'plus', onClick: this._addMeal },
-	            'Plus'
-	          ),
-	          this.props.meals.map(createMeal)
-	        )
-	      );
-	    }
-	  }]);
-	
-	  return Food;
-	})(_react2['default'].Component);
-	
-	var Meal = (function (_React$Component3) {
-	  _inherits(Meal, _React$Component3);
-	
-	  function Meal(props, context) {
-	    var _this4 = this;
-	
-	    _classCallCheck(this, Meal);
-	
-	    _get(Object.getPrototypeOf(Meal.prototype), 'constructor', this).call(this, props, context);
-	
-	    this._close = function (e) {
-	      e.stopPropagation();
-	      card.foods[_this4.props.parentIndex].meals.splice(_this4.props.index, 1);
-	      updateClass();
-	    };
-	
-	    this._onChange = function (e) {
-	      card.foods[_this4.props.parentIndex].meals[_this4.props.index][e.target.id] = e.target.type === 'number' ? Math.abs(e.target.value) : e.target.value;
-	      updateClass();
-	    };
-	
-	    this.state = {
-	      meal: this.props,
-	      input: { name: false, description: false, price: false, time: false }
-	    };
-	  }
-	
-	  _createClass(Meal, [{
-	    key: 'render',
-	    value: function render() {
-	      var food = this.props;
-	      return _react2['default'].createElement(
-	        'div',
-	        { className: 'meal flex-item-2' },
-	        _react2['default'].createElement('span', { className: 'close', onClick: this._close }),
-	        _react2['default'].createElement('input', { type: 'text', id: 'name', value: this.props.name, onChange: this._onChange, onClick: function (e) {
-	            return e.stopPropagation();
-	          } }),
-	        _react2['default'].createElement('br', null),
-	        _react2['default'].createElement('input', { type: 'text', id: 'description', value: this.props.description, onChange: this._onChange, onClick: function (e) {
-	            return e.stopPropagation();
-	          } }),
-	        _react2['default'].createElement('br', null),
-	        _react2['default'].createElement('input', { type: 'number', id: 'price', value: this.props.price, onChange: this._onChange, onClick: function (e) {
-	            return e.stopPropagation();
-	          } }),
-	        _react2['default'].createElement('br', null),
-	        _react2['default'].createElement('input', { type: 'number', id: 'time', value: this.props.time, onChange: this._onChange, onClick: function (e) {
-	            return e.stopPropagation();
-	          } })
-	      );
-	    }
-	  }]);
-	
-	  return Meal;
-	})(_react2['default'].Component);
-	
+	exports['default'] = Start;
 	exports['default'] = _reactRelay2['default'].createContainer(Start, {
 	  fragments: {
 	    //Question: Is fragment on mutation available on the component himself? no it's not
@@ -51644,7 +51468,7 @@
 /***/ },
 /* 480 */
 /*!*********************************************!*\
-  !*** ./src/client/components/board/card.js ***!
+  !*** ./src/client/components/start/card.js ***!
   \*********************************************/
 /***/ function(module, exports, __webpack_require__) {
 
@@ -51666,32 +51490,85 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var _reactRelay = __webpack_require__(/*! react-relay */ 200);
-	
-	var _reactRelay2 = _interopRequireDefault(_reactRelay);
-	
 	var _react = __webpack_require__(/*! react */ 3);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactRouter = __webpack_require__(/*! react-router */ 1);
+	var _reactRelay = __webpack_require__(/*! react-relay */ 200);
+	
+	var _reactRelay2 = _interopRequireDefault(_reactRelay);
 	
 	var _classnames = __webpack_require__(/*! classnames */ 461);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	var _mutationsUpdatecardmutation = __webpack_require__(/*! ../../mutations/updatecardmutation */ 481);
-	
-	var _mutationsUpdatecardmutation2 = _interopRequireDefault(_mutationsUpdatecardmutation);
-	
+	var card = {
+	  name: 'Your restaurant\'s name',
+	  description: 'Describe you restaurant',
+	  foods: [{
+	    id: '_' + Math.random().toString(36).substr(2, 9),
+	    name: 'the food\'s name',
+	    description: 'the food\'s description',
+	    meals: [{
+	      id: '_' + Math.random().toString(36).substr(2, 9),
+	      name: 'the meal\'s name',
+	      description: 'the meal\'s description',
+	      price: 0,
+	      time: 0
+	    }]
+	  }]
+	};
 	//list of var to be used on each component
 	var updateClass;
-	var card;
-	/**The 1st class Component Card inherit restaurants props;
-	 */
 	
-	var Card = (function (_React$Component) {
-	  _inherits(Card, _React$Component);
+	var Plus = (function (_React$Component) {
+	  _inherits(Plus, _React$Component);
+	
+	  function Plus() {
+	    _classCallCheck(this, Plus);
+	
+	    _get(Object.getPrototypeOf(Plus.prototype), 'constructor', this).apply(this, arguments);
+	  }
+	
+	  _createClass(Plus, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2['default'].createElement(
+	        'svg',
+	        { className: 'plus-icon-svg', viewBox: '0 0 80 80' },
+	        _react2['default'].createElement('path', { d: 'M0,40 L80,40 M40,0 L40,80' })
+	      );
+	    }
+	  }]);
+	
+	  return Plus;
+	})(_react2['default'].Component);
+	
+	var Close = (function (_React$Component2) {
+	  _inherits(Close, _React$Component2);
+	
+	  function Close() {
+	    _classCallCheck(this, Close);
+	
+	    _get(Object.getPrototypeOf(Close.prototype), 'constructor', this).apply(this, arguments);
+	  }
+	
+	  _createClass(Close, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2['default'].createElement(
+	        'svg',
+	        { className: 'close-icon-svg', viewBox: '0 0 80 80' },
+	        _react2['default'].createElement('path', { d: 'M10,10 L70,70 M70,10 L10,70' })
+	      );
+	    }
+	  }]);
+	
+	  return Close;
+	})(_react2['default'].Component);
+	
+	var Card = (function (_React$Component3) {
+	  _inherits(Card, _React$Component3);
 	
 	  function Card(props, context) {
 	    var _this = this;
@@ -51701,7 +51578,7 @@
 	    _get(Object.getPrototypeOf(Card.prototype), 'constructor', this).call(this, props, context);
 	
 	    this._add = function () {
-	      card.foods.push({
+	      _this.state.foods.push({
 	        id: '_' + Math.random().toString(36).substr(2, 9),
 	        name: 'the food\'s name',
 	        description: 'the food\'s description',
@@ -51713,7 +51590,7 @@
 	          time: 0
 	        }]
 	      });
-	      updateClass();
+	      _this.setState({ foods: _this.state.foods });
 	    };
 	
 	    this._onChange = function (e) {
@@ -51722,38 +51599,18 @@
 	      updateClass();
 	    };
 	
-	    this._cardUpdateMutation = function () {
-	      _this.state.foods.map(function (food) {
-	        console.log(food);
-	        delete food.__dataID__;
-	        food.meals.map(function (meal) {
-	          return delete meal.__dataID__;
-	        });
-	      });
-	      var resto = {
-	        name: _this.state.name,
-	        description: _this.state.description,
-	        foods: _this.state.foods
-	      };
-	      console.log(_this.state.foods);
-	      _reactRelay2['default'].Store.update(new _mutationsUpdatecardmutation2['default']({ card: resto, restaurant: _this.props.restaurant.restaurant }));
-	    };
-	
-	    var restaurant = this.props.restaurant.restaurant;
-	    card = {
-	      name: restaurant.name,
-	      description: restaurant.description,
-	      foods: restaurant.foods
-	    };
 	    this.state = card;
-	    this.state.save = false;
 	    updateClass = function () {
-	      _this.state.save = true;
 	      _this.setState(card);
 	    };
 	  }
 	
 	  _createClass(Card, [{
+	    key: 'componentWillLeave',
+	    value: function componentWillLeave() {
+	      this.props.update('card', card);
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var createFood = function createFood(food, index) {
@@ -51761,19 +51618,23 @@
 	      };
 	      return _react2['default'].createElement(
 	        'div',
-	        { className: 'card' },
+	        { className: 'openarestaurant' },
 	        _react2['default'].createElement(
 	          'div',
 	          { className: 'brand' },
 	          _react2['default'].createElement(
 	            'h1',
 	            { className: 'name' },
-	            _react2['default'].createElement('input', { type: 'text', id: 'name', value: this.state.name, onChange: this._onChange })
+	            _react2['default'].createElement('input', { type: 'text', id: 'name', value: this.state.name, style: {
+	                width: this.state.name.length / 2 + 'em'
+	              }, onChange: this._onChange })
 	          ),
 	          _react2['default'].createElement(
 	            'h2',
 	            { className: 'description' },
-	            _react2['default'].createElement('input', { type: 'text', id: 'description', value: this.state.description, onChange: this._onChange })
+	            _react2['default'].createElement('textarea', { type: 'text', id: 'description', value: this.state.description, style: {
+	                width: this.state.description.length / 2 + 'em'
+	              }, onChange: this._onChange })
 	          )
 	        ),
 	        _react2['default'].createElement(
@@ -51781,23 +51642,14 @@
 	          { className: 'nav' },
 	          _react2['default'].createElement(
 	            'div',
-	            { className: 'flex-item-2' },
-	            _react2['default'].createElement(
-	              'span',
-	              { className: 'plus', onClick: this._add },
-	              'Plus'
-	            )
+	            { className: 'flex-item-2', onClick: this._add },
+	            _react2['default'].createElement(Plus, null)
 	          )
 	        ),
 	        _react2['default'].createElement(
 	          'div',
 	          { className: 'foods nav-wrap' },
 	          this.state.foods.map(createFood)
-	        ),
-	        _react2['default'].createElement(
-	          'span',
-	          { className: (0, _classnames2['default'])('submit', { hidden: !this.state.save }), onClick: this._cardUpdateMutation },
-	          'Save Changes'
 	        )
 	      );
 	    }
@@ -51806,8 +51658,10 @@
 	  return Card;
 	})(_react2['default'].Component);
 	
-	var Food = (function (_React$Component2) {
-	  _inherits(Food, _React$Component2);
+	exports['default'] = Card;
+	
+	var Food = (function (_React$Component4) {
+	  _inherits(Food, _React$Component4);
 	
 	  function Food(props, context) {
 	    var _this2 = this;
@@ -51829,7 +51683,9 @@
 	    };
 	
 	    this._switchExpand = function (e) {
-	      _this2.setState({ expand: !_this2.state.expand });
+	      _this2.setState({
+	        expand: !_this2.state.expand
+	      });
 	    };
 	
 	    this._close = function () {
@@ -51846,7 +51702,10 @@
 	    this.state = {
 	      expand: false,
 	      food: this.props,
-	      input: { name: false, description: false }
+	      input: {
+	        name: false,
+	        description: false
+	      }
 	    };
 	  }
 	
@@ -51861,24 +51720,40 @@
 	      };
 	      return _react2['default'].createElement(
 	        'div',
-	        { className: 'food flex-item-2', onClick: this._switchExpand },
-	        _react2['default'].createElement('span', { className: 'close', onClick: this._close }),
-	        _react2['default'].createElement('input', { id: 'name', type: 'text', value: this.props.name, onChange: this._onChange, onClick: function (e) {
-	            return e.stopPropagation();
-	          } }),
+	        { className: 'food flex-item-2' },
+	        _react2['default'].createElement(
+	          'span',
+	          { className: 'close', onClick: this._close },
+	          _react2['default'].createElement(Close, null)
+	        ),
+	        _react2['default'].createElement('input', { id: 'name', type: 'text', style: {
+	            width: this.props.name.length / 2 + 'em'
+	          }, value: this.props.name, onChange: this._onChange }),
 	        _react2['default'].createElement('br', null),
-	        _react2['default'].createElement('input', { id: 'description', type: 'text', value: this.props.description, onChange: this._onChange, onClick: function (e) {
-	            return e.stopPropagation();
-	          } }),
+	        _react2['default'].createElement('input', { id: 'description', type: 'text', style: {
+	            width: this.props.description.length / 2 + 'em'
+	          }, value: this.props.description, onChange: this._onChange }),
 	        _react2['default'].createElement(
 	          'div',
-	          { className: (0, _classnames2['default'])('meals', { 'nav-wrap': this.state.expand, 'hidden': !this.state.expand }) },
+	          { className: (0, _classnames2['default'])('meals', {
+	              'nav-wrap': this.state.expand,
+	              'hidden': !this.state.expand
+	            }) },
 	          _react2['default'].createElement(
 	            'span',
 	            { className: 'plus', onClick: this._addMeal },
-	            'Plus'
+	            _react2['default'].createElement(Plus, null)
 	          ),
 	          this.props.meals.map(createMeal)
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { onClick: this._switchExpand },
+	          _react2['default'].createElement(
+	            'svg',
+	            { className: 'expand-icon-svg', viewBox: '0 0 80 60' },
+	            _react2['default'].createElement('path', { className: 'expand-icon-path', d: this.state.expand ? 'M0,60 L40,0 L80,60' : 'M0,0 L40,60 L80,0', fill: 'white', stroke: 'black', strokeWidth: 10 })
+	          )
 	        )
 	      );
 	    }
@@ -51887,8 +51762,8 @@
 	  return Food;
 	})(_react2['default'].Component);
 	
-	var Meal = (function (_React$Component3) {
-	  _inherits(Meal, _React$Component3);
+	var Meal = (function (_React$Component5) {
+	  _inherits(Meal, _React$Component5);
 	
 	  function Meal(props, context) {
 	    var _this4 = this;
@@ -51910,7 +51785,12 @@
 	
 	    this.state = {
 	      meal: this.props,
-	      input: { name: false, description: false, price: false, time: false }
+	      input: {
+	        name: false,
+	        description: false,
+	        price: false,
+	        time: false
+	      }
 	    };
 	  }
 	
@@ -51921,22 +51801,24 @@
 	      return _react2['default'].createElement(
 	        'div',
 	        { className: 'meal flex-item-2' },
-	        _react2['default'].createElement('span', { className: 'close', onClick: this._close }),
-	        _react2['default'].createElement('input', { type: 'text', id: 'name', value: this.props.name, onChange: this._onChange, onClick: function (e) {
-	            return e.stopPropagation();
+	        _react2['default'].createElement(
+	          'span',
+	          { className: 'close', onClick: this._close },
+	          _react2['default'].createElement(Close, null)
+	        ),
+	        _react2['default'].createElement('input', { onChange: this._onChange, type: 'text', id: 'name', value: this.props.name, style: {
+	            width: this.props.name.length / 2 + 'em'
 	          } }),
 	        _react2['default'].createElement('br', null),
-	        _react2['default'].createElement('input', { type: 'text', id: 'description', value: this.props.description, onChange: this._onChange, onClick: function (e) {
-	            return e.stopPropagation();
+	        _react2['default'].createElement('input', { onChange: this._onChange, type: 'text', id: 'description', value: this.props.description, style: {
+	            width: this.props.description.length / 2 + 'em'
 	          } }),
 	        _react2['default'].createElement('br', null),
-	        _react2['default'].createElement('input', { type: 'number', id: 'price', value: this.props.price, onChange: this._onChange, onClick: function (e) {
-	            return e.stopPropagation();
-	          } }),
+	        _react2['default'].createElement('input', { type: 'number', id: 'price', value: this.props.price, onChange: this._onChange }),
+	        'mB',
 	        _react2['default'].createElement('br', null),
-	        _react2['default'].createElement('input', { type: 'number', id: 'time', value: this.props.time, onChange: this._onChange, onClick: function (e) {
-	            return e.stopPropagation();
-	          } })
+	        _react2['default'].createElement('input', { type: 'number', id: 'time', value: this.props.time, onChange: this._onChange }),
+	        'min'
 	      );
 	    }
 	  }]);
@@ -51944,58 +51826,28 @@
 	  return Meal;
 	})(_react2['default'].Component);
 	
-	exports['default'] = _reactRelay2['default'].createContainer(Card, {
-	  fragments: {
-	    //Question: Is fragment on mutation available on the component himself? no it's not
-	    //and you use a mutation you have to call mutation fragment if not you get a warning
-	    restaurant: function restaurant() {
-	      return (function (sub_0) {
-	        var GraphQL = _reactRelay2['default'].QL.__GraphQL;
-	        return new GraphQL.QueryFragment('Card', 'Root', [new GraphQL.Field('restaurant', [new GraphQL.Field('id', null, null, null, null, null, {
-	          'parentType': 'Restaurant',
-	          'requisite': true
-	        }), new GraphQL.Field('name', null, null, null, null, null, {
-	          'parentType': 'Restaurant'
-	        }), new GraphQL.Field('description', null, null, null, null, null, {
-	          'parentType': 'Restaurant'
-	        }), new GraphQL.Field('foods', [new GraphQL.Field('id', null, null, null, null, null, {
-	          'parentType': 'Food',
-	          'requisite': true
-	        }), new GraphQL.Field('name', null, null, null, null, null, {
-	          'parentType': 'Food'
-	        }), new GraphQL.Field('description', null, null, null, null, null, {
-	          'parentType': 'Food'
-	        }), new GraphQL.Field('meals', [new GraphQL.Field('id', null, null, null, null, null, {
-	          'parentType': 'Meal',
-	          'requisite': true
-	        }), new GraphQL.Field('name', null, null, null, null, null, {
-	          'parentType': 'Meal'
-	        }), new GraphQL.Field('description', null, null, null, null, null, {
-	          'parentType': 'Meal'
-	        }), new GraphQL.Field('price', null, null, null, null, null, {
-	          'parentType': 'Meal'
-	        }), new GraphQL.Field('time', null, null, null, null, null, {
-	          'parentType': 'Meal'
-	        })], null, null, null, null, {
-	          'parentType': 'Food',
-	          'plural': true
-	        })], null, null, null, null, {
-	          'parentType': 'Restaurant',
-	          'plural': true
-	        })], [_reactRelay2['default'].QL.__frag(sub_0)], null, null, null, {
-	          'parentType': 'Root'
-	        })]);
-	      })(_mutationsUpdatecardmutation2['default'].getFragment('restaurant'));
-	    }
-	  }
-	});
 	module.exports = exports['default'];
+
+	//
+	// _restaurantMutation = () => {
+	//   console.log('Start:restaurantMutation');
+	//   var onSuccess = (restaurant) => {
+	//     //this.props.history.pushState({}, '/board/'+);
+	//     console.log('Mutation successful!', restaurant);
+	//     //loginRequest(Login.user);
+	//   };
+	//   var onFailure = (transaction) => {
+	//     var error = transaction.getError() || new Error('Mutation failed.');
+	//     console.error(error);
+	//   };
+	//   Relay.Store.update(new RestaurantMutation({restaurant: card, user: this.props.user.user}), {onFailure, onSuccess});
+	// }
 
 /***/ },
 /* 481 */
-/*!****************************************************!*\
-  !*** ./src/client/mutations/updatecardmutation.js ***!
-  \****************************************************/
+/*!*************************************************!*\
+  !*** ./src/client/components/start/settings.js ***!
+  \*************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52014,128 +51866,514 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
+	var _react = __webpack_require__(/*! react */ 3);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
 	var _reactRelay = __webpack_require__(/*! react-relay */ 200);
 	
 	var _reactRelay2 = _interopRequireDefault(_reactRelay);
 	
-	var UpdateCardMutation = (function (_Relay$Mutation) {
-	  _inherits(UpdateCardMutation, _Relay$Mutation);
+	var _reactRouter = __webpack_require__(/*! react-router */ 1);
 	
-	  function UpdateCardMutation() {
-	    _classCallCheck(this, UpdateCardMutation);
+	var _classnames = __webpack_require__(/*! classnames */ 461);
 	
-	    _get(Object.getPrototypeOf(UpdateCardMutation.prototype), 'constructor', this).apply(this, arguments);
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
+	var defaultSettings;
+	var _update;
+	var midnightDate;
+	
+	var StartSettings = (function (_React$Component) {
+	  _inherits(StartSettings, _React$Component);
+	
+	  function StartSettings(props, context) {
+	    var _this = this;
+	
+	    _classCallCheck(this, StartSettings);
+	
+	    _get(Object.getPrototypeOf(StartSettings.prototype), 'constructor', this).call(this, props, context);
+	    defaultSettings = {
+	      scorable: false,
+	      open: false,
+	      schedule: [{ day: 'monday', openHours: [{ from: 0, to: 0 }] }, { day: 'tuesday', openHours: [{ from: 0, to: 0 }] }, { day: 'wednesday', openHours: [{ from: 0, to: 0 }] }, { day: 'thursday', openHours: [{ from: 0, to: 0 }] }, { day: 'friday', openHours: [{ from: 0, to: 0 }] }, { day: 'saturday', openHours: [{ from: 0, to: 0 }] }, { day: 'sunday', openHours: [{ from: 0, to: 0 }] }]
+	    };
+	    _update = function () {
+	      _this.state.save = true;
+	      _this.forceUpdate();
+	    };
+	    this.state = { save: false };
 	  }
 	
-	  _createClass(UpdateCardMutation, [{
-	    key: 'getMutation',
-	    value: function getMutation() {
-	      return (function () {
-	        var GraphQL = _reactRelay2['default'].QL.__GraphQL;
-	        return new GraphQL.Mutation('Updatecardmutation', 'UpdateCardPayload', new GraphQL.Callv('UpdateCard', new GraphQL.CallVariable('input')), [new GraphQL.Field('clientMutationId', null, null, null, null, null, {
-	          'parentType': 'UpdateCardPayload',
-	          'generated': true,
-	          'requisite': true
-	        })], null, {
-	          'inputType': 'UpdateCardInput!'
-	        });
-	      })();
-	    }
-	  }, {
-	    key: 'getVariables',
-	    value: function getVariables() {
-	      return {
-	        restaurantID: this.props.restaurant.id,
-	        card: this.props.card
+	  _createClass(StartSettings, [{
+	    key: 'render',
+	    value: function render() {
+	      midnightDate = new Date().setHours(0, 0, 0, 0);
+	      var createWeek = function createWeek(day, index) {
+	        return _react2['default'].createElement(Day, { index: index });
 	      };
+	      return _react2['default'].createElement(
+	        'div',
+	        { className: 'settings' },
+	        _react2['default'].createElement(
+	          'h1',
+	          { className: 'intro' },
+	          'Check your restaurant settings.'
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          null,
+	          _react2['default'].createElement(
+	            'div',
+	            { className: 'setting' },
+	            'let clients note your restaurant',
+	            _react2['default'].createElement(Cursor, { state: defaultSettings.scorable, cursor: 'scorable' })
+	          ),
+	          _react2['default'].createElement(
+	            'div',
+	            { className: 'setting' },
+	            'is your restaurant open ',
+	            _react2['default'].createElement(Cursor, { state: defaultSettings.open, cursor: 'open' })
+	          )
+	        ),
+	        _react2['default'].createElement(
+	          'h2',
+	          null,
+	          'Check out your opening hours'
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'opening-hours nav-wrap' },
+	          defaultSettings.schedule.map(createWeek)
+	        )
+	      );
 	    }
-	  }, {
-	    key: 'getConfigs',
-	    value: function getConfigs() {
-	      return [{
-	        type: 'FIELDS_CHANGE',
-	        fieldIDs: {
-	          restaurant: this.props.restaurant.id
-	        }
-	      }];
-	    }
-	  }, {
-	    key: 'getOptimisticResponse',
-	    value: function getOptimisticResponse() {
-	      return {
-	        restaurant: {
-	          id: this.props.restaurant.id,
-	          name: this.props.card.name,
-	          description: this.props.card.description,
-	          foods: this.props.card.foods
-	        }
-	      };
-	    }
-	  }, {
-	    key: 'getFatQuery',
-	    value: function getFatQuery() {
-	      return (function () {
-	        var GraphQL = _reactRelay2['default'].QL.__GraphQL;
-	        return new GraphQL.QueryFragment('Updatecardmutation', 'UpdateCardPayload', [new GraphQL.Field('restaurant', [new GraphQL.Field('id', null, null, null, null, null, {
-	          'parentType': 'Restaurant',
-	          'requisite': true
-	        }), new GraphQL.Field('name', null, null, null, null, null, {
-	          'parentType': 'Restaurant'
-	        }), new GraphQL.Field('description', null, null, null, null, null, {
-	          'parentType': 'Restaurant'
-	        }), new GraphQL.Field('foods', [new GraphQL.Field('id', null, null, null, null, null, {
-	          'parentType': 'Food',
-	          'requisite': true
-	        }), new GraphQL.Field('name', null, null, null, null, null, {
-	          'parentType': 'Food'
-	        }), new GraphQL.Field('description', null, null, null, null, null, {
-	          'parentType': 'Food'
-	        }), new GraphQL.Field('meals', [new GraphQL.Field('id', null, null, null, null, null, {
-	          'parentType': 'Meal',
-	          'requisite': true
-	        }), new GraphQL.Field('name', null, null, null, null, null, {
-	          'parentType': 'Meal'
-	        }), new GraphQL.Field('description', null, null, null, null, null, {
-	          'parentType': 'Meal'
-	        }), new GraphQL.Field('price', null, null, null, null, null, {
-	          'parentType': 'Meal'
-	        }), new GraphQL.Field('time', null, null, null, null, null, {
-	          'parentType': 'Meal'
-	        })], null, null, null, null, {
-	          'parentType': 'Food',
-	          'plural': true
-	        })], null, null, null, null, {
-	          'parentType': 'Restaurant',
-	          'plural': true
-	        })], null, null, null, null, {
-	          'parentType': 'UpdateCardPayload'
-	        })]);
-	      })();
-	    }
-	  }], [{
-	    key: 'fragments',
-	    value: {
-	      restaurant: function restaurant() {
-	        return (function () {
-	          var GraphQL = _reactRelay2['default'].QL.__GraphQL;
-	          return new GraphQL.QueryFragment('Updatecardmutation', 'Restaurant', [new GraphQL.Field('id', null, null, null, null, null, {
-	            'parentType': 'Restaurant',
-	            'requisite': true
-	          })]);
-	        })();
-	      }
-	    },
-	    enumerable: true
 	  }]);
 	
-	  return UpdateCardMutation;
-	})(_reactRelay2['default'].Mutation);
+	  return StartSettings;
+	})(_react2['default'].Component);
 	
-	exports['default'] = UpdateCardMutation;
+	exports['default'] = StartSettings;
+	
+	var Cursor = (function (_React$Component2) {
+	  _inherits(Cursor, _React$Component2);
+	
+	  function Cursor(props, context) {
+	    var _this2 = this;
+	
+	    _classCallCheck(this, Cursor);
+	
+	    _get(Object.getPrototypeOf(Cursor.prototype), 'constructor', this).call(this, props, context);
+	
+	    this._switch = function (e) {
+	      defaultSettings[_this2.props.cursor] = !defaultSettings[_this2.props.cursor];
+	      _update();
+	    };
+	  }
+	
+	  _createClass(Cursor, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2['default'].createElement(
+	        'svg',
+	        { id: 'timeline', className: 'cursor', viewBox: '0 0 40 20', onClick: this._switch },
+	        _react2['default'].createElement('rect', { x: '0', y: '0', rx: '10', ry: '10', width: '40', height: '20', fill: this.props.state ? 'rgb(42, 195, 4)' : 'rgb(238, 17, 17)' }),
+	        _react2['default'].createElement('circle', { cx: this.props.state ? '10' : '30', cy: '10', r: '10', fill: 'black' })
+	      );
+	    }
+	  }]);
+	
+	  return Cursor;
+	})(_react2['default'].Component);
+	
+	var Day = (function (_React$Component3) {
+	  _inherits(Day, _React$Component3);
+	
+	  function Day(props, context) {
+	    var _this3 = this;
+	
+	    _classCallCheck(this, Day);
+	
+	    _get(Object.getPrototypeOf(Day.prototype), 'constructor', this).call(this, props, context);
+	
+	    this._selected = function (e) {
+	      console.log(e);
+	    };
+	
+	    this._switch = function () {
+	      _this3.setState({ expand: !_this3.state.expand });
+	    };
+	
+	    this._addHours = function () {
+	      defaultSettings.schedule[_this3.props.index].openHours.push({
+	        from: 0,
+	        to: 0
+	      });
+	      _update();
+	    };
+	
+	    this._removeHours = function (index) {
+	      defaultSettings.schedule[_this3.props.index].openHours.splice(index, 1);
+	      _update();
+	    };
+	
+	    this.state = { time: { from: 0, to: 0 }, expand: false };
+	  }
+	
+	  _createClass(Day, [{
+	    key: 'render',
+	    value: function render() {
+	      var _this4 = this;
+	
+	      var schedule = defaultSettings.schedule[this.props.index];
+	      var createSVG = function createSVG(time, index) {
+	        var date = {
+	          from: new Date(midnightDate + time.from),
+	          to: new Date(midnightDate + time.to)
+	        };
+	        var from = time.from / 100000;
+	        var to = time.to / 100000;
+	        return _react2['default'].createElement(
+	          'g',
+	          null,
+	          _react2['default'].createElement('path', { d: 'M' + (from < to ? from : to) + ',12.5 H' + to, stroke: 'green', strokeWidth: '25' }),
+	          _react2['default'].createElement('path', { className: 'from', d: 'M' + (from < to ? from : to) + ',25 V0', stroke: 'black', strokeWidth: '2' }),
+	          _react2['default'].createElement(
+	            'text',
+	            { x: from < to ? from : to, y: '-2.5', fill: 'black', style: { textAnchor: 'middle' } },
+	            date.from.getHours() + 'h' + (date.from.getMinutes() < 10 ? '0' + date.from.getMinutes() : date.from.getMinutes())
+	          ),
+	          _react2['default'].createElement(
+	            'text',
+	            { x: to, y: '-2.5', fill: 'black', style: { textAnchor: 'middle' } },
+	            date.to.getHours() + 'h' + (date.to.getMinutes() < 10 ? '0' + date.to.getMinutes() : date.to.getMinutes())
+	          )
+	        );
+	      };
+	      var createPickers = function createPickers(time, index) {
+	        return _react2['default'].createElement(
+	          'div',
+	          { className: 'flex-item-2 picker-wrapper' },
+	          _react2['default'].createElement('span', { className: 'close-icon', onClick: function (e) {
+	              return _this4._removeHours(index);
+	            } }),
+	          _react2['default'].createElement(Timepicker, { from: index, index: _this4.props.index }),
+	          _react2['default'].createElement(
+	            'strong',
+	            { className: 'to' },
+	            ' to '
+	          ),
+	          _react2['default'].createElement(Timepicker, { to: index, index: _this4.props.index })
+	        );
+	      };
+	
+	      return _react2['default'].createElement(
+	        'div',
+	        null,
+	        _react2['default'].createElement(
+	          'div',
+	          { className: (0, _classnames2['default'])('flex-center', { 'nav-wrap': this.state.expand, hidden: !this.state.expand }) },
+	          schedule.openHours.map(createPickers),
+	          _react2['default'].createElement(
+	            'span',
+	            { className: 'button flex-item-3', onClick: this._addHours },
+	            'And...'
+	          )
+	        ),
+	        _react2['default'].createElement(
+	          'strong',
+	          { className: (0, _classnames2['default'])('day-title', { hidden: this.state.expand }) },
+	          schedule.day
+	        ),
+	        _react2['default'].createElement(
+	          'svg',
+	          { className: 'day', viewBox: '0 0 864 25', onClick: this._switch },
+	          schedule.openHours.map(createSVG)
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Day;
+	})(_react2['default'].Component);
+	
+	var Timepicker = (function (_React$Component4) {
+	  _inherits(Timepicker, _React$Component4);
+	
+	  function Timepicker(props, context) {
+	    var _this5 = this;
+	
+	    _classCallCheck(this, Timepicker);
+	
+	    _get(Object.getPrototypeOf(Timepicker.prototype), 'constructor', this).call(this, props, context);
+	
+	    this._changeHours = function (e, date) {
+	      if (Math.abs(e.target.value > 24)) return;
+	      date.setHours(Math.abs(e.target.value));
+	      console.log(24 * 60 * 60 * 1000, date.getTime() - midnightDate, e.target.value);
+	      defaultSettings.schedule[_this5.props.index].openHours[_this5.props.from !== undefined ? _this5.props.from : _this5.props.to][_this5.props.from !== undefined ? 'from' : 'to'] = date.getTime() - midnightDate;
+	      _update();
+	    };
+	
+	    this._changeMinutes = function (e, date) {
+	      if (Math.abs(e.target.value > 60)) return;
+	      date.setMinutes(Math.abs(e.target.value));
+	      defaultSettings.schedule[_this5.props.index].openHours[_this5.props.from !== undefined ? _this5.props.from : _this5.props.to][_this5.props.from !== undefined ? 'from' : 'to'] = date.getTime() - midnightDate;
+	      _update();
+	    };
+	
+	    this._incPlusHours = function (time) {
+	      console.log('incPlusHours');
+	      if (time > 23 * 60 * 60 * 1000) return;else {
+	        defaultSettings.schedule[_this5.props.index].openHours[_this5.props.from !== undefined ? _this5.props.from : _this5.props.to][_this5.props.from !== undefined ? 'from' : 'to'] += 60 * 60 * 1000;
+	      }
+	      _update();
+	    };
+	
+	    this._incLessHours = function (time) {
+	      if (time < 60 * 60 * 1000) return;else {
+	        defaultSettings.schedule[_this5.props.index].openHours[_this5.props.from !== undefined ? _this5.props.from : _this5.props.to][_this5.props.from !== undefined ? 'from' : 'to'] -= 60 * 60 * 1000;
+	      }
+	      _update();
+	    };
+	
+	    this._incPlusMinutes = function (time) {
+	      console.log('incPlusMinutes');
+	      if (time > 24 * 60 * 60 * 1000 - 60 * 1000) return;else {
+	        defaultSettings.schedule[_this5.props.index].openHours[_this5.props.from !== undefined ? _this5.props.from : _this5.props.to][_this5.props.from !== undefined ? 'from' : 'to'] += 60 * 1000;
+	      }
+	      _update();
+	    };
+	
+	    this._incLessMinutes = function (time) {
+	      console.log('incLessMinutes');
+	      if (time < 60 * 1000) return;else {
+	        defaultSettings.schedule[_this5.props.index].openHours[_this5.props.from !== undefined ? _this5.props.from : _this5.props.to][_this5.props.from !== undefined ? 'from' : 'to'] -= 60 * 1000;
+	      }
+	      _update();
+	    };
+	  }
+	
+	  _createClass(Timepicker, [{
+	    key: 'render',
+	    value: function render() {
+	      var _this6 = this;
+	
+	      var time = defaultSettings.schedule[this.props.index].openHours[this.props.from !== undefined ? this.props.from : this.props.to][this.props.from !== undefined ? 'from' : 'to'];
+	      var date = new Date(midnightDate + time);
+	      return _react2['default'].createElement(
+	        'div',
+	        { className: 'timepicker' },
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'flex-item-2 picker' },
+	          _react2['default'].createElement(
+	            'span',
+	            { className: 'inc-plus', onClick: function (e) {
+	                return _this6._incPlusHours(time);
+	              } },
+	            '▲'
+	          ),
+	          _react2['default'].createElement('input', { type: 'text', className: 'hours', value: date.getHours(), onChange: function (e) {
+	              return _this6._changeHours(e, date);
+	            } }),
+	          ' H',
+	          _react2['default'].createElement(
+	            'span',
+	            { className: 'inc-less', onClick: function (e) {
+	                return _this6._incLessHours(time);
+	              } },
+	            '▼'
+	          )
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'flex-item-2 picker' },
+	          _react2['default'].createElement(
+	            'span',
+	            { className: 'inc-plus', onClick: function (e) {
+	                return _this6._incPlusMinutes(time);
+	              } },
+	            '▲'
+	          ),
+	          _react2['default'].createElement('input', { type: 'text', className: 'minutes', value: date.getMinutes(), onChange: function (e) {
+	              return _this6._changeMinutes(e, date);
+	            } }),
+	          ' Min',
+	          _react2['default'].createElement(
+	            'span',
+	            { className: 'inc-less', onClick: function (e) {
+	                return _this6._incLessMinutes(time);
+	              } },
+	            '▼'
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Timepicker;
+	})(_react2['default'].Component);
+	
 	module.exports = exports['default'];
 
 /***/ },
 /* 482 */
+/*!**********************************************!*\
+  !*** ./src/client/components/board/board.js ***!
+  \**********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var _react = __webpack_require__(/*! react */ 3);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRelay = __webpack_require__(/*! react-relay */ 200);
+	
+	var _reactRelay2 = _interopRequireDefault(_reactRelay);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 1);
+	
+	var _classnames = __webpack_require__(/*! classnames */ 461);
+	
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
+	/// make a board component to go through card and dashboard order
+	
+	var Board = (function (_React$Component) {
+	  _inherits(Board, _React$Component);
+	
+	  function Board(props, context) {
+	    var _this = this;
+	
+	    _classCallCheck(this, Board);
+	
+	    _get(Object.getPrototypeOf(Board.prototype), 'constructor', this).call(this, props, context);
+	
+	    this._select = function (e) {
+	      for (var i in _this.refs) {
+	        console.log(_this.refs[i].getDOMNode());
+	        _this.refs[i].getDOMNode().className = 'flex-item-2';
+	      }
+	      e.target.className = 'flex-item-2 selected';
+	    };
+	
+	    this.state = {
+	      active: this.props.location.pathname
+	    };
+	  }
+	
+	  _createClass(Board, [{
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(newProps) {
+	      if (!newProps.user.user.userID) {
+	        console.log('ChiefIndex:componentWillReceiveProps', newProps.user.user.userID);
+	        this.props.history.pushState({
+	          previousPath: this.props.location.pathname
+	        }, '/register');
+	      }
+	    }
+	  }, {
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      console.log('board:componentWillMount', this.props);
+	      if (this.props.user.user.userID !== this.props.restaurant.restaurant.userID) {
+	        console.log('ChiefIndex:ComponentWillMount', this.props.user.user.userID);
+	        this.props.history.pushState({}, '/');
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      console.log(this.props);
+	      return _react2['default'].createElement(
+	        'div',
+	        { className: 'chief-index' },
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'nav flex-center' },
+	          _react2['default'].createElement(
+	            _reactRouter.Link,
+	            { to: '/card/' + this.props.id, className: (0, _classnames2['default'])('flex-item-2', {
+	                selected: this.props.location.pathname.search('card') !== -1
+	              }), ref: 'card', onClick: this._select },
+	            'Your Card'
+	          ),
+	          _react2['default'].createElement(
+	            _reactRouter.Link,
+	            { to: '/timeline/' + this.props.id, className: (0, _classnames2['default'])('flex-item-2', {
+	                selected: this.props.location.pathname.search('timeline') !== -1
+	              }), ref: 'board', onClick: this._select },
+	            'Dashboard Order'
+	          ),
+	          _react2['default'].createElement(
+	            _reactRouter.Link,
+	            { to: '/settings/' + this.props.id, className: (0, _classnames2['default'])('flex-item-2', {
+	                selected: this.props.location.pathname.search('settings') !== -1
+	              }), ref: 'settings', onClick: this._select },
+	            'Restaurant Settings'
+	          )
+	        ),
+	        this.props.children
+	      );
+	    }
+	  }]);
+	
+	  return Board;
+	})(_react2['default'].Component);
+	
+	exports['default'] = Board;
+	exports['default'] = _reactRelay2['default'].createContainer(Board, {
+	  fragments: {
+	    restaurant: function restaurant() {
+	      return (function () {
+	        var GraphQL = _reactRelay2['default'].QL.__GraphQL;
+	        return new GraphQL.QueryFragment('Board', 'Root', [new GraphQL.Field('restaurant', [new GraphQL.Field('id', null, null, null, null, null, {
+	          'parentType': 'Restaurant',
+	          'requisite': true
+	        }), new GraphQL.Field('userID', null, null, null, null, null, {
+	          'parentType': 'Restaurant'
+	        })], null, null, null, null, {
+	          'parentType': 'Root'
+	        })]);
+	      })();
+	    },
+	    user: function user() {
+	      return (function () {
+	        var GraphQL = _reactRelay2['default'].QL.__GraphQL;
+	        return new GraphQL.QueryFragment('Board', 'Root', [new GraphQL.Field('user', [new GraphQL.Field('userID', null, null, null, null, null, {
+	          'parentType': 'User'
+	        }), new GraphQL.Field('id', null, null, null, null, null, {
+	          'parentType': 'User',
+	          'generated': true,
+	          'requisite': true
+	        })], null, null, null, null, {
+	          'parentType': 'Root'
+	        })]);
+	      })();
+	    }
+	  }
+	});
+	module.exports = exports['default'];
+
+/***/ },
+/* 483 */
 /*!*************************************************!*\
   !*** ./src/client/components/board/timeline.js ***!
   \*************************************************/
@@ -52535,7 +52773,515 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 483 */
+/* 484 */
+/*!*********************************************!*\
+  !*** ./src/client/components/board/card.js ***!
+  \*********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var _reactRelay = __webpack_require__(/*! react-relay */ 200);
+	
+	var _reactRelay2 = _interopRequireDefault(_reactRelay);
+	
+	var _react = __webpack_require__(/*! react */ 3);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 1);
+	
+	var _classnames = __webpack_require__(/*! classnames */ 461);
+	
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
+	var _mutationsUpdatecardmutation = __webpack_require__(/*! ../../mutations/updatecardmutation */ 485);
+	
+	var _mutationsUpdatecardmutation2 = _interopRequireDefault(_mutationsUpdatecardmutation);
+	
+	//list of var to be used on each component
+	var updateClass;
+	var card;
+	/**The 1st class Component Card inherit restaurants props;
+	 */
+	
+	var Card = (function (_React$Component) {
+	  _inherits(Card, _React$Component);
+	
+	  function Card(props, context) {
+	    var _this = this;
+	
+	    _classCallCheck(this, Card);
+	
+	    _get(Object.getPrototypeOf(Card.prototype), 'constructor', this).call(this, props, context);
+	
+	    this._add = function () {
+	      card.foods.push({
+	        id: '_' + Math.random().toString(36).substr(2, 9),
+	        name: 'the food\'s name',
+	        description: 'the food\'s description',
+	        meals: [{
+	          id: '_' + Math.random().toString(36).substr(2, 9),
+	          name: 'the meal\'s name',
+	          description: 'the meal\'s description',
+	          price: 0,
+	          time: 0
+	        }]
+	      });
+	      updateClass();
+	    };
+	
+	    this._onChange = function (e) {
+	      console.log('onChange');
+	      card[e.target.id] = e.target.value;
+	      updateClass();
+	    };
+	
+	    this._cardUpdateMutation = function () {
+	      _this.state.foods.map(function (food) {
+	        console.log(food);
+	        delete food.__dataID__;
+	        food.meals.map(function (meal) {
+	          return delete meal.__dataID__;
+	        });
+	      });
+	      var resto = {
+	        name: _this.state.name,
+	        description: _this.state.description,
+	        foods: _this.state.foods
+	      };
+	      console.log(_this.state.foods);
+	      _reactRelay2['default'].Store.update(new _mutationsUpdatecardmutation2['default']({ card: resto, restaurant: _this.props.restaurant.restaurant }));
+	    };
+	
+	    var restaurant = this.props.restaurant.restaurant;
+	    card = {
+	      name: restaurant.name,
+	      description: restaurant.description,
+	      foods: restaurant.foods
+	    };
+	    this.state = card;
+	    this.state.save = false;
+	    updateClass = function () {
+	      _this.state.save = true;
+	      _this.setState(card);
+	    };
+	  }
+	
+	  _createClass(Card, [{
+	    key: 'render',
+	    value: function render() {
+	      var createFood = function createFood(food, index) {
+	        return _react2['default'].createElement(Food, _extends({}, food, { index: index, key: food.id }));
+	      };
+	      return _react2['default'].createElement(
+	        'div',
+	        { className: 'card' },
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'brand' },
+	          _react2['default'].createElement(
+	            'h1',
+	            { className: 'name' },
+	            _react2['default'].createElement('input', { type: 'text', id: 'name', value: this.state.name, onChange: this._onChange })
+	          ),
+	          _react2['default'].createElement(
+	            'h2',
+	            { className: 'description' },
+	            _react2['default'].createElement('input', { type: 'text', id: 'description', value: this.state.description, onChange: this._onChange })
+	          )
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'nav' },
+	          _react2['default'].createElement(
+	            'div',
+	            { className: 'flex-item-2' },
+	            _react2['default'].createElement(
+	              'span',
+	              { className: 'plus', onClick: this._add },
+	              'Plus'
+	            )
+	          )
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'foods nav-wrap' },
+	          this.state.foods.map(createFood)
+	        ),
+	        _react2['default'].createElement(
+	          'span',
+	          { className: (0, _classnames2['default'])('submit', {
+	              hidden: !this.state.save
+	            }), onClick: this._cardUpdateMutation },
+	          'Save Changes'
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Card;
+	})(_react2['default'].Component);
+	
+	var Food = (function (_React$Component2) {
+	  _inherits(Food, _React$Component2);
+	
+	  function Food(props, context) {
+	    var _this2 = this;
+	
+	    _classCallCheck(this, Food);
+	
+	    _get(Object.getPrototypeOf(Food.prototype), 'constructor', this).call(this, props, context);
+	
+	    this._addMeal = function (e) {
+	      e.stopPropagation();
+	      card.foods[_this2.props.index].meals.push({
+	        id: '_' + Math.random().toString(36).substr(2, 9),
+	        name: 'the meal\'s name',
+	        description: 'the meal\'s description',
+	        price: 0,
+	        time: 0
+	      });
+	      updateClass();
+	    };
+	
+	    this._switchExpand = function (e) {
+	      _this2.setState({
+	        expand: !_this2.state.expand
+	      });
+	    };
+	
+	    this._close = function () {
+	      console.log('close');
+	      card.foods.splice(_this2.props.index, 1);
+	      updateClass();
+	    };
+	
+	    this._onChange = function (e) {
+	      card.foods[_this2.props.index][e.target.id] = e.target.value;
+	      updateClass();
+	    };
+	
+	    this.state = {
+	      expand: false,
+	      food: this.props,
+	      input: {
+	        name: false,
+	        description: false
+	      }
+	    };
+	  }
+	
+	  _createClass(Food, [{
+	    key: 'render',
+	    value: function render() {
+	      var _this3 = this;
+	
+	      var food = this.props;
+	      var createMeal = function createMeal(meal, index) {
+	        return _react2['default'].createElement(Meal, _extends({}, meal, { parentIndex: _this3.props.index, index: index, key: meal.id }));
+	      };
+	      return _react2['default'].createElement(
+	        'div',
+	        { className: 'food flex-item-2', onClick: this._switchExpand },
+	        _react2['default'].createElement('span', { className: 'close', onClick: this._close }),
+	        _react2['default'].createElement('input', { id: 'name', type: 'text', value: this.props.name, onChange: this._onChange, onClick: function (e) {
+	            return e.stopPropagation();
+	          } }),
+	        _react2['default'].createElement('br', null),
+	        _react2['default'].createElement('input', { id: 'description', type: 'text', value: this.props.description, onChange: this._onChange, onClick: function (e) {
+	            return e.stopPropagation();
+	          } }),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: (0, _classnames2['default'])('meals', {
+	              'nav-wrap': this.state.expand,
+	              'hidden': !this.state.expand
+	            }) },
+	          _react2['default'].createElement(
+	            'span',
+	            { className: 'plus', onClick: this._addMeal },
+	            'Plus'
+	          ),
+	          this.props.meals.map(createMeal)
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Food;
+	})(_react2['default'].Component);
+	
+	var Meal = (function (_React$Component3) {
+	  _inherits(Meal, _React$Component3);
+	
+	  function Meal(props, context) {
+	    var _this4 = this;
+	
+	    _classCallCheck(this, Meal);
+	
+	    _get(Object.getPrototypeOf(Meal.prototype), 'constructor', this).call(this, props, context);
+	
+	    this._close = function (e) {
+	      e.stopPropagation();
+	      card.foods[_this4.props.parentIndex].meals.splice(_this4.props.index, 1);
+	      updateClass();
+	    };
+	
+	    this._onChange = function (e) {
+	      card.foods[_this4.props.parentIndex].meals[_this4.props.index][e.target.id] = e.target.type === 'number' ? Math.abs(e.target.value) : e.target.value;
+	      updateClass();
+	    };
+	
+	    this.state = {
+	      meal: this.props,
+	      input: {
+	        name: false,
+	        description: false,
+	        price: false,
+	        time: false
+	      }
+	    };
+	  }
+	
+	  _createClass(Meal, [{
+	    key: 'render',
+	    value: function render() {
+	      var food = this.props;
+	      return _react2['default'].createElement(
+	        'div',
+	        { className: 'meal flex-item-2' },
+	        _react2['default'].createElement('span', { className: 'close', onClick: this._close }),
+	        _react2['default'].createElement('input', { type: 'text', id: 'name', value: this.props.name, onChange: this._onChange, onClick: function (e) {
+	            return e.stopPropagation();
+	          } }),
+	        _react2['default'].createElement('br', null),
+	        _react2['default'].createElement('input', { type: 'text', id: 'description', value: this.props.description, onChange: this._onChange, onClick: function (e) {
+	            return e.stopPropagation();
+	          } }),
+	        _react2['default'].createElement('br', null),
+	        _react2['default'].createElement('input', { type: 'number', id: 'price', value: this.props.price, onChange: this._onChange, onClick: function (e) {
+	            return e.stopPropagation();
+	          } }),
+	        _react2['default'].createElement('br', null),
+	        _react2['default'].createElement('input', { type: 'number', id: 'time', value: this.props.time, onChange: this._onChange, onClick: function (e) {
+	            return e.stopPropagation();
+	          } })
+	      );
+	    }
+	  }]);
+	
+	  return Meal;
+	})(_react2['default'].Component);
+	
+	exports['default'] = _reactRelay2['default'].createContainer(Card, {
+	  fragments: {
+	    //Question: Is fragment on mutation available on the component himself? no it's not
+	    //and you use a mutation you have to call mutation fragment if not you get a warning
+	    restaurant: function restaurant() {
+	      return (function (sub_0) {
+	        var GraphQL = _reactRelay2['default'].QL.__GraphQL;
+	        return new GraphQL.QueryFragment('Card', 'Root', [new GraphQL.Field('restaurant', [new GraphQL.Field('id', null, null, null, null, null, {
+	          'parentType': 'Restaurant',
+	          'requisite': true
+	        }), new GraphQL.Field('name', null, null, null, null, null, {
+	          'parentType': 'Restaurant'
+	        }), new GraphQL.Field('description', null, null, null, null, null, {
+	          'parentType': 'Restaurant'
+	        }), new GraphQL.Field('foods', [new GraphQL.Field('id', null, null, null, null, null, {
+	          'parentType': 'Food',
+	          'requisite': true
+	        }), new GraphQL.Field('name', null, null, null, null, null, {
+	          'parentType': 'Food'
+	        }), new GraphQL.Field('description', null, null, null, null, null, {
+	          'parentType': 'Food'
+	        }), new GraphQL.Field('meals', [new GraphQL.Field('id', null, null, null, null, null, {
+	          'parentType': 'Meal',
+	          'requisite': true
+	        }), new GraphQL.Field('name', null, null, null, null, null, {
+	          'parentType': 'Meal'
+	        }), new GraphQL.Field('description', null, null, null, null, null, {
+	          'parentType': 'Meal'
+	        }), new GraphQL.Field('price', null, null, null, null, null, {
+	          'parentType': 'Meal'
+	        }), new GraphQL.Field('time', null, null, null, null, null, {
+	          'parentType': 'Meal'
+	        })], null, null, null, null, {
+	          'parentType': 'Food',
+	          'plural': true
+	        })], null, null, null, null, {
+	          'parentType': 'Restaurant',
+	          'plural': true
+	        })], [_reactRelay2['default'].QL.__frag(sub_0)], null, null, null, {
+	          'parentType': 'Root'
+	        })]);
+	      })(_mutationsUpdatecardmutation2['default'].getFragment('restaurant'));
+	    }
+	  }
+	});
+	module.exports = exports['default'];
+
+/***/ },
+/* 485 */
+/*!****************************************************!*\
+  !*** ./src/client/mutations/updatecardmutation.js ***!
+  \****************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var _reactRelay = __webpack_require__(/*! react-relay */ 200);
+	
+	var _reactRelay2 = _interopRequireDefault(_reactRelay);
+	
+	var UpdateCardMutation = (function (_Relay$Mutation) {
+	  _inherits(UpdateCardMutation, _Relay$Mutation);
+	
+	  function UpdateCardMutation() {
+	    _classCallCheck(this, UpdateCardMutation);
+	
+	    _get(Object.getPrototypeOf(UpdateCardMutation.prototype), 'constructor', this).apply(this, arguments);
+	  }
+	
+	  _createClass(UpdateCardMutation, [{
+	    key: 'getMutation',
+	    value: function getMutation() {
+	      return (function () {
+	        var GraphQL = _reactRelay2['default'].QL.__GraphQL;
+	        return new GraphQL.Mutation('Updatecardmutation', 'UpdateCardPayload', new GraphQL.Callv('UpdateCard', new GraphQL.CallVariable('input')), [new GraphQL.Field('clientMutationId', null, null, null, null, null, {
+	          'parentType': 'UpdateCardPayload',
+	          'generated': true,
+	          'requisite': true
+	        })], null, {
+	          'inputType': 'UpdateCardInput!'
+	        });
+	      })();
+	    }
+	  }, {
+	    key: 'getVariables',
+	    value: function getVariables() {
+	      return {
+	        restaurantID: this.props.restaurant.id,
+	        card: this.props.card
+	      };
+	    }
+	  }, {
+	    key: 'getConfigs',
+	    value: function getConfigs() {
+	      return [{
+	        type: 'FIELDS_CHANGE',
+	        fieldIDs: {
+	          restaurant: this.props.restaurant.id
+	        }
+	      }];
+	    }
+	  }, {
+	    key: 'getOptimisticResponse',
+	    value: function getOptimisticResponse() {
+	      return {
+	        restaurant: {
+	          id: this.props.restaurant.id,
+	          name: this.props.card.name,
+	          description: this.props.card.description,
+	          foods: this.props.card.foods
+	        }
+	      };
+	    }
+	  }, {
+	    key: 'getFatQuery',
+	    value: function getFatQuery() {
+	      return (function () {
+	        var GraphQL = _reactRelay2['default'].QL.__GraphQL;
+	        return new GraphQL.QueryFragment('Updatecardmutation', 'UpdateCardPayload', [new GraphQL.Field('restaurant', [new GraphQL.Field('id', null, null, null, null, null, {
+	          'parentType': 'Restaurant',
+	          'requisite': true
+	        }), new GraphQL.Field('name', null, null, null, null, null, {
+	          'parentType': 'Restaurant'
+	        }), new GraphQL.Field('description', null, null, null, null, null, {
+	          'parentType': 'Restaurant'
+	        }), new GraphQL.Field('foods', [new GraphQL.Field('id', null, null, null, null, null, {
+	          'parentType': 'Food',
+	          'requisite': true
+	        }), new GraphQL.Field('name', null, null, null, null, null, {
+	          'parentType': 'Food'
+	        }), new GraphQL.Field('description', null, null, null, null, null, {
+	          'parentType': 'Food'
+	        }), new GraphQL.Field('meals', [new GraphQL.Field('id', null, null, null, null, null, {
+	          'parentType': 'Meal',
+	          'requisite': true
+	        }), new GraphQL.Field('name', null, null, null, null, null, {
+	          'parentType': 'Meal'
+	        }), new GraphQL.Field('description', null, null, null, null, null, {
+	          'parentType': 'Meal'
+	        }), new GraphQL.Field('price', null, null, null, null, null, {
+	          'parentType': 'Meal'
+	        }), new GraphQL.Field('time', null, null, null, null, null, {
+	          'parentType': 'Meal'
+	        })], null, null, null, null, {
+	          'parentType': 'Food',
+	          'plural': true
+	        })], null, null, null, null, {
+	          'parentType': 'Restaurant',
+	          'plural': true
+	        })], null, null, null, null, {
+	          'parentType': 'UpdateCardPayload'
+	        })]);
+	      })();
+	    }
+	  }], [{
+	    key: 'fragments',
+	    value: {
+	      restaurant: function restaurant() {
+	        return (function () {
+	          var GraphQL = _reactRelay2['default'].QL.__GraphQL;
+	          return new GraphQL.QueryFragment('Updatecardmutation', 'Restaurant', [new GraphQL.Field('id', null, null, null, null, null, {
+	            'parentType': 'Restaurant',
+	            'requisite': true
+	          })]);
+	        })();
+	      }
+	    },
+	    enumerable: true
+	  }]);
+	
+	  return UpdateCardMutation;
+	})(_reactRelay2['default'].Mutation);
+	
+	exports['default'] = UpdateCardMutation;
+	module.exports = exports['default'];
+
+/***/ },
+/* 486 */
 /*!*************************************************!*\
   !*** ./src/client/components/board/settings.js ***!
   \*************************************************/
@@ -52571,7 +53317,7 @@
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	var _mutationsUpdatesettingsmutation = __webpack_require__(/*! ../../mutations/updatesettingsmutation */ 484);
+	var _mutationsUpdatesettingsmutation = __webpack_require__(/*! ../../mutations/updatesettingsmutation */ 487);
 	
 	var _mutationsUpdatesettingsmutation2 = _interopRequireDefault(_mutationsUpdatesettingsmutation);
 	
@@ -52969,7 +53715,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 484 */
+/* 487 */
 /*!********************************************************!*\
   !*** ./src/client/mutations/updatesettingsmutation.js ***!
   \********************************************************/
@@ -53105,151 +53851,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 485 */
-/*!***************************************************!*\
-  !*** ./src/client/components/board/chiefindex.js ***!
-  \***************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var _react = __webpack_require__(/*! react */ 3);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRelay = __webpack_require__(/*! react-relay */ 200);
-	
-	var _reactRelay2 = _interopRequireDefault(_reactRelay);
-	
-	var _reactRouter = __webpack_require__(/*! react-router */ 1);
-	
-	var _classnames = __webpack_require__(/*! classnames */ 461);
-	
-	var _classnames2 = _interopRequireDefault(_classnames);
-	
-	/// make a board component to go through card and dashboard order
-	
-	var ChiefIndex = (function (_React$Component) {
-	  _inherits(ChiefIndex, _React$Component);
-	
-	  function ChiefIndex(props, context) {
-	    var _this = this;
-	
-	    _classCallCheck(this, ChiefIndex);
-	
-	    _get(Object.getPrototypeOf(ChiefIndex.prototype), 'constructor', this).call(this, props, context);
-	
-	    this._select = function (e) {
-	      for (var i in _this.refs) {
-	        console.log(_this.refs[i].getDOMNode());
-	        _this.refs[i].getDOMNode().className = 'flex-item-2';
-	      }
-	      e.target.className = 'flex-item-2 selected';
-	    };
-	
-	    this.state = { active: this.props.location.pathname };
-	  }
-	
-	  _createClass(ChiefIndex, [{
-	    key: 'componentWillReceiveProps',
-	    value: function componentWillReceiveProps(newProps) {
-	      if (!newProps.user.user.userID) {
-	        console.log('ChiefIndex:componentWillReceiveProps', newProps.user.user.userID);
-	        this.props.history.pushState({ previousPath: this.props.location.pathname }, '/register');
-	      }
-	    }
-	  }, {
-	    key: 'componentWillMount',
-	    value: function componentWillMount() {
-	      if (this.props.user.user.userID !== this.props.restaurant.restaurant.userID) {
-	        console.log('ChiefIndex:ComponentWillMount', this.props.user.user.userID);
-	        this.props.history.pushState({}, '/');
-	      }
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      console.log(this.props);
-	      return _react2['default'].createElement(
-	        'div',
-	        { className: 'chief-index' },
-	        _react2['default'].createElement(
-	          'div',
-	          { className: 'nav flex-center' },
-	          _react2['default'].createElement(
-	            _reactRouter.Link,
-	            { to: '/card/' + this.props.id, className: (0, _classnames2['default'])('flex-item-2', { selected: this.props.location.pathname.search('card') !== -1 }), ref: 'card', onClick: this._select },
-	            'Your Card'
-	          ),
-	          _react2['default'].createElement(
-	            _reactRouter.Link,
-	            { to: '/timeline/' + this.props.id, className: (0, _classnames2['default'])('flex-item-2', { selected: this.props.location.pathname.search('timeline') !== -1 }), ref: 'board', onClick: this._select },
-	            'Dashboard Order'
-	          ),
-	          _react2['default'].createElement(
-	            _reactRouter.Link,
-	            { to: '/settings/' + this.props.id, className: (0, _classnames2['default'])('flex-item-2', { selected: this.props.location.pathname.search('settings') !== -1 }), ref: 'settings', onClick: this._select },
-	            'Restaurant Settings'
-	          )
-	        ),
-	        this.props.children
-	      );
-	    }
-	  }]);
-	
-	  return ChiefIndex;
-	})(_react2['default'].Component);
-	
-	exports['default'] = ChiefIndex;
-	exports['default'] = _reactRelay2['default'].createContainer(ChiefIndex, {
-	  fragments: {
-	    restaurant: function restaurant() {
-	      return (function () {
-	        var GraphQL = _reactRelay2['default'].QL.__GraphQL;
-	        return new GraphQL.QueryFragment('Chiefindex', 'Root', [new GraphQL.Field('restaurant', [new GraphQL.Field('id', null, null, null, null, null, {
-	          'parentType': 'Restaurant',
-	          'requisite': true
-	        }), new GraphQL.Field('userID', null, null, null, null, null, {
-	          'parentType': 'Restaurant'
-	        })], null, null, null, null, {
-	          'parentType': 'Root'
-	        })]);
-	      })();
-	    },
-	    user: function user() {
-	      return (function () {
-	        var GraphQL = _reactRelay2['default'].QL.__GraphQL;
-	        return new GraphQL.QueryFragment('Chiefindex', 'Root', [new GraphQL.Field('user', [new GraphQL.Field('userID', null, null, null, null, null, {
-	          'parentType': 'User'
-	        }), new GraphQL.Field('id', null, null, null, null, null, {
-	          'parentType': 'User',
-	          'generated': true,
-	          'requisite': true
-	        })], null, null, null, null, {
-	          'parentType': 'Root'
-	        })]);
-	      })();
-	    }
-	  }
-	});
-	module.exports = exports['default'];
-
-/***/ },
-/* 486 */
+/* 488 */
 /*!*******************************************!*\
   !*** ./src/client/components/ordering.js ***!
   \*******************************************/
@@ -53285,7 +53887,7 @@
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	var _mutationsOrdermutation = __webpack_require__(/*! ../mutations/ordermutation */ 487);
+	var _mutationsOrdermutation = __webpack_require__(/*! ../mutations/ordermutation */ 489);
 	
 	var _mutationsOrdermutation2 = _interopRequireDefault(_mutationsOrdermutation);
 	
@@ -53834,7 +54436,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 487 */
+/* 489 */
 /*!***********************************************!*\
   !*** ./src/client/mutations/ordermutation.js ***!
   \***********************************************/
@@ -53890,7 +54492,7 @@
 	      return {
 	        order: this.props.order,
 	        restaurantID: this.props.restaurant.id,
-	        userID: this.props.user.id
+	        userID: this.props.user.userID
 	      };
 	    }
 	
@@ -54022,6 +54624,8 @@
 	          return new GraphQL.QueryFragment('Ordermutation', 'User', [new GraphQL.Field('id', null, null, null, null, null, {
 	            'parentType': 'User',
 	            'requisite': true
+	          }), new GraphQL.Field('userID', null, null, null, null, null, {
+	            'parentType': 'User'
 	          })]);
 	        })();
 	      }
@@ -54036,7 +54640,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 488 */
+/* 490 */
 /*!******************************************!*\
   !*** ./src/client/components/profile.js ***!
   \******************************************/
@@ -54072,7 +54676,7 @@
 	
 	var _reactRouter = __webpack_require__(/*! react-router */ 1);
 	
-	var _mutationsUsermutation = __webpack_require__(/*! ../mutations/usermutation */ 489);
+	var _mutationsUsermutation = __webpack_require__(/*! ../mutations/usermutation */ 491);
 	
 	var _mutationsUsermutation2 = _interopRequireDefault(_mutationsUsermutation);
 	
@@ -54100,9 +54704,15 @@
 	      });
 	    };
 	
-	    this._onSave = function (e) {
-	      console.log('onsave', _this.props.user.user.id);
-	      new _reactRelay2['default'].Store.update(new _mutationsUsermutation2['default']({ user: _this.props.user.user, update: _this.state.update }));
+	    this._onKeyUp = function (e) {
+	      console.log('onkeyUp', e.keyCode);
+	      if (e.keyCode === 13) {
+	        new _reactRelay2['default'].Store.update(new _mutationsUsermutation2['default']({ user: _this.props.user.user, update: _this.state.update }));
+	        e.target.blur();
+	      }
+	      if (e.keyCode === 27) {
+	        e.target.blur();
+	      }
 	    };
 	
 	    var user = this.props.user.user;
@@ -54189,16 +54799,21 @@
 	          _react2['default'].createElement('img', { src: user.profilePicture ? user.profilePicture : '/stylesheets/icons/profile.jpeg', alt: 'Profile-Picture' }),
 	          _react2['default'].createElement(
 	            'div',
-	            { className: 'marged' },
+	            { className: 'credentials marged' },
 	            _react2['default'].createElement(
 	              'h1',
 	              null,
-	              _react2['default'].createElement('input', { id: 'name', type: 'text', onChange: this._onChange, value: this.state.update.name })
+	              _react2['default'].createElement('input', { id: 'name', type: 'text', onChange: this._onChange, onKeyUp: this._onKeyUp, value: this.state.update.name })
 	            ),
 	            _react2['default'].createElement(
 	              'h2',
 	              null,
-	              _react2['default'].createElement('input', { id: 'mail', type: 'text', onChange: this._onChange, value: this.state.update.mail })
+	              _react2['default'].createElement('input', { id: 'mail', type: 'text', onChange: this._onChange, onKeyUp: this._onKeyUp, value: this.state.update.mail })
+	            ),
+	            _react2['default'].createElement(
+	              _reactRouter.Link,
+	              { className: 'openarestaurant-link button', to: '/start/card' },
+	              'Open a restaurant.'
 	            )
 	          )
 	        ),
@@ -54207,7 +54822,7 @@
 	          { className: 'flex' },
 	          _react2['default'].createElement(
 	            'div',
-	            { className: 'width-2' },
+	            { className: (0, _classnames2['default'])('width-2', { hidden: !user.restaurants.edges.length }) },
 	            _react2['default'].createElement(
 	              'h3',
 	              null,
@@ -54233,11 +54848,6 @@
 	              user.orders.edges.map(createOrder)
 	            )
 	          )
-	        ),
-	        _react2['default'].createElement(
-	          'div',
-	          { className: (0, _classnames2['default'])('button save', { hidden: !this.state.save }), onClick: this._onSave },
-	          'Save Changes'
 	        )
 	      );
 	    }
@@ -54337,7 +54947,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 489 */
+/* 491 */
 /*!**********************************************!*\
   !*** ./src/client/mutations/usermutation.js ***!
   \**********************************************/
@@ -54465,7 +55075,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 490 */
+/* 492 */
 /*!********************************!*\
   !*** ./~/history/lib/index.js ***!
   \********************************/
@@ -54479,49 +55089,49 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 	
-	var _createBrowserHistory = __webpack_require__(/*! ./createBrowserHistory */ 491);
+	var _createBrowserHistory = __webpack_require__(/*! ./createBrowserHistory */ 493);
 	
 	var _createBrowserHistory2 = _interopRequireDefault(_createBrowserHistory);
 	
 	exports.createHistory = _createBrowserHistory2['default'];
 	
-	var _createHashHistory2 = __webpack_require__(/*! ./createHashHistory */ 509);
+	var _createHashHistory2 = __webpack_require__(/*! ./createHashHistory */ 511);
 	
 	var _createHashHistory3 = _interopRequireDefault(_createHashHistory2);
 	
 	exports.createHashHistory = _createHashHistory3['default'];
 	
-	var _createMemoryHistory2 = __webpack_require__(/*! ./createMemoryHistory */ 510);
+	var _createMemoryHistory2 = __webpack_require__(/*! ./createMemoryHistory */ 512);
 	
 	var _createMemoryHistory3 = _interopRequireDefault(_createMemoryHistory2);
 	
 	exports.createMemoryHistory = _createMemoryHistory3['default'];
 	
-	var _createLocation2 = __webpack_require__(/*! ./createLocation */ 504);
+	var _createLocation2 = __webpack_require__(/*! ./createLocation */ 506);
 	
 	var _createLocation3 = _interopRequireDefault(_createLocation2);
 	
 	exports.createLocation = _createLocation3['default'];
 	
-	var _useBasename2 = __webpack_require__(/*! ./useBasename */ 511);
+	var _useBasename2 = __webpack_require__(/*! ./useBasename */ 513);
 	
 	var _useBasename3 = _interopRequireDefault(_useBasename2);
 	
 	exports.useBasename = _useBasename3['default'];
 	
-	var _useBeforeUnload2 = __webpack_require__(/*! ./useBeforeUnload */ 512);
+	var _useBeforeUnload2 = __webpack_require__(/*! ./useBeforeUnload */ 514);
 	
 	var _useBeforeUnload3 = _interopRequireDefault(_useBeforeUnload2);
 	
 	exports.useBeforeUnload = _useBeforeUnload3['default'];
 	
-	var _useQueries2 = __webpack_require__(/*! ./useQueries */ 513);
+	var _useQueries2 = __webpack_require__(/*! ./useQueries */ 515);
 	
 	var _useQueries3 = _interopRequireDefault(_useQueries2);
 	
 	exports.useQueries = _useQueries3['default'];
 	
-	var _Actions2 = __webpack_require__(/*! ./Actions */ 493);
+	var _Actions2 = __webpack_require__(/*! ./Actions */ 495);
 	
 	var _Actions3 = _interopRequireDefault(_Actions2);
 	
@@ -54529,20 +55139,20 @@
 	
 	// deprecated
 	
-	var _enableBeforeUnload2 = __webpack_require__(/*! ./enableBeforeUnload */ 518);
+	var _enableBeforeUnload2 = __webpack_require__(/*! ./enableBeforeUnload */ 520);
 	
 	var _enableBeforeUnload3 = _interopRequireDefault(_enableBeforeUnload2);
 	
 	exports.enableBeforeUnload = _enableBeforeUnload3['default'];
 	
-	var _enableQueries2 = __webpack_require__(/*! ./enableQueries */ 519);
+	var _enableQueries2 = __webpack_require__(/*! ./enableQueries */ 521);
 	
 	var _enableQueries3 = _interopRequireDefault(_enableQueries2);
 	
 	exports.enableQueries = _enableQueries3['default'];
 
 /***/ },
-/* 491 */
+/* 493 */
 /*!***********************************************!*\
   !*** ./~/history/lib/createBrowserHistory.js ***!
   \***********************************************/
@@ -54566,19 +55176,19 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 	
-	var _invariant = __webpack_require__(/*! invariant */ 492);
+	var _invariant = __webpack_require__(/*! invariant */ 494);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _Actions = __webpack_require__(/*! ./Actions */ 493);
+	var _Actions = __webpack_require__(/*! ./Actions */ 495);
 	
-	var _ExecutionEnvironment = __webpack_require__(/*! ./ExecutionEnvironment */ 494);
+	var _ExecutionEnvironment = __webpack_require__(/*! ./ExecutionEnvironment */ 496);
 	
-	var _DOMUtils = __webpack_require__(/*! ./DOMUtils */ 495);
+	var _DOMUtils = __webpack_require__(/*! ./DOMUtils */ 497);
 	
-	var _DOMStateStorage = __webpack_require__(/*! ./DOMStateStorage */ 496);
+	var _DOMStateStorage = __webpack_require__(/*! ./DOMStateStorage */ 498);
 	
-	var _createDOMHistory = __webpack_require__(/*! ./createDOMHistory */ 498);
+	var _createDOMHistory = __webpack_require__(/*! ./createDOMHistory */ 500);
 	
 	var _createDOMHistory2 = _interopRequireDefault(_createDOMHistory);
 	
@@ -54733,7 +55343,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 6)))
 
 /***/ },
-/* 492 */
+/* 494 */
 /*!******************************************!*\
   !*** ./~/history/~/invariant/browser.js ***!
   \******************************************/
@@ -54790,7 +55400,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 6)))
 
 /***/ },
-/* 493 */
+/* 495 */
 /*!**********************************!*\
   !*** ./~/history/lib/Actions.js ***!
   \**********************************/
@@ -54829,7 +55439,7 @@
 	};
 
 /***/ },
-/* 494 */
+/* 496 */
 /*!***********************************************!*\
   !*** ./~/history/lib/ExecutionEnvironment.js ***!
   \***********************************************/
@@ -54842,7 +55452,7 @@
 	exports.canUseDOM = canUseDOM;
 
 /***/ },
-/* 495 */
+/* 497 */
 /*!***********************************!*\
   !*** ./~/history/lib/DOMUtils.js ***!
   \***********************************/
@@ -54925,7 +55535,7 @@
 	}
 
 /***/ },
-/* 496 */
+/* 498 */
 /*!******************************************!*\
   !*** ./~/history/lib/DOMStateStorage.js ***!
   \******************************************/
@@ -54942,7 +55552,7 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 	
-	var _warning = __webpack_require__(/*! warning */ 497);
+	var _warning = __webpack_require__(/*! warning */ 499);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -55004,7 +55614,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 6)))
 
 /***/ },
-/* 497 */
+/* 499 */
 /*!****************************************!*\
   !*** ./~/history/~/warning/browser.js ***!
   \****************************************/
@@ -55066,7 +55676,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 6)))
 
 /***/ },
-/* 498 */
+/* 500 */
 /*!*******************************************!*\
   !*** ./~/history/lib/createDOMHistory.js ***!
   \*******************************************/
@@ -55090,15 +55700,15 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 	
-	var _invariant = __webpack_require__(/*! invariant */ 492);
+	var _invariant = __webpack_require__(/*! invariant */ 494);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _ExecutionEnvironment = __webpack_require__(/*! ./ExecutionEnvironment */ 494);
+	var _ExecutionEnvironment = __webpack_require__(/*! ./ExecutionEnvironment */ 496);
 	
-	var _DOMUtils = __webpack_require__(/*! ./DOMUtils */ 495);
+	var _DOMUtils = __webpack_require__(/*! ./DOMUtils */ 497);
 	
-	var _createHistory = __webpack_require__(/*! ./createHistory */ 499);
+	var _createHistory = __webpack_require__(/*! ./createHistory */ 501);
 	
 	var _createHistory2 = _interopRequireDefault(_createHistory);
 	
@@ -55125,7 +55735,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 6)))
 
 /***/ },
-/* 499 */
+/* 501 */
 /*!****************************************!*\
   !*** ./~/history/lib/createHistory.js ***!
   \****************************************/
@@ -55149,23 +55759,23 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 	
-	var _deepEqual = __webpack_require__(/*! deep-equal */ 500);
+	var _deepEqual = __webpack_require__(/*! deep-equal */ 502);
 	
 	var _deepEqual2 = _interopRequireDefault(_deepEqual);
 	
-	var _AsyncUtils = __webpack_require__(/*! ./AsyncUtils */ 503);
+	var _AsyncUtils = __webpack_require__(/*! ./AsyncUtils */ 505);
 	
-	var _Actions = __webpack_require__(/*! ./Actions */ 493);
+	var _Actions = __webpack_require__(/*! ./Actions */ 495);
 	
-	var _createLocation2 = __webpack_require__(/*! ./createLocation */ 504);
+	var _createLocation2 = __webpack_require__(/*! ./createLocation */ 506);
 	
 	var _createLocation3 = _interopRequireDefault(_createLocation2);
 	
-	var _runTransitionHook = __webpack_require__(/*! ./runTransitionHook */ 507);
+	var _runTransitionHook = __webpack_require__(/*! ./runTransitionHook */ 509);
 	
 	var _runTransitionHook2 = _interopRequireDefault(_runTransitionHook);
 	
-	var _deprecate = __webpack_require__(/*! ./deprecate */ 508);
+	var _deprecate = __webpack_require__(/*! ./deprecate */ 510);
 	
 	var _deprecate2 = _interopRequireDefault(_deprecate);
 	
@@ -55413,7 +56023,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 500 */
+/* 502 */
 /*!*****************************************!*\
   !*** ./~/history/~/deep-equal/index.js ***!
   \*****************************************/
@@ -55422,8 +56032,8 @@
 	'use strict';
 	
 	var pSlice = Array.prototype.slice;
-	var objectKeys = __webpack_require__(/*! ./lib/keys.js */ 501);
-	var isArguments = __webpack_require__(/*! ./lib/is_arguments.js */ 502);
+	var objectKeys = __webpack_require__(/*! ./lib/keys.js */ 503);
+	var isArguments = __webpack_require__(/*! ./lib/is_arguments.js */ 504);
 	
 	var deepEqual = module.exports = function (actual, expected, opts) {
 	  if (!opts) opts = {};
@@ -55514,7 +56124,7 @@
 	}
 
 /***/ },
-/* 501 */
+/* 503 */
 /*!********************************************!*\
   !*** ./~/history/~/deep-equal/lib/keys.js ***!
   \********************************************/
@@ -55532,7 +56142,7 @@
 	}
 
 /***/ },
-/* 502 */
+/* 504 */
 /*!****************************************************!*\
   !*** ./~/history/~/deep-equal/lib/is_arguments.js ***!
   \****************************************************/
@@ -55557,7 +56167,7 @@
 	};
 
 /***/ },
-/* 503 */
+/* 505 */
 /*!*************************************!*\
   !*** ./~/history/lib/AsyncUtils.js ***!
   \*************************************/
@@ -55591,7 +56201,7 @@
 	}
 
 /***/ },
-/* 504 */
+/* 506 */
 /*!*****************************************!*\
   !*** ./~/history/lib/createLocation.js ***!
   \*****************************************/
@@ -55605,9 +56215,9 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 	
-	var _Actions = __webpack_require__(/*! ./Actions */ 493);
+	var _Actions = __webpack_require__(/*! ./Actions */ 495);
 	
-	var _parsePath = __webpack_require__(/*! ./parsePath */ 505);
+	var _parsePath = __webpack_require__(/*! ./parsePath */ 507);
 	
 	var _parsePath2 = _interopRequireDefault(_parsePath);
 	
@@ -55637,7 +56247,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 505 */
+/* 507 */
 /*!************************************!*\
   !*** ./~/history/lib/parsePath.js ***!
   \************************************/
@@ -55651,11 +56261,11 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 	
-	var _warning = __webpack_require__(/*! warning */ 497);
+	var _warning = __webpack_require__(/*! warning */ 499);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	var _extractPath = __webpack_require__(/*! ./extractPath */ 506);
+	var _extractPath = __webpack_require__(/*! ./extractPath */ 508);
 	
 	var _extractPath2 = _interopRequireDefault(_extractPath);
 	
@@ -55692,7 +56302,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 6)))
 
 /***/ },
-/* 506 */
+/* 508 */
 /*!**************************************!*\
   !*** ./~/history/lib/extractPath.js ***!
   \**************************************/
@@ -55713,7 +56323,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 507 */
+/* 509 */
 /*!********************************************!*\
   !*** ./~/history/lib/runTransitionHook.js ***!
   \********************************************/
@@ -55727,7 +56337,7 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 	
-	var _warning = __webpack_require__(/*! warning */ 497);
+	var _warning = __webpack_require__(/*! warning */ 499);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -55748,7 +56358,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 6)))
 
 /***/ },
-/* 508 */
+/* 510 */
 /*!************************************!*\
   !*** ./~/history/lib/deprecate.js ***!
   \************************************/
@@ -55762,7 +56372,7 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 	
-	var _warning = __webpack_require__(/*! warning */ 497);
+	var _warning = __webpack_require__(/*! warning */ 499);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
@@ -55778,7 +56388,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 6)))
 
 /***/ },
-/* 509 */
+/* 511 */
 /*!********************************************!*\
   !*** ./~/history/lib/createHashHistory.js ***!
   \********************************************/
@@ -55802,23 +56412,23 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 	
-	var _warning = __webpack_require__(/*! warning */ 497);
+	var _warning = __webpack_require__(/*! warning */ 499);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	var _invariant = __webpack_require__(/*! invariant */ 492);
+	var _invariant = __webpack_require__(/*! invariant */ 494);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _Actions = __webpack_require__(/*! ./Actions */ 493);
+	var _Actions = __webpack_require__(/*! ./Actions */ 495);
 	
-	var _ExecutionEnvironment = __webpack_require__(/*! ./ExecutionEnvironment */ 494);
+	var _ExecutionEnvironment = __webpack_require__(/*! ./ExecutionEnvironment */ 496);
 	
-	var _DOMUtils = __webpack_require__(/*! ./DOMUtils */ 495);
+	var _DOMUtils = __webpack_require__(/*! ./DOMUtils */ 497);
 	
-	var _DOMStateStorage = __webpack_require__(/*! ./DOMStateStorage */ 496);
+	var _DOMStateStorage = __webpack_require__(/*! ./DOMStateStorage */ 498);
 	
-	var _createDOMHistory = __webpack_require__(/*! ./createDOMHistory */ 498);
+	var _createDOMHistory = __webpack_require__(/*! ./createDOMHistory */ 500);
 	
 	var _createDOMHistory2 = _interopRequireDefault(_createDOMHistory);
 	
@@ -56022,7 +56632,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 6)))
 
 /***/ },
-/* 510 */
+/* 512 */
 /*!**********************************************!*\
   !*** ./~/history/lib/createMemoryHistory.js ***!
   \**********************************************/
@@ -56046,13 +56656,13 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 	
-	var _invariant = __webpack_require__(/*! invariant */ 492);
+	var _invariant = __webpack_require__(/*! invariant */ 494);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
-	var _Actions = __webpack_require__(/*! ./Actions */ 493);
+	var _Actions = __webpack_require__(/*! ./Actions */ 495);
 	
-	var _createHistory = __webpack_require__(/*! ./createHistory */ 499);
+	var _createHistory = __webpack_require__(/*! ./createHistory */ 501);
 	
 	var _createHistory2 = _interopRequireDefault(_createHistory);
 	
@@ -56183,7 +56793,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 6)))
 
 /***/ },
-/* 511 */
+/* 513 */
 /*!**************************************!*\
   !*** ./~/history/lib/useBasename.js ***!
   \**************************************/
@@ -56213,17 +56823,17 @@
 	  }return target;
 	}
 	
-	var _ExecutionEnvironment = __webpack_require__(/*! ./ExecutionEnvironment */ 494);
+	var _ExecutionEnvironment = __webpack_require__(/*! ./ExecutionEnvironment */ 496);
 	
-	var _runTransitionHook = __webpack_require__(/*! ./runTransitionHook */ 507);
+	var _runTransitionHook = __webpack_require__(/*! ./runTransitionHook */ 509);
 	
 	var _runTransitionHook2 = _interopRequireDefault(_runTransitionHook);
 	
-	var _extractPath = __webpack_require__(/*! ./extractPath */ 506);
+	var _extractPath = __webpack_require__(/*! ./extractPath */ 508);
 	
 	var _extractPath2 = _interopRequireDefault(_extractPath);
 	
-	var _parsePath = __webpack_require__(/*! ./parsePath */ 505);
+	var _parsePath = __webpack_require__(/*! ./parsePath */ 507);
 	
 	var _parsePath2 = _interopRequireDefault(_parsePath);
 	
@@ -56334,7 +56944,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 512 */
+/* 514 */
 /*!******************************************!*\
   !*** ./~/history/lib/useBeforeUnload.js ***!
   \******************************************/
@@ -56358,15 +56968,15 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 	
-	var _warning = __webpack_require__(/*! warning */ 497);
+	var _warning = __webpack_require__(/*! warning */ 499);
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	var _ExecutionEnvironment = __webpack_require__(/*! ./ExecutionEnvironment */ 494);
+	var _ExecutionEnvironment = __webpack_require__(/*! ./ExecutionEnvironment */ 496);
 	
-	var _DOMUtils = __webpack_require__(/*! ./DOMUtils */ 495);
+	var _DOMUtils = __webpack_require__(/*! ./DOMUtils */ 497);
 	
-	var _deprecate = __webpack_require__(/*! ./deprecate */ 508);
+	var _deprecate = __webpack_require__(/*! ./deprecate */ 510);
 	
 	var _deprecate2 = _interopRequireDefault(_deprecate);
 	
@@ -56464,7 +57074,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 6)))
 
 /***/ },
-/* 513 */
+/* 515 */
 /*!*************************************!*\
   !*** ./~/history/lib/useQueries.js ***!
   \*************************************/
@@ -56494,15 +57104,15 @@
 	  }return target;
 	}
 	
-	var _qs = __webpack_require__(/*! qs */ 514);
+	var _qs = __webpack_require__(/*! qs */ 516);
 	
 	var _qs2 = _interopRequireDefault(_qs);
 	
-	var _runTransitionHook = __webpack_require__(/*! ./runTransitionHook */ 507);
+	var _runTransitionHook = __webpack_require__(/*! ./runTransitionHook */ 509);
 	
 	var _runTransitionHook2 = _interopRequireDefault(_runTransitionHook);
 	
-	var _parsePath = __webpack_require__(/*! ./parsePath */ 505);
+	var _parsePath = __webpack_require__(/*! ./parsePath */ 507);
 	
 	var _parsePath2 = _interopRequireDefault(_parsePath);
 	
@@ -56601,7 +57211,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 514 */
+/* 516 */
 /*!*************************************!*\
   !*** ./~/history/~/qs/lib/index.js ***!
   \*************************************/
@@ -56611,8 +57221,8 @@
 	
 	'use strict';
 	
-	var Stringify = __webpack_require__(/*! ./stringify */ 515);
-	var Parse = __webpack_require__(/*! ./parse */ 517);
+	var Stringify = __webpack_require__(/*! ./stringify */ 517);
+	var Parse = __webpack_require__(/*! ./parse */ 519);
 	
 	// Declare internals
 	
@@ -56624,7 +57234,7 @@
 	};
 
 /***/ },
-/* 515 */
+/* 517 */
 /*!*****************************************!*\
   !*** ./~/history/~/qs/lib/stringify.js ***!
   \*****************************************/
@@ -56634,7 +57244,7 @@
 	
 	'use strict';
 	
-	var Utils = __webpack_require__(/*! ./utils */ 516);
+	var Utils = __webpack_require__(/*! ./utils */ 518);
 	
 	// Declare internals
 	
@@ -56742,7 +57352,7 @@
 	};
 
 /***/ },
-/* 516 */
+/* 518 */
 /*!*************************************!*\
   !*** ./~/history/~/qs/lib/utils.js ***!
   \*************************************/
@@ -56929,7 +57539,7 @@
 	};
 
 /***/ },
-/* 517 */
+/* 519 */
 /*!*************************************!*\
   !*** ./~/history/~/qs/lib/parse.js ***!
   \*************************************/
@@ -56939,7 +57549,7 @@
 	
 	'use strict';
 	
-	var Utils = __webpack_require__(/*! ./utils */ 516);
+	var Utils = __webpack_require__(/*! ./utils */ 518);
 	
 	// Declare internals
 	
@@ -57107,7 +57717,7 @@
 	};
 
 /***/ },
-/* 518 */
+/* 520 */
 /*!*********************************************!*\
   !*** ./~/history/lib/enableBeforeUnload.js ***!
   \*********************************************/
@@ -57121,11 +57731,11 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 	
-	var _deprecate = __webpack_require__(/*! ./deprecate */ 508);
+	var _deprecate = __webpack_require__(/*! ./deprecate */ 510);
 	
 	var _deprecate2 = _interopRequireDefault(_deprecate);
 	
-	var _useBeforeUnload = __webpack_require__(/*! ./useBeforeUnload */ 512);
+	var _useBeforeUnload = __webpack_require__(/*! ./useBeforeUnload */ 514);
 	
 	var _useBeforeUnload2 = _interopRequireDefault(_useBeforeUnload);
 	
@@ -57133,7 +57743,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 519 */
+/* 521 */
 /*!****************************************!*\
   !*** ./~/history/lib/enableQueries.js ***!
   \****************************************/
@@ -57147,11 +57757,11 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 	
-	var _deprecate = __webpack_require__(/*! ./deprecate */ 508);
+	var _deprecate = __webpack_require__(/*! ./deprecate */ 510);
 	
 	var _deprecate2 = _interopRequireDefault(_deprecate);
 	
-	var _useQueries = __webpack_require__(/*! ./useQueries */ 513);
+	var _useQueries = __webpack_require__(/*! ./useQueries */ 515);
 	
 	var _useQueries2 = _interopRequireDefault(_useQueries);
 	
@@ -57159,7 +57769,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 520 */
+/* 522 */
 /*!*******************************************!*\
   !*** ./~/react-router-relay/lib/index.js ***!
   \*******************************************/
@@ -57167,11 +57777,11 @@
 
 	'use strict';
 	
-	var _interopRequireDefault = __webpack_require__(/*! babel-runtime/helpers/interop-require-default */ 521)['default'];
+	var _interopRequireDefault = __webpack_require__(/*! babel-runtime/helpers/interop-require-default */ 523)['default'];
 	
 	exports.__esModule = true;
 	
-	var _createElement = __webpack_require__(/*! ./createElement */ 522);
+	var _createElement = __webpack_require__(/*! ./createElement */ 524);
 	
 	var _createElement2 = _interopRequireDefault(_createElement);
 	
@@ -57179,7 +57789,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 521 */
+/* 523 */
 /*!*********************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/helpers/interop-require-default.js ***!
   \*********************************************************************************/
@@ -57196,7 +57806,7 @@
 	exports.__esModule = true;
 
 /***/ },
-/* 522 */
+/* 524 */
 /*!***************************************************!*\
   !*** ./~/react-router-relay/lib/createElement.js ***!
   \***************************************************/
@@ -57204,9 +57814,9 @@
 
 	'use strict';
 	
-	var _extends = __webpack_require__(/*! babel-runtime/helpers/extends */ 523)['default'];
+	var _extends = __webpack_require__(/*! babel-runtime/helpers/extends */ 525)['default'];
 	
-	var _interopRequireDefault = __webpack_require__(/*! babel-runtime/helpers/interop-require-default */ 521)['default'];
+	var _interopRequireDefault = __webpack_require__(/*! babel-runtime/helpers/interop-require-default */ 523)['default'];
 	
 	exports.__esModule = true;
 	exports['default'] = createElement;
@@ -57215,7 +57825,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _Container = __webpack_require__(/*! ./Container */ 539);
+	var _Container = __webpack_require__(/*! ./Container */ 541);
 	
 	var _Container2 = _interopRequireDefault(_Container);
 	
@@ -57228,7 +57838,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 523 */
+/* 525 */
 /*!*****************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/helpers/extends.js ***!
   \*****************************************************************/
@@ -57236,7 +57846,7 @@
 
 	"use strict";
 	
-	var _Object$assign = __webpack_require__(/*! babel-runtime/core-js/object/assign */ 524)["default"];
+	var _Object$assign = __webpack_require__(/*! babel-runtime/core-js/object/assign */ 526)["default"];
 	
 	exports["default"] = _Object$assign || function (target) {
 	  for (var i = 1; i < arguments.length; i++) {
@@ -57255,7 +57865,7 @@
 	exports.__esModule = true;
 
 /***/ },
-/* 524 */
+/* 526 */
 /*!***********************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/core-js/object/assign.js ***!
   \***********************************************************************/
@@ -57263,10 +57873,10 @@
 
 	"use strict";
 	
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/assign */ 525), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/assign */ 527), __esModule: true };
 
 /***/ },
-/* 525 */
+/* 527 */
 /*!************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/fn/object/assign.js ***!
   \************************************************************************************/
@@ -57274,11 +57884,11 @@
 
 	'use strict';
 	
-	__webpack_require__(/*! ../../modules/es6.object.assign */ 526);
-	module.exports = __webpack_require__(/*! ../../modules/$.core */ 529).Object.assign;
+	__webpack_require__(/*! ../../modules/es6.object.assign */ 528);
+	module.exports = __webpack_require__(/*! ../../modules/$.core */ 531).Object.assign;
 
 /***/ },
-/* 526 */
+/* 528 */
 /*!*********************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/es6.object.assign.js ***!
   \*********************************************************************************************/
@@ -57287,12 +57897,12 @@
 	// 19.1.3.1 Object.assign(target, source)
 	'use strict';
 	
-	var $export = __webpack_require__(/*! ./$.export */ 527);
+	var $export = __webpack_require__(/*! ./$.export */ 529);
 	
-	$export($export.S + $export.F, 'Object', { assign: __webpack_require__(/*! ./$.object-assign */ 532) });
+	$export($export.S + $export.F, 'Object', { assign: __webpack_require__(/*! ./$.object-assign */ 534) });
 
 /***/ },
-/* 527 */
+/* 529 */
 /*!************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.export.js ***!
   \************************************************************************************/
@@ -57300,9 +57910,9 @@
 
 	'use strict';
 	
-	var global = __webpack_require__(/*! ./$.global */ 528),
-	    core = __webpack_require__(/*! ./$.core */ 529),
-	    ctx = __webpack_require__(/*! ./$.ctx */ 530),
+	var global = __webpack_require__(/*! ./$.global */ 530),
+	    core = __webpack_require__(/*! ./$.core */ 531),
+	    ctx = __webpack_require__(/*! ./$.ctx */ 532),
 	    PROTOTYPE = 'prototype';
 	
 	var $export = function $export(type, name, source) {
@@ -57350,7 +57960,7 @@
 	module.exports = $export;
 
 /***/ },
-/* 528 */
+/* 530 */
 /*!************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.global.js ***!
   \************************************************************************************/
@@ -57363,7 +57973,7 @@
 	if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 
 /***/ },
-/* 529 */
+/* 531 */
 /*!**********************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.core.js ***!
   \**********************************************************************************/
@@ -57375,7 +57985,7 @@
 	if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
 
 /***/ },
-/* 530 */
+/* 532 */
 /*!*********************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.ctx.js ***!
   \*********************************************************************************/
@@ -57384,7 +57994,7 @@
 	// optional / simple context binding
 	'use strict';
 	
-	var aFunction = __webpack_require__(/*! ./$.a-function */ 531);
+	var aFunction = __webpack_require__(/*! ./$.a-function */ 533);
 	module.exports = function (fn, that, length) {
 	  aFunction(fn);
 	  if (that === undefined) return fn;
@@ -57408,7 +58018,7 @@
 	};
 
 /***/ },
-/* 531 */
+/* 533 */
 /*!****************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.a-function.js ***!
   \****************************************************************************************/
@@ -57422,7 +58032,7 @@
 	};
 
 /***/ },
-/* 532 */
+/* 534 */
 /*!*******************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.object-assign.js ***!
   \*******************************************************************************************/
@@ -57431,12 +58041,12 @@
 	// 19.1.2.1 Object.assign(target, source, ...)
 	'use strict';
 	
-	var $ = __webpack_require__(/*! ./$ */ 533),
-	    toObject = __webpack_require__(/*! ./$.to-object */ 534),
-	    IObject = __webpack_require__(/*! ./$.iobject */ 536);
+	var $ = __webpack_require__(/*! ./$ */ 535),
+	    toObject = __webpack_require__(/*! ./$.to-object */ 536),
+	    IObject = __webpack_require__(/*! ./$.iobject */ 538);
 	
 	// should work with symbols and should have deterministic property order (V8 bug)
-	module.exports = __webpack_require__(/*! ./$.fails */ 538)(function () {
+	module.exports = __webpack_require__(/*! ./$.fails */ 540)(function () {
 	  var a = Object.assign,
 	      A = {},
 	      B = {},
@@ -57468,7 +58078,7 @@
 	} : Object.assign;
 
 /***/ },
-/* 533 */
+/* 535 */
 /*!*****************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.js ***!
   \*****************************************************************************/
@@ -57491,7 +58101,7 @@
 	};
 
 /***/ },
-/* 534 */
+/* 536 */
 /*!***************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.to-object.js ***!
   \***************************************************************************************/
@@ -57500,13 +58110,13 @@
 	// 7.1.13 ToObject(argument)
 	'use strict';
 	
-	var defined = __webpack_require__(/*! ./$.defined */ 535);
+	var defined = __webpack_require__(/*! ./$.defined */ 537);
 	module.exports = function (it) {
 	  return Object(defined(it));
 	};
 
 /***/ },
-/* 535 */
+/* 537 */
 /*!*************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.defined.js ***!
   \*************************************************************************************/
@@ -57521,7 +58131,7 @@
 	};
 
 /***/ },
-/* 536 */
+/* 538 */
 /*!*************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.iobject.js ***!
   \*************************************************************************************/
@@ -57530,13 +58140,13 @@
 	// fallback for non-array-like ES3 and non-enumerable old V8 strings
 	'use strict';
 	
-	var cof = __webpack_require__(/*! ./$.cof */ 537);
+	var cof = __webpack_require__(/*! ./$.cof */ 539);
 	module.exports = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
 	  return cof(it) == 'String' ? it.split('') : Object(it);
 	};
 
 /***/ },
-/* 537 */
+/* 539 */
 /*!*********************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.cof.js ***!
   \*********************************************************************************/
@@ -57551,7 +58161,7 @@
 	};
 
 /***/ },
-/* 538 */
+/* 540 */
 /*!***********************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.fails.js ***!
   \***********************************************************************************/
@@ -57568,7 +58178,7 @@
 	};
 
 /***/ },
-/* 539 */
+/* 541 */
 /*!***********************************************!*\
   !*** ./~/react-router-relay/lib/Container.js ***!
   \***********************************************/
@@ -57576,17 +58186,17 @@
 
 	'use strict';
 	
-	var _inherits = __webpack_require__(/*! babel-runtime/helpers/inherits */ 540)['default'];
+	var _inherits = __webpack_require__(/*! babel-runtime/helpers/inherits */ 542)['default'];
 	
-	var _createClass = __webpack_require__(/*! babel-runtime/helpers/create-class */ 549)['default'];
+	var _createClass = __webpack_require__(/*! babel-runtime/helpers/create-class */ 551)['default'];
 	
-	var _classCallCheck = __webpack_require__(/*! babel-runtime/helpers/class-call-check */ 552)['default'];
+	var _classCallCheck = __webpack_require__(/*! babel-runtime/helpers/class-call-check */ 554)['default'];
 	
-	var _extends = __webpack_require__(/*! babel-runtime/helpers/extends */ 523)['default'];
+	var _extends = __webpack_require__(/*! babel-runtime/helpers/extends */ 525)['default'];
 	
-	var _objectWithoutProperties = __webpack_require__(/*! babel-runtime/helpers/object-without-properties */ 553)['default'];
+	var _objectWithoutProperties = __webpack_require__(/*! babel-runtime/helpers/object-without-properties */ 555)['default'];
 	
-	var _interopRequireDefault = __webpack_require__(/*! babel-runtime/helpers/interop-require-default */ 521)['default'];
+	var _interopRequireDefault = __webpack_require__(/*! babel-runtime/helpers/interop-require-default */ 523)['default'];
 	
 	exports.__esModule = true;
 	
@@ -57594,19 +58204,19 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactStaticContainer = __webpack_require__(/*! react-static-container */ 554);
+	var _reactStaticContainer = __webpack_require__(/*! react-static-container */ 556);
 	
 	var _reactStaticContainer2 = _interopRequireDefault(_reactStaticContainer);
 	
-	var _getParamsForRoute = __webpack_require__(/*! ./getParamsForRoute */ 556);
+	var _getParamsForRoute = __webpack_require__(/*! ./getParamsForRoute */ 558);
 	
 	var _getParamsForRoute2 = _interopRequireDefault(_getParamsForRoute);
 	
-	var _RootComponent = __webpack_require__(/*! ./RootComponent */ 583);
+	var _RootComponent = __webpack_require__(/*! ./RootComponent */ 585);
 	
 	var _RootComponent2 = _interopRequireDefault(_RootComponent);
 	
-	var _RouteAggregator = __webpack_require__(/*! ./RouteAggregator */ 584);
+	var _RouteAggregator = __webpack_require__(/*! ./RouteAggregator */ 586);
 	
 	var _RouteAggregator2 = _interopRequireDefault(_RouteAggregator);
 	
@@ -57713,7 +58323,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 540 */
+/* 542 */
 /*!******************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/helpers/inherits.js ***!
   \******************************************************************/
@@ -57721,9 +58331,9 @@
 
 	"use strict";
 	
-	var _Object$create = __webpack_require__(/*! babel-runtime/core-js/object/create */ 541)["default"];
+	var _Object$create = __webpack_require__(/*! babel-runtime/core-js/object/create */ 543)["default"];
 	
-	var _Object$setPrototypeOf = __webpack_require__(/*! babel-runtime/core-js/object/set-prototype-of */ 543)["default"];
+	var _Object$setPrototypeOf = __webpack_require__(/*! babel-runtime/core-js/object/set-prototype-of */ 545)["default"];
 	
 	exports["default"] = function (subClass, superClass) {
 	  if (typeof superClass !== "function" && superClass !== null) {
@@ -57744,7 +58354,7 @@
 	exports.__esModule = true;
 
 /***/ },
-/* 541 */
+/* 543 */
 /*!***********************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/core-js/object/create.js ***!
   \***********************************************************************/
@@ -57752,10 +58362,10 @@
 
 	"use strict";
 	
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/create */ 542), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/create */ 544), __esModule: true };
 
 /***/ },
-/* 542 */
+/* 544 */
 /*!************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/fn/object/create.js ***!
   \************************************************************************************/
@@ -57763,13 +58373,13 @@
 
 	'use strict';
 	
-	var $ = __webpack_require__(/*! ../../modules/$ */ 533);
+	var $ = __webpack_require__(/*! ../../modules/$ */ 535);
 	module.exports = function create(P, D) {
 	  return $.create(P, D);
 	};
 
 /***/ },
-/* 543 */
+/* 545 */
 /*!*********************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/core-js/object/set-prototype-of.js ***!
   \*********************************************************************************/
@@ -57777,10 +58387,10 @@
 
 	"use strict";
 	
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/set-prototype-of */ 544), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/set-prototype-of */ 546), __esModule: true };
 
 /***/ },
-/* 544 */
+/* 546 */
 /*!**********************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/fn/object/set-prototype-of.js ***!
   \**********************************************************************************************/
@@ -57788,11 +58398,11 @@
 
 	'use strict';
 	
-	__webpack_require__(/*! ../../modules/es6.object.set-prototype-of */ 545);
-	module.exports = __webpack_require__(/*! ../../modules/$.core */ 529).Object.setPrototypeOf;
+	__webpack_require__(/*! ../../modules/es6.object.set-prototype-of */ 547);
+	module.exports = __webpack_require__(/*! ../../modules/$.core */ 531).Object.setPrototypeOf;
 
 /***/ },
-/* 545 */
+/* 547 */
 /*!*******************************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/es6.object.set-prototype-of.js ***!
   \*******************************************************************************************************/
@@ -57801,11 +58411,11 @@
 	// 19.1.3.19 Object.setPrototypeOf(O, proto)
 	'use strict';
 	
-	var $export = __webpack_require__(/*! ./$.export */ 527);
-	$export($export.S, 'Object', { setPrototypeOf: __webpack_require__(/*! ./$.set-proto */ 546).set });
+	var $export = __webpack_require__(/*! ./$.export */ 529);
+	$export($export.S, 'Object', { setPrototypeOf: __webpack_require__(/*! ./$.set-proto */ 548).set });
 
 /***/ },
-/* 546 */
+/* 548 */
 /*!***************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.set-proto.js ***!
   \***************************************************************************************/
@@ -57815,9 +58425,9 @@
 	/* eslint-disable no-proto */
 	'use strict';
 	
-	var getDesc = __webpack_require__(/*! ./$ */ 533).getDesc,
-	    isObject = __webpack_require__(/*! ./$.is-object */ 547),
-	    anObject = __webpack_require__(/*! ./$.an-object */ 548);
+	var getDesc = __webpack_require__(/*! ./$ */ 535).getDesc,
+	    isObject = __webpack_require__(/*! ./$.is-object */ 549),
+	    anObject = __webpack_require__(/*! ./$.an-object */ 550);
 	var check = function check(O, proto) {
 	  anObject(O);
 	  if (!isObject(proto) && proto !== null) throw TypeError(proto + ": can't set as prototype!");
@@ -57826,7 +58436,7 @@
 	  set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
 	  (function (test, buggy, set) {
 	    try {
-	      set = __webpack_require__(/*! ./$.ctx */ 530)(Function.call, getDesc(Object.prototype, '__proto__').set, 2);
+	      set = __webpack_require__(/*! ./$.ctx */ 532)(Function.call, getDesc(Object.prototype, '__proto__').set, 2);
 	      set(test, []);
 	      buggy = !(test instanceof Array);
 	    } catch (e) {
@@ -57842,7 +58452,7 @@
 	};
 
 /***/ },
-/* 547 */
+/* 549 */
 /*!***************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.is-object.js ***!
   \***************************************************************************************/
@@ -57855,7 +58465,7 @@
 	};
 
 /***/ },
-/* 548 */
+/* 550 */
 /*!***************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.an-object.js ***!
   \***************************************************************************************/
@@ -57863,14 +58473,14 @@
 
 	'use strict';
 	
-	var isObject = __webpack_require__(/*! ./$.is-object */ 547);
+	var isObject = __webpack_require__(/*! ./$.is-object */ 549);
 	module.exports = function (it) {
 	  if (!isObject(it)) throw TypeError(it + ' is not an object!');
 	  return it;
 	};
 
 /***/ },
-/* 549 */
+/* 551 */
 /*!**********************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/helpers/create-class.js ***!
   \**********************************************************************/
@@ -57878,7 +58488,7 @@
 
 	"use strict";
 	
-	var _Object$defineProperty = __webpack_require__(/*! babel-runtime/core-js/object/define-property */ 550)["default"];
+	var _Object$defineProperty = __webpack_require__(/*! babel-runtime/core-js/object/define-property */ 552)["default"];
 	
 	exports["default"] = (function () {
 	  function defineProperties(target, props) {
@@ -57902,7 +58512,7 @@
 	exports.__esModule = true;
 
 /***/ },
-/* 550 */
+/* 552 */
 /*!********************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/core-js/object/define-property.js ***!
   \********************************************************************************/
@@ -57910,10 +58520,10 @@
 
 	"use strict";
 	
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/define-property */ 551), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/define-property */ 553), __esModule: true };
 
 /***/ },
-/* 551 */
+/* 553 */
 /*!*********************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/fn/object/define-property.js ***!
   \*********************************************************************************************/
@@ -57921,13 +58531,13 @@
 
 	'use strict';
 	
-	var $ = __webpack_require__(/*! ../../modules/$ */ 533);
+	var $ = __webpack_require__(/*! ../../modules/$ */ 535);
 	module.exports = function defineProperty(it, key, desc) {
 	  return $.setDesc(it, key, desc);
 	};
 
 /***/ },
-/* 552 */
+/* 554 */
 /*!**************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/helpers/class-call-check.js ***!
   \**************************************************************************/
@@ -57944,7 +58554,7 @@
 	exports.__esModule = true;
 
 /***/ },
-/* 553 */
+/* 555 */
 /*!***********************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/helpers/object-without-properties.js ***!
   \***********************************************************************************/
@@ -57967,7 +58577,7 @@
 	exports.__esModule = true;
 
 /***/ },
-/* 554 */
+/* 556 */
 /*!****************************************************************!*\
   !*** ./~/react-router-relay/~/react-static-container/index.js ***!
   \****************************************************************/
@@ -57984,10 +58594,10 @@
 	
 	'use strict';
 	
-	module.exports = __webpack_require__(/*! ./lib/StaticContainer.react */ 555);
+	module.exports = __webpack_require__(/*! ./lib/StaticContainer.react */ 557);
 
 /***/ },
-/* 555 */
+/* 557 */
 /*!************************************************************************************!*\
   !*** ./~/react-router-relay/~/react-static-container/lib/StaticContainer.react.js ***!
   \************************************************************************************/
@@ -58099,7 +58709,7 @@
 	module.exports = StaticContainer;
 
 /***/ },
-/* 556 */
+/* 558 */
 /*!*******************************************************!*\
   !*** ./~/react-router-relay/lib/getParamsForRoute.js ***!
   \*******************************************************/
@@ -58107,11 +58717,11 @@
 
 	'use strict';
 	
-	var _getIterator = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 557)['default'];
+	var _getIterator = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 559)['default'];
 	
-	var _Object$assign = __webpack_require__(/*! babel-runtime/core-js/object/assign */ 524)['default'];
+	var _Object$assign = __webpack_require__(/*! babel-runtime/core-js/object/assign */ 526)['default'];
 	
-	var _interopRequireDefault = __webpack_require__(/*! babel-runtime/helpers/interop-require-default */ 521)['default'];
+	var _interopRequireDefault = __webpack_require__(/*! babel-runtime/helpers/interop-require-default */ 523)['default'];
 	
 	exports.__esModule = true;
 	exports['default'] = getParamsForRoute;
@@ -58169,7 +58779,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 557 */
+/* 559 */
 /*!**********************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/core-js/get-iterator.js ***!
   \**********************************************************************/
@@ -58177,10 +58787,10 @@
 
 	"use strict";
 	
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/get-iterator */ 558), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/get-iterator */ 560), __esModule: true };
 
 /***/ },
-/* 558 */
+/* 560 */
 /*!***********************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/fn/get-iterator.js ***!
   \***********************************************************************************/
@@ -58188,12 +58798,12 @@
 
 	'use strict';
 	
-	__webpack_require__(/*! ../modules/web.dom.iterable */ 559);
-	__webpack_require__(/*! ../modules/es6.string.iterator */ 577);
-	module.exports = __webpack_require__(/*! ../modules/core.get-iterator */ 580);
+	__webpack_require__(/*! ../modules/web.dom.iterable */ 561);
+	__webpack_require__(/*! ../modules/es6.string.iterator */ 579);
+	module.exports = __webpack_require__(/*! ../modules/core.get-iterator */ 582);
 
 /***/ },
-/* 559 */
+/* 561 */
 /*!********************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/web.dom.iterable.js ***!
   \********************************************************************************************/
@@ -58201,28 +58811,28 @@
 
 	'use strict';
 	
-	__webpack_require__(/*! ./es6.array.iterator */ 560);
-	var Iterators = __webpack_require__(/*! ./$.iterators */ 563);
+	__webpack_require__(/*! ./es6.array.iterator */ 562);
+	var Iterators = __webpack_require__(/*! ./$.iterators */ 565);
 	Iterators.NodeList = Iterators.HTMLCollection = Iterators.Array;
 
 /***/ },
-/* 560 */
+/* 562 */
 /*!**********************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/es6.array.iterator.js ***!
   \**********************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var addToUnscopables = __webpack_require__(/*! ./$.add-to-unscopables */ 561),
-	    step = __webpack_require__(/*! ./$.iter-step */ 562),
-	    Iterators = __webpack_require__(/*! ./$.iterators */ 563),
-	    toIObject = __webpack_require__(/*! ./$.to-iobject */ 564);
+	var addToUnscopables = __webpack_require__(/*! ./$.add-to-unscopables */ 563),
+	    step = __webpack_require__(/*! ./$.iter-step */ 564),
+	    Iterators = __webpack_require__(/*! ./$.iterators */ 565),
+	    toIObject = __webpack_require__(/*! ./$.to-iobject */ 566);
 	
 	// 22.1.3.4 Array.prototype.entries()
 	// 22.1.3.13 Array.prototype.keys()
 	// 22.1.3.29 Array.prototype.values()
 	// 22.1.3.30 Array.prototype[@@iterator]()
-	module.exports = __webpack_require__(/*! ./$.iter-define */ 565)(Array, 'Array', function (iterated, kind) {
+	module.exports = __webpack_require__(/*! ./$.iter-define */ 567)(Array, 'Array', function (iterated, kind) {
 	  this._t = toIObject(iterated); // target
 	  this._i = 0; // next index
 	  this._k = kind; // kind
@@ -58248,7 +58858,7 @@
 	addToUnscopables('entries');
 
 /***/ },
-/* 561 */
+/* 563 */
 /*!************************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.add-to-unscopables.js ***!
   \************************************************************************************************/
@@ -58259,7 +58869,7 @@
 	module.exports = function () {/* empty */};
 
 /***/ },
-/* 562 */
+/* 564 */
 /*!***************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.iter-step.js ***!
   \***************************************************************************************/
@@ -58272,7 +58882,7 @@
 	};
 
 /***/ },
-/* 563 */
+/* 565 */
 /*!***************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.iterators.js ***!
   \***************************************************************************************/
@@ -58283,7 +58893,7 @@
 	module.exports = {};
 
 /***/ },
-/* 564 */
+/* 566 */
 /*!****************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.to-iobject.js ***!
   \****************************************************************************************/
@@ -58292,30 +58902,30 @@
 	// to indexed object, toObject with fallback for non-array-like ES3 strings
 	'use strict';
 	
-	var IObject = __webpack_require__(/*! ./$.iobject */ 536),
-	    defined = __webpack_require__(/*! ./$.defined */ 535);
+	var IObject = __webpack_require__(/*! ./$.iobject */ 538),
+	    defined = __webpack_require__(/*! ./$.defined */ 537);
 	module.exports = function (it) {
 	  return IObject(defined(it));
 	};
 
 /***/ },
-/* 565 */
+/* 567 */
 /*!*****************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.iter-define.js ***!
   \*****************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var LIBRARY = __webpack_require__(/*! ./$.library */ 566),
-	    $export = __webpack_require__(/*! ./$.export */ 527),
-	    redefine = __webpack_require__(/*! ./$.redefine */ 567),
-	    hide = __webpack_require__(/*! ./$.hide */ 568),
-	    has = __webpack_require__(/*! ./$.has */ 571),
-	    Iterators = __webpack_require__(/*! ./$.iterators */ 563),
-	    $iterCreate = __webpack_require__(/*! ./$.iter-create */ 572),
-	    setToStringTag = __webpack_require__(/*! ./$.set-to-string-tag */ 573),
-	    getProto = __webpack_require__(/*! ./$ */ 533).getProto,
-	    ITERATOR = __webpack_require__(/*! ./$.wks */ 574)('iterator'),
+	var LIBRARY = __webpack_require__(/*! ./$.library */ 568),
+	    $export = __webpack_require__(/*! ./$.export */ 529),
+	    redefine = __webpack_require__(/*! ./$.redefine */ 569),
+	    hide = __webpack_require__(/*! ./$.hide */ 570),
+	    has = __webpack_require__(/*! ./$.has */ 573),
+	    Iterators = __webpack_require__(/*! ./$.iterators */ 565),
+	    $iterCreate = __webpack_require__(/*! ./$.iter-create */ 574),
+	    setToStringTag = __webpack_require__(/*! ./$.set-to-string-tag */ 575),
+	    getProto = __webpack_require__(/*! ./$ */ 535).getProto,
+	    ITERATOR = __webpack_require__(/*! ./$.wks */ 576)('iterator'),
 	    BUGGY = !([].keys && 'next' in [].keys()),
 	    // Safari has buggy iterators w/o `next`
 	FF_ITERATOR = '@@iterator',
@@ -58387,7 +58997,7 @@
 	};
 
 /***/ },
-/* 566 */
+/* 568 */
 /*!*************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.library.js ***!
   \*************************************************************************************/
@@ -58398,7 +59008,7 @@
 	module.exports = true;
 
 /***/ },
-/* 567 */
+/* 569 */
 /*!**************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.redefine.js ***!
   \**************************************************************************************/
@@ -58406,10 +59016,10 @@
 
 	'use strict';
 	
-	module.exports = __webpack_require__(/*! ./$.hide */ 568);
+	module.exports = __webpack_require__(/*! ./$.hide */ 570);
 
 /***/ },
-/* 568 */
+/* 570 */
 /*!**********************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.hide.js ***!
   \**********************************************************************************/
@@ -58417,9 +59027,9 @@
 
 	'use strict';
 	
-	var $ = __webpack_require__(/*! ./$ */ 533),
-	    createDesc = __webpack_require__(/*! ./$.property-desc */ 569);
-	module.exports = __webpack_require__(/*! ./$.descriptors */ 570) ? function (object, key, value) {
+	var $ = __webpack_require__(/*! ./$ */ 535),
+	    createDesc = __webpack_require__(/*! ./$.property-desc */ 571);
+	module.exports = __webpack_require__(/*! ./$.descriptors */ 572) ? function (object, key, value) {
 	  return $.setDesc(object, key, createDesc(1, value));
 	} : function (object, key, value) {
 	  object[key] = value;
@@ -58427,7 +59037,7 @@
 	};
 
 /***/ },
-/* 569 */
+/* 571 */
 /*!*******************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.property-desc.js ***!
   \*******************************************************************************************/
@@ -58445,7 +59055,7 @@
 	};
 
 /***/ },
-/* 570 */
+/* 572 */
 /*!*****************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.descriptors.js ***!
   \*****************************************************************************************/
@@ -58454,14 +59064,14 @@
 	// Thank's IE8 for his funny defineProperty
 	'use strict';
 	
-	module.exports = !__webpack_require__(/*! ./$.fails */ 538)(function () {
+	module.exports = !__webpack_require__(/*! ./$.fails */ 540)(function () {
 	  return Object.defineProperty({}, 'a', { get: function get() {
 	      return 7;
 	    } }).a != 7;
 	});
 
 /***/ },
-/* 571 */
+/* 573 */
 /*!*********************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.has.js ***!
   \*********************************************************************************/
@@ -58475,20 +59085,20 @@
 	};
 
 /***/ },
-/* 572 */
+/* 574 */
 /*!*****************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.iter-create.js ***!
   \*****************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var $ = __webpack_require__(/*! ./$ */ 533),
-	    descriptor = __webpack_require__(/*! ./$.property-desc */ 569),
-	    setToStringTag = __webpack_require__(/*! ./$.set-to-string-tag */ 573),
+	var $ = __webpack_require__(/*! ./$ */ 535),
+	    descriptor = __webpack_require__(/*! ./$.property-desc */ 571),
+	    setToStringTag = __webpack_require__(/*! ./$.set-to-string-tag */ 575),
 	    IteratorPrototype = {};
 	
 	// 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
-	__webpack_require__(/*! ./$.hide */ 568)(IteratorPrototype, __webpack_require__(/*! ./$.wks */ 574)('iterator'), function () {
+	__webpack_require__(/*! ./$.hide */ 570)(IteratorPrototype, __webpack_require__(/*! ./$.wks */ 576)('iterator'), function () {
 	  return this;
 	});
 	
@@ -58498,7 +59108,7 @@
 	};
 
 /***/ },
-/* 573 */
+/* 575 */
 /*!***********************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.set-to-string-tag.js ***!
   \***********************************************************************************************/
@@ -58506,16 +59116,16 @@
 
 	'use strict';
 	
-	var def = __webpack_require__(/*! ./$ */ 533).setDesc,
-	    has = __webpack_require__(/*! ./$.has */ 571),
-	    TAG = __webpack_require__(/*! ./$.wks */ 574)('toStringTag');
+	var def = __webpack_require__(/*! ./$ */ 535).setDesc,
+	    has = __webpack_require__(/*! ./$.has */ 573),
+	    TAG = __webpack_require__(/*! ./$.wks */ 576)('toStringTag');
 	
 	module.exports = function (it, tag, stat) {
 	  if (it && !has(it = stat ? it : it.prototype, TAG)) def(it, TAG, { configurable: true, value: tag });
 	};
 
 /***/ },
-/* 574 */
+/* 576 */
 /*!*********************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.wks.js ***!
   \*********************************************************************************/
@@ -58523,15 +59133,15 @@
 
 	'use strict';
 	
-	var store = __webpack_require__(/*! ./$.shared */ 575)('wks'),
-	    uid = __webpack_require__(/*! ./$.uid */ 576),
-	    Symbol = __webpack_require__(/*! ./$.global */ 528).Symbol;
+	var store = __webpack_require__(/*! ./$.shared */ 577)('wks'),
+	    uid = __webpack_require__(/*! ./$.uid */ 578),
+	    Symbol = __webpack_require__(/*! ./$.global */ 530).Symbol;
 	module.exports = function (name) {
 	  return store[name] || (store[name] = Symbol && Symbol[name] || (Symbol || uid)('Symbol.' + name));
 	};
 
 /***/ },
-/* 575 */
+/* 577 */
 /*!************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.shared.js ***!
   \************************************************************************************/
@@ -58539,7 +59149,7 @@
 
 	'use strict';
 	
-	var global = __webpack_require__(/*! ./$.global */ 528),
+	var global = __webpack_require__(/*! ./$.global */ 530),
 	    SHARED = '__core-js_shared__',
 	    store = global[SHARED] || (global[SHARED] = {});
 	module.exports = function (key) {
@@ -58547,7 +59157,7 @@
 	};
 
 /***/ },
-/* 576 */
+/* 578 */
 /*!*********************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.uid.js ***!
   \*********************************************************************************/
@@ -58562,17 +59172,17 @@
 	};
 
 /***/ },
-/* 577 */
+/* 579 */
 /*!***********************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/es6.string.iterator.js ***!
   \***********************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var $at = __webpack_require__(/*! ./$.string-at */ 578)(true);
+	var $at = __webpack_require__(/*! ./$.string-at */ 580)(true);
 	
 	// 21.1.3.27 String.prototype[@@iterator]()
-	__webpack_require__(/*! ./$.iter-define */ 565)(String, 'String', function (iterated) {
+	__webpack_require__(/*! ./$.iter-define */ 567)(String, 'String', function (iterated) {
 	  this._t = String(iterated); // target
 	  this._i = 0; // next index
 	  // 21.1.5.2.1 %StringIteratorPrototype%.next()
@@ -58587,7 +59197,7 @@
 	});
 
 /***/ },
-/* 578 */
+/* 580 */
 /*!***************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.string-at.js ***!
   \***************************************************************************************/
@@ -58595,8 +59205,8 @@
 
 	'use strict';
 	
-	var toInteger = __webpack_require__(/*! ./$.to-integer */ 579),
-	    defined = __webpack_require__(/*! ./$.defined */ 535);
+	var toInteger = __webpack_require__(/*! ./$.to-integer */ 581),
+	    defined = __webpack_require__(/*! ./$.defined */ 537);
 	// true  -> String#at
 	// false -> String#codePointAt
 	module.exports = function (TO_STRING) {
@@ -58613,7 +59223,7 @@
 	};
 
 /***/ },
-/* 579 */
+/* 581 */
 /*!****************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.to-integer.js ***!
   \****************************************************************************************/
@@ -58629,7 +59239,7 @@
 	};
 
 /***/ },
-/* 580 */
+/* 582 */
 /*!*********************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/core.get-iterator.js ***!
   \*********************************************************************************************/
@@ -58637,16 +59247,16 @@
 
 	'use strict';
 	
-	var anObject = __webpack_require__(/*! ./$.an-object */ 548),
-	    get = __webpack_require__(/*! ./core.get-iterator-method */ 581);
-	module.exports = __webpack_require__(/*! ./$.core */ 529).getIterator = function (it) {
+	var anObject = __webpack_require__(/*! ./$.an-object */ 550),
+	    get = __webpack_require__(/*! ./core.get-iterator-method */ 583);
+	module.exports = __webpack_require__(/*! ./$.core */ 531).getIterator = function (it) {
 	  var iterFn = get(it);
 	  if (typeof iterFn != 'function') throw TypeError(it + ' is not iterable!');
 	  return anObject(iterFn.call(it));
 	};
 
 /***/ },
-/* 581 */
+/* 583 */
 /*!****************************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/core.get-iterator-method.js ***!
   \****************************************************************************************************/
@@ -58654,15 +59264,15 @@
 
 	'use strict';
 	
-	var classof = __webpack_require__(/*! ./$.classof */ 582),
-	    ITERATOR = __webpack_require__(/*! ./$.wks */ 574)('iterator'),
-	    Iterators = __webpack_require__(/*! ./$.iterators */ 563);
-	module.exports = __webpack_require__(/*! ./$.core */ 529).getIteratorMethod = function (it) {
+	var classof = __webpack_require__(/*! ./$.classof */ 584),
+	    ITERATOR = __webpack_require__(/*! ./$.wks */ 576)('iterator'),
+	    Iterators = __webpack_require__(/*! ./$.iterators */ 565);
+	module.exports = __webpack_require__(/*! ./$.core */ 531).getIteratorMethod = function (it) {
 	  if (it != undefined) return it[ITERATOR] || it['@@iterator'] || Iterators[classof(it)];
 	};
 
 /***/ },
-/* 582 */
+/* 584 */
 /*!*************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.classof.js ***!
   \*************************************************************************************/
@@ -58671,8 +59281,8 @@
 	// getting tag from 19.1.3.6 Object.prototype.toString()
 	'use strict';
 	
-	var cof = __webpack_require__(/*! ./$.cof */ 537),
-	    TAG = __webpack_require__(/*! ./$.wks */ 574)('toStringTag'),
+	var cof = __webpack_require__(/*! ./$.cof */ 539),
+	    TAG = __webpack_require__(/*! ./$.wks */ 576)('toStringTag'),
 	
 	// ES3 wrong here
 	ARG = cof((function () {
@@ -58691,7 +59301,7 @@
 	};
 
 /***/ },
-/* 583 */
+/* 585 */
 /*!***************************************************!*\
   !*** ./~/react-router-relay/lib/RootComponent.js ***!
   \***************************************************/
@@ -58699,13 +59309,13 @@
 
 	'use strict';
 	
-	var _inherits = __webpack_require__(/*! babel-runtime/helpers/inherits */ 540)['default'];
+	var _inherits = __webpack_require__(/*! babel-runtime/helpers/inherits */ 542)['default'];
 	
-	var _createClass = __webpack_require__(/*! babel-runtime/helpers/create-class */ 549)['default'];
+	var _createClass = __webpack_require__(/*! babel-runtime/helpers/create-class */ 551)['default'];
 	
-	var _classCallCheck = __webpack_require__(/*! babel-runtime/helpers/class-call-check */ 552)['default'];
+	var _classCallCheck = __webpack_require__(/*! babel-runtime/helpers/class-call-check */ 554)['default'];
 	
-	var _interopRequireDefault = __webpack_require__(/*! babel-runtime/helpers/interop-require-default */ 521)['default'];
+	var _interopRequireDefault = __webpack_require__(/*! babel-runtime/helpers/interop-require-default */ 523)['default'];
 	
 	exports.__esModule = true;
 	
@@ -58717,11 +59327,11 @@
 	
 	var _reactRelay2 = _interopRequireDefault(_reactRelay);
 	
-	var _Container = __webpack_require__(/*! ./Container */ 539);
+	var _Container = __webpack_require__(/*! ./Container */ 541);
 	
 	var _Container2 = _interopRequireDefault(_Container);
 	
-	var _RouteAggregator = __webpack_require__(/*! ./RouteAggregator */ 584);
+	var _RouteAggregator = __webpack_require__(/*! ./RouteAggregator */ 586);
 	
 	var _RouteAggregator2 = _interopRequireDefault(_RouteAggregator);
 	
@@ -58807,7 +59417,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 584 */
+/* 586 */
 /*!*****************************************************!*\
   !*** ./~/react-router-relay/lib/RouteAggregator.js ***!
   \*****************************************************/
@@ -58815,21 +59425,21 @@
 
 	'use strict';
 	
-	var _classCallCheck = __webpack_require__(/*! babel-runtime/helpers/class-call-check */ 552)['default'];
+	var _classCallCheck = __webpack_require__(/*! babel-runtime/helpers/class-call-check */ 554)['default'];
 	
-	var _WeakMap = __webpack_require__(/*! babel-runtime/core-js/weak-map */ 585)['default'];
+	var _WeakMap = __webpack_require__(/*! babel-runtime/core-js/weak-map */ 587)['default'];
 	
-	var _Object$assign = __webpack_require__(/*! babel-runtime/core-js/object/assign */ 524)['default'];
+	var _Object$assign = __webpack_require__(/*! babel-runtime/core-js/object/assign */ 526)['default'];
 	
-	var _Object$keys = __webpack_require__(/*! babel-runtime/core-js/object/keys */ 600)['default'];
+	var _Object$keys = __webpack_require__(/*! babel-runtime/core-js/object/keys */ 602)['default'];
 	
-	var _getIterator = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 557)['default'];
+	var _getIterator = __webpack_require__(/*! babel-runtime/core-js/get-iterator */ 559)['default'];
 	
-	var _interopRequireDefault = __webpack_require__(/*! babel-runtime/helpers/interop-require-default */ 521)['default'];
+	var _interopRequireDefault = __webpack_require__(/*! babel-runtime/helpers/interop-require-default */ 523)['default'];
 	
 	exports.__esModule = true;
 	
-	var _invariant = __webpack_require__(/*! invariant */ 604);
+	var _invariant = __webpack_require__(/*! invariant */ 606);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
@@ -58837,7 +59447,7 @@
 	
 	var _reactRelay2 = _interopRequireDefault(_reactRelay);
 	
-	var _getParamsForRoute = __webpack_require__(/*! ./getParamsForRoute */ 556);
+	var _getParamsForRoute = __webpack_require__(/*! ./getParamsForRoute */ 558);
 	
 	var _getParamsForRoute2 = _interopRequireDefault(_getParamsForRoute);
 	
@@ -59030,7 +59640,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 585 */
+/* 587 */
 /*!******************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/core-js/weak-map.js ***!
   \******************************************************************/
@@ -59038,10 +59648,10 @@
 
 	"use strict";
 	
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/weak-map */ 586), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/weak-map */ 588), __esModule: true };
 
 /***/ },
-/* 586 */
+/* 588 */
 /*!*******************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/fn/weak-map.js ***!
   \*******************************************************************************/
@@ -59049,13 +59659,13 @@
 
 	'use strict';
 	
-	__webpack_require__(/*! ../modules/es6.object.to-string */ 587);
-	__webpack_require__(/*! ../modules/web.dom.iterable */ 559);
-	__webpack_require__(/*! ../modules/es6.weak-map */ 588);
-	module.exports = __webpack_require__(/*! ../modules/$.core */ 529).WeakMap;
+	__webpack_require__(/*! ../modules/es6.object.to-string */ 589);
+	__webpack_require__(/*! ../modules/web.dom.iterable */ 561);
+	__webpack_require__(/*! ../modules/es6.weak-map */ 590);
+	module.exports = __webpack_require__(/*! ../modules/$.core */ 531).WeakMap;
 
 /***/ },
-/* 587 */
+/* 589 */
 /*!************************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/es6.object.to-string.js ***!
   \************************************************************************************************/
@@ -59064,25 +59674,25 @@
 	"use strict";
 
 /***/ },
-/* 588 */
+/* 590 */
 /*!****************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/es6.weak-map.js ***!
   \****************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var $ = __webpack_require__(/*! ./$ */ 533),
-	    redefine = __webpack_require__(/*! ./$.redefine */ 567),
-	    weak = __webpack_require__(/*! ./$.collection-weak */ 589),
-	    isObject = __webpack_require__(/*! ./$.is-object */ 547),
-	    has = __webpack_require__(/*! ./$.has */ 571),
+	var $ = __webpack_require__(/*! ./$ */ 535),
+	    redefine = __webpack_require__(/*! ./$.redefine */ 569),
+	    weak = __webpack_require__(/*! ./$.collection-weak */ 591),
+	    isObject = __webpack_require__(/*! ./$.is-object */ 549),
+	    has = __webpack_require__(/*! ./$.has */ 573),
 	    frozenStore = weak.frozenStore,
 	    WEAK = weak.WEAK,
 	    isExtensible = Object.isExtensible || isObject,
 	    tmp = {};
 	
 	// 23.3 WeakMap Objects
-	var $WeakMap = __webpack_require__(/*! ./$.collection */ 599)('WeakMap', function (get) {
+	var $WeakMap = __webpack_require__(/*! ./$.collection */ 601)('WeakMap', function (get) {
 	  return function WeakMap() {
 	    return get(this, arguments.length > 0 ? arguments[0] : undefined);
 	  };
@@ -59117,22 +59727,22 @@
 	}
 
 /***/ },
-/* 589 */
+/* 591 */
 /*!*********************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.collection-weak.js ***!
   \*********************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var hide = __webpack_require__(/*! ./$.hide */ 568),
-	    redefineAll = __webpack_require__(/*! ./$.redefine-all */ 590),
-	    anObject = __webpack_require__(/*! ./$.an-object */ 548),
-	    isObject = __webpack_require__(/*! ./$.is-object */ 547),
-	    strictNew = __webpack_require__(/*! ./$.strict-new */ 591),
-	    forOf = __webpack_require__(/*! ./$.for-of */ 592),
-	    createArrayMethod = __webpack_require__(/*! ./$.array-methods */ 596),
-	    $has = __webpack_require__(/*! ./$.has */ 571),
-	    WEAK = __webpack_require__(/*! ./$.uid */ 576)('weak'),
+	var hide = __webpack_require__(/*! ./$.hide */ 570),
+	    redefineAll = __webpack_require__(/*! ./$.redefine-all */ 592),
+	    anObject = __webpack_require__(/*! ./$.an-object */ 550),
+	    isObject = __webpack_require__(/*! ./$.is-object */ 549),
+	    strictNew = __webpack_require__(/*! ./$.strict-new */ 593),
+	    forOf = __webpack_require__(/*! ./$.for-of */ 594),
+	    createArrayMethod = __webpack_require__(/*! ./$.array-methods */ 598),
+	    $has = __webpack_require__(/*! ./$.has */ 573),
+	    WEAK = __webpack_require__(/*! ./$.uid */ 578)('weak'),
 	    isExtensible = Object.isExtensible || isObject,
 	    arrayFind = createArrayMethod(5),
 	    arrayFindIndex = createArrayMethod(6),
@@ -59210,7 +59820,7 @@
 	};
 
 /***/ },
-/* 590 */
+/* 592 */
 /*!******************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.redefine-all.js ***!
   \******************************************************************************************/
@@ -59218,14 +59828,14 @@
 
 	'use strict';
 	
-	var redefine = __webpack_require__(/*! ./$.redefine */ 567);
+	var redefine = __webpack_require__(/*! ./$.redefine */ 569);
 	module.exports = function (target, src) {
 	  for (var key in src) redefine(target, key, src[key]);
 	  return target;
 	};
 
 /***/ },
-/* 591 */
+/* 593 */
 /*!****************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.strict-new.js ***!
   \****************************************************************************************/
@@ -59239,7 +59849,7 @@
 	};
 
 /***/ },
-/* 592 */
+/* 594 */
 /*!************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.for-of.js ***!
   \************************************************************************************/
@@ -59247,12 +59857,12 @@
 
 	'use strict';
 	
-	var ctx = __webpack_require__(/*! ./$.ctx */ 530),
-	    call = __webpack_require__(/*! ./$.iter-call */ 593),
-	    isArrayIter = __webpack_require__(/*! ./$.is-array-iter */ 594),
-	    anObject = __webpack_require__(/*! ./$.an-object */ 548),
-	    toLength = __webpack_require__(/*! ./$.to-length */ 595),
-	    getIterFn = __webpack_require__(/*! ./core.get-iterator-method */ 581);
+	var ctx = __webpack_require__(/*! ./$.ctx */ 532),
+	    call = __webpack_require__(/*! ./$.iter-call */ 595),
+	    isArrayIter = __webpack_require__(/*! ./$.is-array-iter */ 596),
+	    anObject = __webpack_require__(/*! ./$.an-object */ 550),
+	    toLength = __webpack_require__(/*! ./$.to-length */ 597),
+	    getIterFn = __webpack_require__(/*! ./core.get-iterator-method */ 583);
 	module.exports = function (iterable, entries, fn, that) {
 	  var iterFn = getIterFn(iterable),
 	      f = ctx(fn, that, entries ? 2 : 1),
@@ -59270,7 +59880,7 @@
 	};
 
 /***/ },
-/* 593 */
+/* 595 */
 /*!***************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.iter-call.js ***!
   \***************************************************************************************/
@@ -59279,7 +59889,7 @@
 	// call something on iterator step with safe closing on error
 	'use strict';
 	
-	var anObject = __webpack_require__(/*! ./$.an-object */ 548);
+	var anObject = __webpack_require__(/*! ./$.an-object */ 550);
 	module.exports = function (iterator, fn, value, entries) {
 	  try {
 	    return entries ? fn(anObject(value)[0], value[1]) : fn(value);
@@ -59292,7 +59902,7 @@
 	};
 
 /***/ },
-/* 594 */
+/* 596 */
 /*!*******************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.is-array-iter.js ***!
   \*******************************************************************************************/
@@ -59301,8 +59911,8 @@
 	// check on default Array iterator
 	'use strict';
 	
-	var Iterators = __webpack_require__(/*! ./$.iterators */ 563),
-	    ITERATOR = __webpack_require__(/*! ./$.wks */ 574)('iterator'),
+	var Iterators = __webpack_require__(/*! ./$.iterators */ 565),
+	    ITERATOR = __webpack_require__(/*! ./$.wks */ 576)('iterator'),
 	    ArrayProto = Array.prototype;
 	
 	module.exports = function (it) {
@@ -59310,7 +59920,7 @@
 	};
 
 /***/ },
-/* 595 */
+/* 597 */
 /*!***************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.to-length.js ***!
   \***************************************************************************************/
@@ -59319,14 +59929,14 @@
 	// 7.1.15 ToLength
 	'use strict';
 	
-	var toInteger = __webpack_require__(/*! ./$.to-integer */ 579),
+	var toInteger = __webpack_require__(/*! ./$.to-integer */ 581),
 	    min = Math.min;
 	module.exports = function (it) {
 	  return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
 	};
 
 /***/ },
-/* 596 */
+/* 598 */
 /*!*******************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.array-methods.js ***!
   \*******************************************************************************************/
@@ -59341,11 +59951,11 @@
 	// 6 -> Array#findIndex
 	'use strict';
 	
-	var ctx = __webpack_require__(/*! ./$.ctx */ 530),
-	    IObject = __webpack_require__(/*! ./$.iobject */ 536),
-	    toObject = __webpack_require__(/*! ./$.to-object */ 534),
-	    toLength = __webpack_require__(/*! ./$.to-length */ 595),
-	    asc = __webpack_require__(/*! ./$.array-species-create */ 597);
+	var ctx = __webpack_require__(/*! ./$.ctx */ 532),
+	    IObject = __webpack_require__(/*! ./$.iobject */ 538),
+	    toObject = __webpack_require__(/*! ./$.to-object */ 536),
+	    toLength = __webpack_require__(/*! ./$.to-length */ 597),
+	    asc = __webpack_require__(/*! ./$.array-species-create */ 599);
 	module.exports = function (TYPE) {
 	  var IS_MAP = TYPE == 1,
 	      IS_FILTER = TYPE == 2,
@@ -59384,7 +59994,7 @@
 	};
 
 /***/ },
-/* 597 */
+/* 599 */
 /*!**************************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.array-species-create.js ***!
   \**************************************************************************************************/
@@ -59393,9 +60003,9 @@
 	// 9.4.2.3 ArraySpeciesCreate(originalArray, length)
 	'use strict';
 	
-	var isObject = __webpack_require__(/*! ./$.is-object */ 547),
-	    isArray = __webpack_require__(/*! ./$.is-array */ 598),
-	    SPECIES = __webpack_require__(/*! ./$.wks */ 574)('species');
+	var isObject = __webpack_require__(/*! ./$.is-object */ 549),
+	    isArray = __webpack_require__(/*! ./$.is-array */ 600),
+	    SPECIES = __webpack_require__(/*! ./$.wks */ 576)('species');
 	module.exports = function (original, length) {
 	  var C;
 	  if (isArray(original)) {
@@ -59410,7 +60020,7 @@
 	};
 
 /***/ },
-/* 598 */
+/* 600 */
 /*!**************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.is-array.js ***!
   \**************************************************************************************/
@@ -59419,30 +60029,30 @@
 	// 7.2.2 IsArray(argument)
 	'use strict';
 	
-	var cof = __webpack_require__(/*! ./$.cof */ 537);
+	var cof = __webpack_require__(/*! ./$.cof */ 539);
 	module.exports = Array.isArray || function (arg) {
 	  return cof(arg) == 'Array';
 	};
 
 /***/ },
-/* 599 */
+/* 601 */
 /*!****************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.collection.js ***!
   \****************************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var $ = __webpack_require__(/*! ./$ */ 533),
-	    global = __webpack_require__(/*! ./$.global */ 528),
-	    $export = __webpack_require__(/*! ./$.export */ 527),
-	    fails = __webpack_require__(/*! ./$.fails */ 538),
-	    hide = __webpack_require__(/*! ./$.hide */ 568),
-	    redefineAll = __webpack_require__(/*! ./$.redefine-all */ 590),
-	    forOf = __webpack_require__(/*! ./$.for-of */ 592),
-	    strictNew = __webpack_require__(/*! ./$.strict-new */ 591),
-	    isObject = __webpack_require__(/*! ./$.is-object */ 547),
-	    setToStringTag = __webpack_require__(/*! ./$.set-to-string-tag */ 573),
-	    DESCRIPTORS = __webpack_require__(/*! ./$.descriptors */ 570);
+	var $ = __webpack_require__(/*! ./$ */ 535),
+	    global = __webpack_require__(/*! ./$.global */ 530),
+	    $export = __webpack_require__(/*! ./$.export */ 529),
+	    fails = __webpack_require__(/*! ./$.fails */ 540),
+	    hide = __webpack_require__(/*! ./$.hide */ 570),
+	    redefineAll = __webpack_require__(/*! ./$.redefine-all */ 592),
+	    forOf = __webpack_require__(/*! ./$.for-of */ 594),
+	    strictNew = __webpack_require__(/*! ./$.strict-new */ 593),
+	    isObject = __webpack_require__(/*! ./$.is-object */ 549),
+	    setToStringTag = __webpack_require__(/*! ./$.set-to-string-tag */ 575),
+	    DESCRIPTORS = __webpack_require__(/*! ./$.descriptors */ 572);
 	
 	module.exports = function (NAME, wrapper, methods, common, IS_MAP, IS_WEAK) {
 	  var Base = global[NAME],
@@ -59488,7 +60098,7 @@
 	};
 
 /***/ },
-/* 600 */
+/* 602 */
 /*!*********************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/core-js/object/keys.js ***!
   \*********************************************************************/
@@ -59496,10 +60106,10 @@
 
 	"use strict";
 	
-	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/keys */ 601), __esModule: true };
+	module.exports = { "default": __webpack_require__(/*! core-js/library/fn/object/keys */ 603), __esModule: true };
 
 /***/ },
-/* 601 */
+/* 603 */
 /*!**********************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/fn/object/keys.js ***!
   \**********************************************************************************/
@@ -59507,11 +60117,11 @@
 
 	'use strict';
 	
-	__webpack_require__(/*! ../../modules/es6.object.keys */ 602);
-	module.exports = __webpack_require__(/*! ../../modules/$.core */ 529).Object.keys;
+	__webpack_require__(/*! ../../modules/es6.object.keys */ 604);
+	module.exports = __webpack_require__(/*! ../../modules/$.core */ 531).Object.keys;
 
 /***/ },
-/* 602 */
+/* 604 */
 /*!*******************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/es6.object.keys.js ***!
   \*******************************************************************************************/
@@ -59520,16 +60130,16 @@
 	// 19.1.2.14 Object.keys(O)
 	'use strict';
 	
-	var toObject = __webpack_require__(/*! ./$.to-object */ 534);
+	var toObject = __webpack_require__(/*! ./$.to-object */ 536);
 	
-	__webpack_require__(/*! ./$.object-sap */ 603)('keys', function ($keys) {
+	__webpack_require__(/*! ./$.object-sap */ 605)('keys', function ($keys) {
 	  return function keys(it) {
 	    return $keys(toObject(it));
 	  };
 	});
 
 /***/ },
-/* 603 */
+/* 605 */
 /*!****************************************************************************************!*\
   !*** ./~/react-router-relay/~/babel-runtime/~/core-js/library/modules/$.object-sap.js ***!
   \****************************************************************************************/
@@ -59538,9 +60148,9 @@
 	// most Object methods by ES6 should accept primitives
 	'use strict';
 	
-	var $export = __webpack_require__(/*! ./$.export */ 527),
-	    core = __webpack_require__(/*! ./$.core */ 529),
-	    fails = __webpack_require__(/*! ./$.fails */ 538);
+	var $export = __webpack_require__(/*! ./$.export */ 529),
+	    core = __webpack_require__(/*! ./$.core */ 531),
+	    fails = __webpack_require__(/*! ./$.fails */ 540);
 	module.exports = function (KEY, exec) {
 	  var fn = (core.Object || {})[KEY] || Object[KEY],
 	      exp = {};
@@ -59551,7 +60161,7 @@
 	};
 
 /***/ },
-/* 604 */
+/* 606 */
 /*!*****************************************************!*\
   !*** ./~/react-router-relay/~/invariant/browser.js ***!
   \*****************************************************/
@@ -59608,7 +60218,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 6)))
 
 /***/ },
-/* 605 */
+/* 607 */
 /*!*******************************!*\
   !*** ./stylesheets/home.scss ***!
   \*******************************/
@@ -59617,10 +60227,10 @@
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(/*! !./../~/css-loader!./../~/sass-loader!./home.scss */ 606);
+	var content = __webpack_require__(/*! !./../~/css-loader!./../~/sass-loader!./home.scss */ 608);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(/*! ./../~/style-loader/addStyles.js */ 608)(content, {});
+	var update = __webpack_require__(/*! ./../~/style-loader/addStyles.js */ 610)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -59637,24 +60247,24 @@
 	}
 
 /***/ },
-/* 606 */
+/* 608 */
 /*!**************************************************************!*\
   !*** ./~/css-loader!./~/sass-loader!./stylesheets/home.scss ***!
   \**************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(/*! ./../~/css-loader/lib/css-base.js */ 607)();
+	exports = module.exports = __webpack_require__(/*! ./../~/css-loader/lib/css-base.js */ 609)();
 	// imports
 	
 	
 	// module
-	exports.push([module.id, "div.modal {\n  display: flex;\n  flex-flow: row nowrap;\n  justify-content: center;\n  position: absolute;\n  top: 0;\n  text-align: center;\n  height: 100%;\n  width: 100%;\n  background-color: rgba(10, 10, 10, 0.9); }\n  div.modal div.form {\n    align-self: center;\n    transform-origin: center;\n    border: 2px solid;\n    color: white;\n    padding: 4em; }\n  div.modal span.close-icon {\n    position: absolute;\n    top: 0;\n    width: 4em;\n    height: 4em;\n    top: 1em;\n    right: 1em;\n    background-image: url(\"/stylesheets/icons/close-white.svg\"); }\n    div.modal span.close-icon:hover {\n      border: 2px solid; }\n  div.modal input#submit {\n    font-size: 1em;\n    color: white;\n    background-color: black;\n    padding: 0.5em;\n    border: 2px solid;\n    font-family: inherit;\n    border-radius: 10px; }\n    div.modal input#submit:hover {\n      color: black;\n      background-color: white; }\n  div.modal input {\n    font-size: 1em;\n    color: white;\n    background-color: rgba(10, 10, 10, 0);\n    border: 2px solid;\n    font-family: inherit; }\n  div.modal div.question {\n    margin: 2em;\n    padding: 0.5em; }\n    div.modal div.question:hover {\n      cursor: default;\n      color: black;\n      background-color: white;\n      border-radius: 10px; }\n  div.modal div.log {\n    margin: 1em; }\n  div.modal div.social {\n    cursor: default;\n    border: 2px solid blue;\n    padding: 0.5em;\n    border-radius: 10px; }\n    div.modal div.social:hover {\n      color: black;\n      background-color: white; }\n\nbody {\n  font-family: 'Osaka'; }\n\n.nav, .nav-wrap {\n  display: flex;\n  flex-flow: row nowrap;\n  justify-content: flex-start; }\n\n.nav-wrap {\n  flex-wrap: wrap; }\n\n.flex-item-1 {\n  flex-grow: 1;\n  flex-shrink: 1;\n  flex-basis: auto; }\n\n.title {\n  font-size: 3em;\n  font-family: inherit; }\n\n.flex-item-2, div.modal div.form {\n  text-decoration: none;\n  color: black;\n  margin: 1em;\n  order: 2;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-3 {\n  text-decoration: none;\n  color: black;\n  margin: 1em;\n  order: 3;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-4 {\n  text-decoration: none;\n  color: black;\n  margin: 1em;\n  order: 4;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-5 {\n  text-decoration: none;\n  color: black;\n  margin: 1em;\n  order: 5;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-6 {\n  text-decoration: none;\n  color: black;\n  margin: 1em;\n  order: 6;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-7 {\n  text-decoration: none;\n  color: black;\n  margin: 1em;\n  order: 7;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-8 {\n  text-decoration: none;\n  color: black;\n  margin: 1em;\n  order: 8;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-9 {\n  text-decoration: none;\n  color: black;\n  margin: 1em;\n  order: 9;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-10 {\n  text-decoration: none;\n  color: black;\n  margin: 1em;\n  order: 10;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\nspan.submit {\n  cursor: default;\n  border-radius: 10px;\n  bottom: 1em;\n  right: 1em;\n  font-size: 1em;\n  position: fixed;\n  padding: 1em;\n  background-color: rgba(0, 0, 0, 0.83);\n  color: white; }\n  span.submit:hover {\n    color: black;\n    background-color: white;\n    border: 1px solid; }\n\nspan.plus {\n  cursor: default;\n  margin: 1em;\n  border-radius: 5px;\n  border: 1px solid black;\n  padding: 0.25em; }\n  span.plus:hover {\n    background-color: black;\n    color: white;\n    border: 1px solid white; }\n\nspan.close {\n  position: absolute;\n  width: 1.5em;\n  height: 1.5em;\n  top: 0.5em;\n  right: 0.5em;\n  background-image: url(\"/stylesheets/icons/close-black.svg\"); }\n  span.close:hover {\n    border: 1px solid; }\n\ndiv.openarestaurant {\n  text-align: center; }\n  div.openarestaurant input {\n    border: none;\n    font-size: inherit;\n    text-align: center;\n    margin: 0; }\n  div.openarestaurant textarea {\n    border: none;\n    font-size: inherit;\n    text-align: center;\n    margin: 0;\n    width: 80%;\n    height: 4em; }\n  div.openarestaurant div.brand {\n    text-align: center; }\n    div.openarestaurant div.brand h1 {\n      margin: 0.5em; }\n    div.openarestaurant div.brand h2 {\n      margin: 0.5em; }\n  div.openarestaurant div.food {\n    position: relative;\n    text-align: center;\n    font-size: 1.5em;\n    padding: 1em;\n    border: 3px solid;\n    border-radius: 10px; }\n    div.openarestaurant div.food span.plus {\n      position: absolute;\n      top: 0.25em;\n      left: 0.25em; }\n\ndiv.restaurants-index .search-input {\n  margin: 0 0.25em;\n  font-size: 1.5em; }\n\ndiv.restaurants-index .search-container {\n  margin: 0.5em 0;\n  position: relative;\n  height: 2em;\n  padding: 1em; }\n\ndiv.restaurants-index .search-icon {\n  position: absolute;\n  width: 2em;\n  height: 2em;\n  background-image: url(\"/stylesheets/icons/search.svg\"); }\n  div.restaurants-index .search-icon:hover {\n    background-color: gainsboro; }\n\ndiv.restaurants-map {\n  text-align: center; }\n  div.restaurants-map .geolocalization {\n    z-index: 1;\n    position: absolute;\n    top: 500px; }\n\ndiv.restaurant-list .restaurant {\n  position: relative;\n  padding: 1em;\n  margin: auto;\n  width: 90%;\n  border: 1px solid;\n  margin-bottom: 1em;\n  text-align: center; }\n  div.restaurant-list .restaurant .order-button {\n    font-size: 1.5em;\n    border: 3px solid;\n    position: absolute;\n    bottom: 0.5em;\n    right: 0.5em;\n    padding: 0.5em;\n    border-radius: 10px;\n    cursor: default;\n    color: black;\n    text-decoration: none; }\n    div.restaurant-list .restaurant .order-button:hover {\n      color: white;\n      background-color: black; }\n  div.restaurant-list .restaurant .restaurant-name {\n    cursor: default;\n    font-size: 1.5em; }\n  div.restaurant-list .restaurant .restaurant-description {\n    cursor: default; }\n  div.restaurant-list .restaurant .restaurant-distance {\n    position: absolute;\n    top: 1em;\n    left: 1em; }\n  div.restaurant-list .restaurant .foods {\n    margin: 1em; }\n    div.restaurant-list .restaurant .foods .food-name {\n      font-size: 1.5em; }\n    div.restaurant-list .restaurant .foods .meals {\n      padding: 1em;\n      margin: 1em;\n      border: 1px solid; }\n      div.restaurant-list .restaurant .foods .meals .meal {\n        padding-bottom: 1em; }\n  div.restaurant-list .restaurant .food {\n    flex-grow: 0;\n    flex-shrink: 1;\n    flex-basis: auto;\n    align-self: center; }\n\ndiv.shop {\n  text-align: center; }\n  div.shop .modal-order {\n    position: absolute;\n    top: 0;\n    height: 100%;\n    width: 100%;\n    align-items: center;\n    justify-content: center; }\n    div.shop .modal-order .order {\n      background-color: white;\n      position: relative;\n      border: 3px solid;\n      padding: 2em; }\n      div.shop .modal-order .order .close {\n        position: absolute;\n        background-image: url(\"/stylesheets/icons/close-black.svg\");\n        width: 1.5em;\n        height: 1.5em;\n        top: 0.5em;\n        right: 0.5em; }\n        div.shop .modal-order .order .close:hover {\n          border: 1px solid; }\n      div.shop .modal-order .order .price {\n        text-align: left;\n        margin: 1em; }\n      div.shop .modal-order .order .item {\n        margin: 0;\n        padding: 1em;\n        border: 1px solid; }\n      div.shop .modal-order .order .pay {\n        cursor: default;\n        position: absolute;\n        padding: 0.5em;\n        border-radius: 10px;\n        right: 1em;\n        bottom: 1em;\n        border: 1px solid; }\n      div.shop .modal-order .order .nopay {\n        cursor: default;\n        position: absolute;\n        padding: 0.5em;\n        border-radius: 10px;\n        left: 1em;\n        bottom: 1em;\n        border: 1px solid; }\n  div.shop .caddy {\n    position: fixed;\n    bottom: 0; }\n    div.shop .caddy .item {\n      padding: 1em;\n      border-right: 1px solid;\n      margin: 0; }\n    div.shop .caddy .command {\n      padding: 2em;\n      border: 1px solid;\n      border-radius: 10px; }\n      div.shop .caddy .command:hover {\n        background-color: black;\n        color: white; }\n  div.shop .food {\n    cursor: default;\n    border-radius: 10px;\n    padding: 1em;\n    border: 3px solid; }\n    div.shop .food .description {\n      margin: 1em; }\n    div.shop .food .name {\n      font-size: 1.5em; }\n    div.shop .food .meals {\n      border-top: 1px solid; }\n      div.shop .food .meals .meal {\n        cursor: default;\n        padding: 1em; }\n        div.shop .food .meals .meal .name {\n          font-size: 1.5em; }\n        div.shop .food .meals .meal:hover {\n          background-color: black;\n          color: white; }\n\n.timepicker {\n  display: inline-flex;\n  flex-flow: row nowrap;\n  justify-content: center; }\n  .timepicker .picker {\n    margin: 0.5em;\n    overflow: hidden;\n    position: relative; }\n    .timepicker .picker:hover {\n      overflow: visible; }\n  .timepicker span.inc-plus {\n    cursor: pointer;\n    position: absolute;\n    left: 1em;\n    top: -1.5em; }\n  .timepicker span.inc-less {\n    cursor: pointer;\n    position: absolute;\n    left: 1em;\n    bottom: -1.5em; }\n  .timepicker input {\n    width: 1.25em;\n    font-size: 1em;\n    border: none;\n    overflow: visible; }\n\ndiv.profile {\n  position: relative;\n  padding: 2em; }\n  div.profile img {\n    width: 15em;\n    height: 15em; }\n  div.profile div.save {\n    position: absolute;\n    top: 0;\n    right: 0; }\n  div.profile div.restaurants-list {\n    border: 1px solid; }\n    div.profile div.restaurants-list .restaurant {\n      cursor: default;\n      color: black;\n      text-decoration: none;\n      display: block;\n      padding: 0.5em;\n      border-bottom: 1px solid; }\n      div.profile div.restaurants-list .restaurant:hover {\n        font-size: 1.5em; }\n    div.profile div.restaurants-list .last-restaurant {\n      cursor: default;\n      text-decoration: none;\n      color: black;\n      display: block;\n      padding: 0.5em; }\n      div.profile div.restaurants-list .last-restaurant:hover {\n        font-size: 1.5em; }\n  div.profile div.orders-list {\n    border: 1px solid;\n    padding: 0.5em; }\n    div.profile div.orders-list .last-order, div.profile div.orders-list .order {\n      position: relative; }\n      div.profile div.orders-list .last-order .price, div.profile div.orders-list .order .price {\n        position: absolute;\n        top: 0;\n        right: 0; }\n    div.profile div.orders-list .order {\n      border-bottom: 1px solid; }\n  div.profile .item {\n    padding: 0.5em; }\n  div.profile h1 input, div.profile h2 input {\n    width: 100%;\n    font-size: inherit;\n    font-style: inherit;\n    border: none; }\n\ndiv.board div.nav a, div.board div.nav-wrap a {\n  text-decoration: none;\n  color: black;\n  font-size: 1.5em;\n  padding: 0.5em;\n  cursor: default; }\n  div.board div.nav a:hover, div.board div.nav-wrap a:hover {\n    border: 1px solid;\n    border-radius: 10px; }\n\ndiv.board div.dashboard {\n  position: relative; }\n  div.board div.dashboard div.order {\n    border: 1px solid;\n    margin: 1em;\n    text-align: center; }\n    div.board div.dashboard div.order h1 {\n      margin: 0; }\n      div.board div.dashboard div.order h1 span.price {\n        float: right; }\n      div.board div.dashboard div.order h1 span.time {\n        float: left; }\n\ndiv.board div.timeline {\n  text-align: center; }\n  div.board div.timeline span.play {\n    margin: 0.5em;\n    float: left;\n    width: 2em;\n    height: 2em;\n    background-image: url(\"/stylesheets/icons/play.svg\"); }\n  div.board div.timeline span.time {\n    font-size: 2em; }\n  div.board div.timeline span.pause {\n    margin: 0.5em;\n    float: left;\n    width: 2em;\n    height: 2em;\n    background-image: url(\"/stylesheets/icons/pause.svg\"); }\n\ndiv.settings {\n  margin: 2em; }\n  div.settings .setting {\n    font-size: 1.5em;\n    margin: 1em auto;\n    width: 75%;\n    position: relative;\n    padding: 0.75em;\n    border: 1px solid; }\n    div.settings .setting .cursor {\n      cursor: pointer;\n      height: 2em;\n      top: 0.5em;\n      right: 0.5em;\n      position: absolute; }\n  div.settings .close-icon {\n    top: 0em;\n    right: 0em; }\n  div.settings .opening-hours {\n    text-align: center; }\n    div.settings .opening-hours .day-title {\n      margin-bottom: 0.75em;\n      text-align: left;\n      display: inline-block;\n      padding: 0.5em;\n      border: 1px solid; }\n    div.settings .opening-hours .picker-wrapper {\n      background-color: #ababa8;\n      position: relative;\n      margin: 0.5em;\n      padding: 1em; }\n    div.settings .opening-hours .to {\n      margin: 0.5em; }\n    div.settings .opening-hours .day {\n      height: 2em;\n      border: 1px solid;\n      margin: 1em; }\n      div.settings .opening-hours .day #from,\n      div.settings .opening-hours .day #to {\n        cursor: col-resize; }\n      div.settings .opening-hours .day text {\n        font-size: 0.75em; }\n\n.selected {\n  padding: 1em;\n  border: 1px solid;\n  border-radius: 10px; }\n\ndiv.card input {\n  border: none;\n  font-size: inherit;\n  text-align: center;\n  margin: 0; }\n\ndiv.card div.food {\n  position: relative;\n  text-align: center;\n  font-size: 1.5em;\n  padding: 1em;\n  border: 3px solid;\n  border-radius: 10px; }\n  div.card div.food span.plus {\n    position: absolute;\n    top: 0.25em;\n    left: 0.25em; }\n\ndiv.card div.brand {\n  text-align: center; }\n  div.card div.brand h1 {\n    margin: 0.5em; }\n  div.card div.brand h2 {\n    margin: 0.5em; }\n\ndiv.card div.nav a, div.card div.nav-wrap a {\n  text-decoration: none;\n  color: black;\n  font-size: 1.5em;\n  padding: 0.5em;\n  cursor: default; }\n  div.card div.nav a:hover, div.card div.nav-wrap a:hover {\n    border: 1px solid;\n    border-radius: 10px; }\n\n.popup {\n  text-decoration: none;\n  color: black !important;\n  display: block;\n  text-align: center;\n  cursor: pointer; }\n\n.leaflet-popup-tip {\n  display: none; }\n\n.text-center {\n  text-align: center; }\n\n.flex-center {\n  justify-content: center; }\n\n.flex {\n  display: flex; }\n\n.marged {\n  margin: 1em; }\n\n.center-text {\n  text-align: center; }\n\nsvg {\n  overflow: visible; }\n\n.width-2 {\n  width: 50%; }\n\n.width-3 {\n  width: 33.33333%; }\n\n.width-4 {\n  width: 25%; }\n\n.width-5 {\n  width: 20%; }\n\n.width-6 {\n  width: 16.66667%; }\n\n.width-7 {\n  width: 14.28571%; }\n\n.width-8 {\n  width: 12.5%; }\n\n.width-9 {\n  width: 11.11111%; }\n\n.width-10 {\n  width: 10%; }\n\n.restaurant-popup {\n  text-align: center; }\n\n#map {\n  height: 1000px; }\n\n.close-icon {\n  background-image: url(\"/stylesheets/icons/close-black.svg\");\n  height: 1em;\n  width: 1em;\n  position: absolute; }\n  .close-icon:hover {\n    border: 1px solid; }\n\nbody {\n  margin: 0;\n  overflow: hidden; }\n\nsection {\n  border: 1px solid;\n  position: relative;\n  overflow-y: scroll; }\n  section .close-icon {\n    right: 1em;\n    top: 1em; }\n\nnav.nav-brand {\n  border-bottom: 1px solid; }\n  nav.nav-brand a {\n    padding: 1em;\n    padding: 0.5;\n    border-radius: 10px;\n    cursor: default;\n    color: black;\n    text-decoration: none; }\n    nav.nav-brand a:hover {\n      color: white;\n      background-color: black; }\n  nav.nav-brand div.title a {\n    padding: 0.25em; }\n  nav.nav-brand div.session {\n    position: relative; }\n    nav.nav-brand div.session .menu {\n      border-left: 1px solid;\n      border-bottom: 1px solid;\n      border-right: 1px solid;\n      width: 100%;\n      position: absolute;\n      background-color: white;\n      z-index: 1; }\n      nav.nav-brand div.session .menu .profile-link {\n        margin: 1em; }\n        nav.nav-brand div.session .menu .profile-link a {\n          margin-top: 2em;\n          width: 100%; }\n      nav.nav-brand div.session .menu .button {\n        margin: 1em; }\n\n.button {\n  padding: 1em;\n  display: inline-block;\n  padding: 0.5;\n  border-radius: 10px;\n  cursor: default;\n  color: black;\n  text-decoration: none; }\n  .button:hover {\n    color: white;\n    background-color: black; }\n\n.hidden {\n  display: none; }\n", ""]);
+	exports.push([module.id, "div.modal {\n  display: flex;\n  flex-flow: row nowrap;\n  justify-content: center;\n  position: absolute;\n  top: 0;\n  text-align: center;\n  height: 100%;\n  width: 100%;\n  background-color: rgba(10, 10, 10, 0.9); }\n  div.modal div.form {\n    align-self: center;\n    transform-origin: center;\n    border: 2px solid;\n    color: white;\n    padding: 4em; }\n  div.modal span.close-icon {\n    position: absolute;\n    top: 0;\n    width: 4em;\n    height: 4em;\n    top: 1em;\n    right: 1em;\n    background-image: url(\"/stylesheets/icons/close-white.svg\"); }\n    div.modal span.close-icon:hover {\n      border: 2px solid; }\n  div.modal input#submit {\n    font-size: 1em;\n    color: white;\n    background-color: black;\n    padding: 0.5em;\n    border: 2px solid;\n    font-family: inherit;\n    border-radius: 10px; }\n    div.modal input#submit:hover {\n      color: black;\n      background-color: white; }\n  div.modal input {\n    font-size: 1em;\n    color: white;\n    background-color: rgba(10, 10, 10, 0);\n    border: 2px solid;\n    font-family: inherit; }\n  div.modal div.question {\n    margin: 2em;\n    padding: 0.5em; }\n    div.modal div.question:hover {\n      cursor: default;\n      color: black;\n      background-color: white;\n      border-radius: 10px; }\n  div.modal div.log {\n    margin: 1em; }\n  div.modal div.social {\n    cursor: default;\n    border: 2px solid blue;\n    padding: 0.5em;\n    border-radius: 10px; }\n    div.modal div.social:hover {\n      color: black;\n      background-color: white; }\n\nbody {\n  font-family: 'Osaka'; }\n\n.nav, .nav-wrap {\n  display: flex;\n  flex-flow: row nowrap;\n  justify-content: flex-start; }\n\n.nav-wrap {\n  flex-wrap: wrap; }\n\n.flex-item-1 {\n  flex-grow: 1;\n  flex-shrink: 1;\n  flex-basis: auto; }\n\n.title {\n  font-size: 3em;\n  font-family: inherit; }\n\n.flex-item-2, div.modal div.form {\n  text-decoration: none;\n  color: black;\n  order: 2;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-3 {\n  text-decoration: none;\n  color: black;\n  order: 3;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-4 {\n  text-decoration: none;\n  color: black;\n  order: 4;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-5 {\n  text-decoration: none;\n  color: black;\n  order: 5;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-6 {\n  text-decoration: none;\n  color: black;\n  order: 6;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-7 {\n  text-decoration: none;\n  color: black;\n  order: 7;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-8 {\n  text-decoration: none;\n  color: black;\n  order: 8;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-9 {\n  text-decoration: none;\n  color: black;\n  order: 9;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\n.flex-item-10 {\n  text-decoration: none;\n  color: black;\n  order: 10;\n  flex-grow: 0;\n  flex-shrink: 1;\n  flex-basis: auto;\n  align-self: center; }\n\nspan.submit {\n  cursor: default;\n  border-radius: 10px;\n  bottom: 1em;\n  right: 1em;\n  font-size: 1em;\n  position: fixed;\n  padding: 1em;\n  background-color: rgba(0, 0, 0, 0.83);\n  color: white; }\n  span.submit:hover {\n    color: black;\n    background-color: white;\n    border: 1px solid; }\n\ndiv.start-index {\n  text-align: center; }\n  div.start-index .circles {\n    position: fixed;\n    bottom: 0;\n    height: 2em; }\n  div.start-index .link-right {\n    position: fixed;\n    bottom: 1em;\n    right: 1em; }\n  div.start-index .link-left {\n    position: fixed;\n    bottom: 1em;\n    left: 1em; }\n\n.plus-icon-svg, .close-icon-svg {\n  height: 1.5em;\n  stroke: black;\n  stroke-width: 5; }\n  .plus-icon-svg:hover, .close-icon-svg:hover {\n    stroke-width: 10; }\n\n.expand-icon-svg {\n  height: 1em;\n  width: 1em; }\n\n.expand-icon-path {\n  stroke-linejoin: round;\n  stroke-linecap: round; }\n\nspan.close {\n  position: absolute;\n  width: 1.5em;\n  height: 1.5em;\n  top: 0.5em;\n  right: 0.5em; }\n\ndiv.openarestaurant {\n  text-align: center;\n  margin: 1em; }\n  div.openarestaurant input {\n    border: none;\n    font-size: inherit;\n    text-align: center;\n    margin: 0; }\n    div.openarestaurant input:focus {\n      outline: none; }\n  div.openarestaurant textarea {\n    border: none;\n    font-size: inherit;\n    text-align: center;\n    margin: 0;\n    height: 1.2em; }\n    div.openarestaurant textarea:focus {\n      outline: none; }\n  div.openarestaurant div.brand {\n    text-align: center; }\n    div.openarestaurant div.brand h1 {\n      margin: 0.5em; }\n    div.openarestaurant div.brand h2 {\n      margin: 0.5em; }\n  div.openarestaurant div.foods {\n    margin: 1em; }\n  div.openarestaurant div.food {\n    position: relative;\n    margin: 0.5em;\n    text-align: center;\n    font-size: 1.5em;\n    padding: 1em 1em 0;\n    border: 3px solid;\n    border-radius: 10px; }\n    div.openarestaurant div.food span.plus {\n      position: absolute;\n      top: 0.5em;\n      left: 0.5em; }\n    div.openarestaurant div.food div.meal {\n      position: relative;\n      margin: 1em; }\n      div.openarestaurant div.food div.meal span.close {\n        position: absolute;\n        width: 1.5em;\n        height: 1.5em;\n        top: -1em;\n        right: -1em; }\n      div.openarestaurant div.food div.meal #price,\n      div.openarestaurant div.food div.meal #time {\n        width: 2em; }\n\ndiv.restaurants-index .search-input {\n  margin: 0 0.25em;\n  font-size: 1.5em; }\n\ndiv.restaurants-index .search-container {\n  margin: 0.5em 0;\n  position: relative;\n  height: 2em;\n  padding: 1em; }\n\ndiv.restaurants-index .search-icon-wrapper {\n  background: white;\n  display: inline;\n  border: 1px solid;\n  float: right;\n  font-size: 1em;\n  position: relative;\n  padding: 1em 1em; }\n\ndiv.restaurants-index .search-icon {\n  position: absolute;\n  top: 0.25em;\n  right: 0.25em;\n  width: 1.5em;\n  height: 1.5em;\n  background-image: url(\"/stylesheets/icons/search.svg\"); }\n\ndiv.restaurants-map {\n  text-align: center; }\n  div.restaurants-map .geolocalization {\n    z-index: 1;\n    position: absolute;\n    top: 500px; }\n\ndiv.restaurant-list .restaurant {\n  position: relative;\n  padding: 1em;\n  margin: auto;\n  width: 90%;\n  border: 1px solid;\n  margin-bottom: 1em;\n  text-align: center; }\n  div.restaurant-list .restaurant .order-button {\n    font-size: 1.5em;\n    border: 3px solid;\n    position: absolute;\n    bottom: 0.5em;\n    right: 0.5em;\n    padding: 0.5em;\n    border-radius: 10px;\n    cursor: default;\n    color: black;\n    text-decoration: none; }\n    div.restaurant-list .restaurant .order-button:hover {\n      color: white;\n      background-color: black; }\n  div.restaurant-list .restaurant .restaurant-name {\n    cursor: default;\n    font-size: 1.5em; }\n  div.restaurant-list .restaurant .restaurant-description {\n    cursor: default; }\n  div.restaurant-list .restaurant .restaurant-distance {\n    position: absolute;\n    top: 1em;\n    left: 1em; }\n  div.restaurant-list .restaurant .foods {\n    margin: 1em; }\n    div.restaurant-list .restaurant .foods .food-name {\n      font-size: 1.5em; }\n    div.restaurant-list .restaurant .foods .meals {\n      padding: 1em;\n      margin: 1em;\n      border: 1px solid; }\n      div.restaurant-list .restaurant .foods .meals .meal {\n        padding-bottom: 1em; }\n  div.restaurant-list .restaurant .food {\n    flex-grow: 0;\n    flex-shrink: 1;\n    flex-basis: auto;\n    align-self: center; }\n\ndiv.shop {\n  text-align: center; }\n  div.shop .modal-order {\n    position: absolute;\n    top: 0;\n    height: 100%;\n    width: 100%;\n    align-items: center;\n    justify-content: center; }\n    div.shop .modal-order .order {\n      background-color: white;\n      position: relative;\n      border: 3px solid;\n      padding: 2em; }\n      div.shop .modal-order .order .close {\n        position: absolute;\n        background-image: url(\"/stylesheets/icons/close-black.svg\");\n        width: 1.5em;\n        height: 1.5em;\n        top: 0.5em;\n        right: 0.5em; }\n        div.shop .modal-order .order .close:hover {\n          border: 1px solid; }\n      div.shop .modal-order .order .price {\n        text-align: left;\n        margin: 1em; }\n      div.shop .modal-order .order .item {\n        margin: 0;\n        padding: 1em;\n        border: 1px solid; }\n      div.shop .modal-order .order .pay {\n        cursor: default;\n        position: absolute;\n        padding: 0.5em;\n        border-radius: 10px;\n        right: 1em;\n        bottom: 1em;\n        border: 1px solid; }\n      div.shop .modal-order .order .nopay {\n        cursor: default;\n        position: absolute;\n        padding: 0.5em;\n        border-radius: 10px;\n        left: 1em;\n        bottom: 1em;\n        border: 1px solid; }\n  div.shop .caddy {\n    position: fixed;\n    bottom: 0; }\n    div.shop .caddy .item {\n      padding: 1em;\n      border-right: 1px solid;\n      margin: 0; }\n    div.shop .caddy .command {\n      padding: 2em;\n      border: 1px solid;\n      border-radius: 10px; }\n      div.shop .caddy .command:hover {\n        background-color: black;\n        color: white; }\n  div.shop .food {\n    cursor: default;\n    border-radius: 10px;\n    padding: 1em;\n    border: 3px solid; }\n    div.shop .food .description {\n      margin: 1em; }\n    div.shop .food .name {\n      font-size: 1.5em; }\n    div.shop .food .meals {\n      border-top: 1px solid; }\n      div.shop .food .meals .meal {\n        cursor: default;\n        padding: 1em; }\n        div.shop .food .meals .meal .name {\n          font-size: 1.5em; }\n        div.shop .food .meals .meal:hover {\n          background-color: black;\n          color: white; }\n\n.timepicker {\n  display: inline-flex;\n  flex-flow: row nowrap;\n  justify-content: center; }\n  .timepicker .picker {\n    margin: 0.5em;\n    overflow: hidden;\n    position: relative; }\n    .timepicker .picker:hover {\n      overflow: visible; }\n  .timepicker span.inc-plus {\n    cursor: pointer;\n    position: absolute;\n    left: 1em;\n    top: -1.5em; }\n  .timepicker span.inc-less {\n    cursor: pointer;\n    position: absolute;\n    left: 1em;\n    bottom: -1.5em; }\n  .timepicker input {\n    width: 1.25em;\n    font-size: 1em;\n    border: none;\n    overflow: visible; }\n\ndiv.profile {\n  position: relative;\n  padding: 2em; }\n  div.profile img {\n    width: 15em;\n    height: 15em; }\n  div.profile div.credentials {\n    width: 100%; }\n  div.profile .openarestaurant-link {\n    padding: 1em;\n    border: 1px solid;\n    border-radius: 10px; }\n  div.profile div.restaurants-list {\n    border: 1px solid; }\n    div.profile div.restaurants-list .restaurant {\n      cursor: default;\n      color: black;\n      text-decoration: none;\n      display: block;\n      padding: 0.5em;\n      border-bottom: 1px solid; }\n      div.profile div.restaurants-list .restaurant:hover {\n        font-size: 1.5em; }\n    div.profile div.restaurants-list .last-restaurant {\n      cursor: default;\n      text-decoration: none;\n      color: black;\n      display: block;\n      padding: 0.5em; }\n      div.profile div.restaurants-list .last-restaurant:hover {\n        font-size: 1.5em; }\n  div.profile div.orders-list {\n    border: 1px solid;\n    padding: 0.5em; }\n    div.profile div.orders-list .last-order, div.profile div.orders-list .order {\n      position: relative; }\n      div.profile div.orders-list .last-order .price, div.profile div.orders-list .order .price {\n        position: absolute;\n        top: 0;\n        right: 0; }\n    div.profile div.orders-list .order {\n      border-bottom: 1px solid; }\n  div.profile .item {\n    padding: 0.5em; }\n  div.profile h1 input, div.profile h2 input {\n    width: 100%;\n    font-size: inherit;\n    font-style: inherit;\n    border: none; }\n    div.profile h1 input:focus, div.profile h2 input:focus {\n      outline: none; }\n\ndiv.board div.nav a, div.board div.nav-wrap a {\n  text-decoration: none;\n  color: black;\n  font-size: 1.5em;\n  padding: 0.5em;\n  cursor: default; }\n  div.board div.nav a:hover, div.board div.nav-wrap a:hover {\n    border: 1px solid;\n    border-radius: 10px; }\n\ndiv.board div.dashboard {\n  position: relative; }\n  div.board div.dashboard div.order {\n    border: 1px solid;\n    margin: 1em;\n    text-align: center; }\n    div.board div.dashboard div.order h1 {\n      margin: 0; }\n      div.board div.dashboard div.order h1 span.price {\n        float: right; }\n      div.board div.dashboard div.order h1 span.time {\n        float: left; }\n\ndiv.board div.timeline {\n  text-align: center; }\n  div.board div.timeline span.play {\n    margin: 0.5em;\n    float: left;\n    width: 2em;\n    height: 2em;\n    background-image: url(\"/stylesheets/icons/play.svg\"); }\n  div.board div.timeline span.time {\n    font-size: 2em; }\n  div.board div.timeline span.pause {\n    margin: 0.5em;\n    float: left;\n    width: 2em;\n    height: 2em;\n    background-image: url(\"/stylesheets/icons/pause.svg\"); }\n\ndiv.settings {\n  margin: 2em; }\n  div.settings .setting {\n    font-size: 1.5em;\n    margin: 1em auto;\n    width: 75%;\n    position: relative;\n    padding: 0.75em;\n    border: 1px solid; }\n    div.settings .setting .cursor {\n      cursor: pointer;\n      height: 2em;\n      top: 0.5em;\n      right: 0.5em;\n      position: absolute; }\n  div.settings .close-icon {\n    top: 0em;\n    right: 0em; }\n  div.settings .opening-hours {\n    text-align: center; }\n    div.settings .opening-hours .day-title {\n      margin-bottom: 0.75em;\n      text-align: left;\n      display: inline-block;\n      padding: 0.5em;\n      border: 1px solid; }\n    div.settings .opening-hours .picker-wrapper {\n      background-color: #ababa8;\n      position: relative;\n      margin: 0.5em;\n      padding: 1em; }\n    div.settings .opening-hours .to {\n      margin: 0.5em; }\n    div.settings .opening-hours .day {\n      height: 2em;\n      border: 1px solid;\n      margin: 1em; }\n      div.settings .opening-hours .day #from,\n      div.settings .opening-hours .day #to {\n        cursor: col-resize; }\n      div.settings .opening-hours .day text {\n        font-size: 0.75em; }\n\n.selected {\n  padding: 1em;\n  border: 1px solid;\n  border-radius: 10px; }\n\ndiv.card input {\n  border: none;\n  font-size: inherit;\n  text-align: center;\n  margin: 0; }\n\ndiv.card div.food {\n  position: relative;\n  text-align: center;\n  font-size: 1.5em;\n  padding: 1em;\n  border: 3px solid;\n  border-radius: 10px; }\n  div.card div.food span.plus {\n    position: absolute;\n    top: 0.25em;\n    left: 0.25em; }\n\ndiv.card div.brand {\n  text-align: center; }\n  div.card div.brand h1 {\n    margin: 0.5em; }\n  div.card div.brand h2 {\n    margin: 0.5em; }\n\ndiv.card div.nav a, div.card div.nav-wrap a {\n  text-decoration: none;\n  color: black;\n  font-size: 1.5em;\n  padding: 0.5em;\n  cursor: default; }\n  div.card div.nav a:hover, div.card div.nav-wrap a:hover {\n    border: 1px solid;\n    border-radius: 10px; }\n\n.popup {\n  text-decoration: none;\n  color: black !important;\n  display: block;\n  text-align: center;\n  cursor: pointer; }\n\n.leaflet-popup-tip {\n  display: none; }\n\n.text-center {\n  text-align: center; }\n\n.flex-center {\n  justify-content: center; }\n\n.flex {\n  display: flex; }\n\n.marged {\n  margin: 1em; }\n\n.center-text {\n  text-align: center; }\n\nsvg {\n  overflow: visible; }\n\n.width-2 {\n  width: 50%; }\n\n.width-3 {\n  width: 33.33333%; }\n\n.width-4 {\n  width: 25%; }\n\n.width-5 {\n  width: 20%; }\n\n.width-6 {\n  width: 16.66667%; }\n\n.width-7 {\n  width: 14.28571%; }\n\n.width-8 {\n  width: 12.5%; }\n\n.width-9 {\n  width: 11.11111%; }\n\n.width-10 {\n  width: 10%; }\n\n.restaurant-popup {\n  text-align: center; }\n\n#map {\n  height: 1000px; }\n\n.close-icon {\n  background-image: url(\"/stylesheets/icons/close-black.svg\");\n  height: 1em;\n  width: 1em;\n  position: absolute; }\n  .close-icon:hover {\n    border: 1px solid; }\n\nbody {\n  margin: 0;\n  overflow: hidden; }\n\nsection {\n  border: 1px solid;\n  position: relative;\n  overflow-y: scroll; }\n  section .close-icon {\n    right: 1em;\n    top: 1em; }\n\nnav.nav-brand {\n  border-bottom: 1px solid; }\n  nav.nav-brand a {\n    padding: 1em;\n    padding: 0.5;\n    border-radius: 10px;\n    cursor: default;\n    color: black;\n    text-decoration: none; }\n    nav.nav-brand a:hover {\n      color: white;\n      background-color: black; }\n  nav.nav-brand div.title a {\n    padding: 0.25em; }\n  nav.nav-brand div.session {\n    position: relative; }\n    nav.nav-brand div.session .menu {\n      border-left: 1px solid;\n      border-bottom: 1px solid;\n      border-right: 1px solid;\n      width: 100%;\n      position: absolute;\n      background-color: white;\n      z-index: 1; }\n      nav.nav-brand div.session .menu .profile-link {\n        margin: 1em; }\n        nav.nav-brand div.session .menu .profile-link a {\n          margin-top: 2em;\n          width: 100%; }\n      nav.nav-brand div.session .menu .button {\n        margin: 1em; }\n\n.button {\n  padding: 1em;\n  display: inline-block;\n  padding: 0.5;\n  border-radius: 10px;\n  cursor: default;\n  color: black;\n  text-decoration: none; }\n  .button:hover {\n    color: white;\n    background-color: black; }\n\n.hidden {\n  display: none; }\n", ""]);
 	
 	// exports
 
 
 /***/ },
-/* 607 */
+/* 609 */
 /*!**************************************!*\
   !*** ./~/css-loader/lib/css-base.js ***!
   \**************************************/
@@ -59712,7 +60322,7 @@
 	};
 
 /***/ },
-/* 608 */
+/* 610 */
 /*!*************************************!*\
   !*** ./~/style-loader/addStyles.js ***!
   \*************************************/

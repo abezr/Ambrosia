@@ -192,11 +192,11 @@ export var OrderMutation = mutationWithClientMutationId({
   mutateAndGetPayload: (args, {
     rootValue
   }) => co(function*() {
-    console.log('schema:ordermutation', args.order);
     //we need restaurant id plus order
     var restaurantID = fromGlobalId(args.restaurantID).id;
-    var userID = fromGlobalId(args.userID).id;
+    var userID = args.userID;
     var order = args.order;
+    console.log('schema:ordermutation', restaurantID, args.userID);
     //orders[0] = restaurantOrder, orders[1] = userOrder
     var orders = yield addOrder(restaurantID, userID, order, rootValue);
     return {restaurantID, userID, orders, order, rootValue};

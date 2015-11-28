@@ -13,11 +13,13 @@ import RestaurantsIndex, {RestaurantsIndexComponent} from './components/restaura
 import RestaurantsMap from './components/restaurantsmap';
 import RestaurantsList from './components/restaurantslist';
 import Users from './components/users';
-import Start from './components/start';
-import Card from './components/board/card';
-import Board from './components/board/timeline';
-import Settings from './components/board/settings';
-import ChiefIndex from './components/board/chiefindex';
+import Start from './components/start/start';
+import StartCard from './components/start/card';
+import StartSettings from './components/start/settings';
+import Board from './components/board/board';
+import BoardTimeLine from './components/board/timeline';
+import BoardCard from './components/board/card';
+import BoardSettings from './components/board/settings';
 import Ordering from './components/ordering';
 import Profile from './components/profile';
 import React from 'react';
@@ -98,12 +100,15 @@ ReactDom.render(
         <Route path='map' component={RestaurantsMap} />
         <Route path='list' component={RestaurantsList} />
       </Route>
-      <Route path="start" component={Start} queries={ViewerQuery} />
+      <Route path="start" component={Start} queries={ViewerQuery}>
+        <Route path='card' component={StartCard}/>
+        <Route path='settings' component={StartSettings}/>
+      </Route>
       <Route path="register" component={Login} queries={ViewerQuery} />
-      <Route path="board/:id" component={ChiefIndex} queries={FullQuery}>
-        <Route path="/settings/:id" component = {Settings} queries={RestaurantQuery} />
-        <Route path="/timeline/:id" component = {Board} queries={RestaurantQuery}/>
-        <Route path="/card/:id" component = {Card} queries={RestaurantQuery}/>
+      <Route path="board/:id" component={Board} queries={FullQuery}>
+        <Route path="/settings/:id" component = {BoardSettings} queries={RestaurantQuery} />
+        <Route path="/timeline/:id" component = {BoardTimeLine} queries={RestaurantQuery}/>
+        <Route path="/card/:id" component = {BoardCard} queries={RestaurantQuery}/>
       </Route>
     </Route>
   </Router>, document.getElementById('app'));

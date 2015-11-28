@@ -14,17 +14,40 @@ span.submit {
     border: 1px solid;
   }
 }
-span.plus {
-  cursor: default;
-  margin: 1em;
-  border-radius: 5px;
-  border: 1px solid black;
-  padding: 0.25em;
-  &:hover {
-    background-color: black;
-    color: white;
-    border: 1px solid white;
+div.start-index {
+  text-align: center;
+  .circles {
+    position: fixed;
+    bottom: 0;
+    height: 2em;
   }
+  .link-right {
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
+  }
+  .link-left {
+    position: fixed;
+    bottom: 1em;
+    left: 1em;
+  }
+}
+
+.plus-icon-svg, .close-icon-svg {
+  height: 1.5em;
+  stroke: black;
+  stroke-width: 5;
+  &:hover {
+    stroke-width: 10;
+  }
+}
+.expand-icon-svg {
+  height: 1em;
+  width: 1em;
+}
+.expand-icon-path {
+  stroke-linejoin: round;
+  stroke-linecap: round;
 }
 span.close {
   position: absolute;
@@ -32,26 +55,28 @@ span.close {
   height: 1.5em;
   top: 0.5em;
   right: 0.5em;
-  background-image: url("/stylesheets/icons/close-black.svg");
-  &:hover {
-    border: 1px solid;
-  }
 }
 div.openarestaurant {
   text-align: center;
+  margin: 1em;
   input {
     border: none;
     font-size: inherit;
     text-align: center;
     margin: 0;
+    &:focus {
+      outline: none;
+    }
   }
   textarea {
     border: none;
     font-size: inherit;
     text-align: center;
     margin: 0;
-    width: 80%;
-    height: 4em;
+    height: 1.2em;
+    &:focus {
+      outline: none;
+    }
   }
   div.brand {
     text-align: center;
@@ -62,20 +87,36 @@ div.openarestaurant {
       margin: 0.5em;
     }
   }
+  div.foods {
+    margin: 1em;
+  }
   div.food {
     position: relative;
+    margin: 0.5em;
     text-align: center;
     font-size: 1.5em;
-    padding: 1em;
+    padding: 1em 1em 0;
     border: 3px solid;
     border-radius: 10px;
     span.plus {
       position: absolute;
-      top: 0.25em;
-      left: 0.25em;
+      top: 0.5em;
+      left: 0.5em;
     }
     div.meal {
-
+      span.close {
+        position: absolute;
+        width: 1.5em;
+        height: 1.5em;
+        top: -1em;
+        right: -1em;
+      }
+      position: relative;
+      margin: 1em;
+      #price,
+      #time {
+        width: 2em;
+      }
     }
   }
 }

@@ -36,7 +36,7 @@ export class Index extends React.Component {
       <nav className='nav nav-brand'>
         <div className='flex-item-1 title'><Link to='/' >Ambrosia</Link></div>
         <Link to='/restaurants/list' className='flex-item-2'>Restaurants</Link>
-        <Link to='/start' className='flex-item-2'>Start!</Link>
+        <Link to='/start/card' className='flex-item-2'>Start!</Link>
         <LoginButton {...user}/>
       </nav>
       </header>

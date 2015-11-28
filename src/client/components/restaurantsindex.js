@@ -57,7 +57,9 @@ export class RestaurantsIndexComponent extends React.Component {
         <nav className='nav'>
           <div className='search-container'>
             <input type='text' ref='name' className='search-input' value={this.state.search} onChange={this._onChange}/>
-            <span className='search-icon' onClick={this._submit}/>
+            <button className='search-icon-wrapper'>
+              <span className='search-icon' onClick={this._submit}/>
+            </button>
           </div>
         </nav>
         {this.renderChildren()}

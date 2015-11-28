@@ -29,7 +29,6 @@ body {
   .flex-item-#{$i} {
     text-decoration: none;
     color: black;
-    margin: 1em;
     order: $i;
     @include flex-item;
   }

@@ -10,7 +10,7 @@
     "query": "DEBUG=* babel-node script/query.js",
     "mutation": "DEBUG=* babel-node script/mutation.js",
     "update-schema": "babel-node script/updateSchema",
-    "seed": "babel-node script/seed"
+    "seed-restaurants": "babel-node seed/restaurants"
   },
   "browserify": {
     "transform": [

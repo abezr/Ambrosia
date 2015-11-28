@@ -5,10 +5,13 @@ div.profile {
     width: 15em;
     height: 15em;
   }
-  div.save {
-    position: absolute;
-    top: 0;
-    right: 0;
+  div.credentials {
+    width: 100%;
+  }
+  .openarestaurant-link {
+    padding: 1em;
+    border: 1px solid;
+    border-radius: 10px;
   }
   div.restaurants-list {
     border: 1px solid;
@@ -61,6 +64,9 @@ div.profile {
       font-size: inherit;
       font-style: inherit;
       border: none;
+      &:focus {
+        outline: none;
+      }
     }
   }
 }

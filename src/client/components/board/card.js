@@ -14,9 +14,9 @@ var card;
  */
 class Card extends React.Component {
 
-  constructor (props :any, context: object) {
+  constructor(props : any, context : object) {
     super(props, context);
-    var restaurant: object = this.props.restaurant.restaurant;
+    var restaurant : object = this.props.restaurant.restaurant;
     card = {
       name: restaurant.name,
       description: restaurant.description,
@@ -35,17 +35,18 @@ class Card extends React.Component {
       id: '_' + Math.random().toString(36).substr(2, 9),
       name: 'the food\'s name',
       description: 'the food\'s description',
-      meals: [{
-        id: '_' + Math.random().toString(36).substr(2, 9),
-        name: 'the meal\'s name',
-        description: 'the meal\'s description',
-        price: 0,
-        time: 0
-      }]
+      meals: [
+        {
+          id: '_' + Math.random().toString(36).substr(2, 9),
+          name: 'the meal\'s name',
+          description: 'the meal\'s description',
+          price: 0,
+          time: 0
+        }
+      ]
     });
     updateClass();
   }
-
 
   _onChange = (e) => {
     console.log('onChange');
@@ -56,13 +57,13 @@ class Card extends React.Component {
   _cardUpdateMutation = () => {
     this.state.foods.map((food) => {
       console.log(food);
-      delete food.__dataID__
+      delete food.__dataID__;
       food.meals.map((meal) => delete meal.__dataID__);
     });
     var resto = {
-      name : this.state.name,
-      description : this.state.description,
-      foods : this.state.foods
+      name: this.state.name,
+      description: this.state.description,
+      foods: this.state.foods
     };
     console.log(this.state.foods);
     Relay.Store.update(new UpdateCardMutation({card: resto, restaurant: this.props.restaurant.restaurant}));
@@ -70,38 +71,45 @@ class Card extends React.Component {
 
   render () {
     var createFood = (food, index) => {
-      return (
+      return(
         <Food {...food} index={index} key={food.id}/>
       );
     }
     return (
-    <div className='card'>
-      <div className='brand'>
-        <h1 className='name'><input type ='text' id='name' value={this.state.name} onChange={this._onChange}/></h1>
-        <h2 className='description'><input type ='text' id='description' value={this.state.description} onChange={this._onChange}/></h2>
+      <div className='card'>
+        <div className='brand'>
+          <h1 className='name'><input type='text' id='name' value={this.state.name} onChange={this._onChange}/></h1>
+          <h2 className='description'><input type='text' id='description' value={this.state.description} onChange={this._onChange}/></h2>
+        </div>
+        <div className='nav'>
+          <div className='flex-item-2'>
+            <span className='plus' onClick={this._add}>Plus</span>
+          </div>
+        </div>
+        <div className='foods nav-wrap'>
+          {this.state.foods.map(createFood)}
+        </div>
+        <span className={classnames('submit', {
+          hidden: !this.state.save
+        })} onClick={this._cardUpdateMutation}>
+          Save Changes
+        </span>
       </div>
-      <div className='nav'>
-        <div className='flex-item-2'><span className='plus' onClick={this._add}>Plus</span></div>
-      </div>
-      <div className='foods nav-wrap'>
-        {this.state.foods.map(createFood)}
-      </div>
-      <span className={classnames('submit', {hidden: !this.state.save})} onClick={this._cardUpdateMutation}>
-        Save Changes
-      </span>
-    </div>
-  );
+    );
   }
 }
 
 class Food extends React.Component {
 
-  constructor (props, context) {
+  constructor(props, context) {
     super(props, context);
     this.state = {
       expand: false,
       food: this.props,
-      input: {name: false, description: false}
+      input: {
+        name: false,
+        description: false
+      }
     };
   }
 
@@ -118,7 +126,9 @@ class Food extends React.Component {
   }
 
   _switchExpand = (e) => {
-    this.setState({expand: !this.state.expand});
+    this.setState({
+      expand: !this.state.expand
+    });
   }
 
   _close = () => {
@@ -134,13 +144,16 @@ class Food extends React.Component {
 
   render () {
     var food = this.props;
-    var createMeal = (meal, index) => <Meal {...meal} parentIndex={this.props.index} index={index} key={meal.id}/>
+    var createMeal = (meal, index) => <Meal {...meal} parentIndex={this.props.index} index={index} key={meal.id}/>;
     return (
       <div className='food flex-item-2' onClick={this._switchExpand}>
         <span className='close' onClick={this._close}/>
-        <input id = 'name' type = 'text' value={this.props.name} onChange={this._onChange} onClick={(e)=> e.stopPropagation()}/><br/>
-        <input id = 'description' type = 'text' value={this.props.description} onChange={this._onChange} onClick={(e)=> e.stopPropagation()}/>
-        <div className={classnames('meals',  {'nav-wrap': this.state.expand, 'hidden': !this.state.expand})}>
+        <input id='name' type='text' value={this.props.name} onChange={this._onChange} onClick={(e) => e.stopPropagation()}/><br/>
+        <input id='description' type='text' value={this.props.description} onChange={this._onChange} onClick={(e) => e.stopPropagation()}/>
+        <div className={classnames('meals', {
+          'nav-wrap': this.state.expand,
+          'hidden': !this.state.expand
+        })}>
           <span className='plus' onClick={this._addMeal}>Plus</span>
           {this.props.meals.map(createMeal)}
         </div>
@@ -151,11 +164,16 @@ class Food extends React.Component {
 
 class Meal extends React.Component {
 
-  constructor (props, context) {
+  constructor(props, context) {
     super(props, context);
     this.state = {
       meal: this.props,
-      input: {name: false, description: false, price: false, time: false}
+      input: {
+        name: false,
+        description: false,
+        price: false,
+        time: false
+      }
     }
   }
 
@@ -166,7 +184,9 @@ class Meal extends React.Component {
   }
 
   _onChange = (e) => {
-    card.foods[this.props.parentIndex].meals[this.props.index][e.target.id] = e.target.type === 'number' ? Math.abs(e.target.value) : e.target.value;
+    card.foods[this.props.parentIndex].meals[this.props.index][e.target.id] = e.target.type === 'number'
+      ? Math.abs(e.target.value)
+      : e.target.value;
     updateClass();
   }
 
@@ -175,10 +195,10 @@ class Meal extends React.Component {
     return (
       <div className='meal flex-item-2'>
         <span className='close' onClick={this._close}/>
-        <input type='text' id='name' value={this.props.name} onChange={this._onChange} onClick={(e)=> e.stopPropagation()}/><br/>
-        <input type='text' id='description' value={this.props.description} onChange={this._onChange} onClick={(e)=> e.stopPropagation()}/><br/>
-        <input type='number' id='price' value={this.props.price} onChange={this._onChange} onClick={(e)=> e.stopPropagation()}/><br/>
-        <input type='number' id='time' value={this.props.time} onChange={this._onChange} onClick={(e)=> e.stopPropagation()}/>
+        <input type='text' id='name' value={this.props.name} onChange={this._onChange} onClick={(e) => e.stopPropagation()}/><br/>
+        <input type='text' id='description' value={this.props.description} onChange={this._onChange} onClick={(e) => e.stopPropagation()}/><br/>
+        <input type='number' id='price' value={this.props.price} onChange={this._onChange} onClick={(e) => e.stopPropagation()}/><br/>
+        <input type='number' id='time' value={this.props.time} onChange={this._onChange} onClick={(e) => e.stopPropagation()}/>
       </div>
     );
   }
@@ -188,7 +208,7 @@ export default Relay.createContainer(Card, {
   fragments: {
     //Question: Is fragment on mutation available on the component himself? no it's not
     //and you use a mutation you have to call mutation fragment if not you get a warning
-    restaurant: () => Relay.QL`
+    restaurant: () => Relay.QL `
     fragment on Root {
       restaurant {
         ${UpdateCardMutation.getFragment('restaurant')}
