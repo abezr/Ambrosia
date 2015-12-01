@@ -8,7 +8,7 @@ import {Link} from 'react-router';
 import classnames from 'classnames';
 
 /// make a board component to go through card and dashboard order
-export default class Board extends React.Component {
+class Board extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {

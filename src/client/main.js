@@ -18,7 +18,7 @@ import StartCard from './components/start/card';
 import StartSettings from './components/start/settings';
 import Board from './components/board/board';
 import BoardTimeLine from './components/board/timeline';
-import BoardCard from './components/board/card';
+import BoardCard from './components/board/cardcomponent';
 import BoardSettings from './components/board/settings';
 import Ordering from './components/ordering';
 import Profile from './components/profile';

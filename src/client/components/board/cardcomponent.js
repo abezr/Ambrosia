@@ -1,56 +1,28 @@
 import React from 'react';
 import Relay from 'react-relay';
 import classnames from 'classnames';
+import UpdateCardMutation from '../../mutations/updatecardmutation';
 
-var card = {
-  name: 'Your restaurant\'s name',
-  description: 'Describe your restaurant',
-  foods: [
-    {
-      id: '_' + Math.random().toString(36).substr(2, 9),
-      name: 'the food\'s name',
-      description: 'the food\'s description',
-      meals: [
-        {
-          id: '_' + Math.random().toString(36).substr(2, 9),
-          name: 'the meal\'s name',
-          description: 'the meal\'s description',
-          price: 0,
-          time: 0
-        }
-      ]
-    }
-  ]
-};
+var card;
 //list of var to be used on each component
 var updateClass;
 
-class Plus extends React.Component{
-  render() {
-    return (
-      <svg className='plus-icon-svg' viewBox='0 0 80 80'>
-        <path d='M0,40 L80,40 M40,0 L40,80'/>
-      </svg>
-    );
-  }
-}
-
-class Close extends React.Component {
-  render() {
-    return (
-      <svg className='close-icon-svg' viewBox='0 0 80 80'>
-        <path d='M10,10 L70,70 M70,10 L10,70'/>
-      </svg>
-    );
-  }
-}
-
-export default class Card extends React.Component {
+export class Card extends React.Component {
 
   constructor(props, context) {
     super(props, context);
+    if(this.props.restaurant.restaurant) {
+      var restaurant = this.props.restaurant.restaurant;
+      card = {
+        name: restaurant.name,
+        description: restaurant.description,
+        foods: restaurant.foods
+      };
+    }
     this.state = card;
+    this.state.save = false;
     updateClass = () => {
+      this.state.save = true;
       this.setState(card);
     };
   }
@@ -76,20 +48,21 @@ export default class Card extends React.Component {
     });
     this.setState({foods: this.state.foods});
   }
-  //
-  // _restaurantMutation = () => {
-  //   console.log('Start:restaurantMutation');
-  //   var onSuccess = (restaurant) => {
-  //     //this.props.history.pushState({}, '/board/'+);
-  //     console.log('Mutation successful!', restaurant);
-  //     //loginRequest(Login.user);
-  //   };
-  //   var onFailure = (transaction) => {
-  //     var error = transaction.getError() || new Error('Mutation failed.');
-  //     console.error(error);
-  //   };
-  //   Relay.Store.update(new RestaurantMutation({restaurant: card, user: this.props.user.user}), {onFailure, onSuccess});
-  // }
+
+  _cardUpdateMutation = () => {
+    this.state.foods.map((food) => {
+      console.log(food);
+      delete food.__dataID__;
+      food.meals.map((meal) => delete meal.__dataID__);
+    });
+    var resto = {
+      name: this.state.name,
+      description: this.state.description,
+      foods: this.state.foods
+    };
+    console.log(this.state.foods);
+    Relay.Store.update(new UpdateCardMutation({card: resto, restaurant: this.props.restaurant.restaurant}));
+  }
 
   _onChange = (e) => {
     console.log('onChange');
@@ -105,6 +78,9 @@ export default class Card extends React.Component {
     }
     return (
       <div className='openarestaurant'>
+        <span className={classnames('submit', {hidden: !this.state.save})}>
+          Save changes
+        </span>
         <div className='brand'>
           <h1 className='name'><input type='text' id='name' value={this.state.name} style={{
       width: this. state. name. length / 2 + 'em'
@@ -253,3 +229,52 @@ class Meal extends React.Component {
     );
   }
 }
+
+class Plus extends React.Component{
+  render() {
+    return (
+      <svg className='plus-icon-svg' viewBox='0 0 80 80'>
+        <path d='M0,40 L80,40 M40,0 L40,80'/>
+      </svg>
+    );
+  }
+}
+
+class Close extends React.Component {
+  render() {
+    return (
+      <svg className='close-icon-svg' viewBox='0 0 80 80'>
+        <path d='M10,10 L70,70 M70,10 L10,70'/>
+      </svg>
+    );
+  }
+}
+
+export default Relay.createContainer(Card, {
+  fragments: {
+    //Question: Is fragment on mutation available on the component himself? no it's not
+    //and you use a mutation you have to call mutation fragment if not you get a warning
+    restaurant: () => Relay.QL `
+    fragment on Root {
+      restaurant {
+        ${UpdateCardMutation.getFragment('restaurant')}
+        id,
+        name,
+        description,
+        foods {
+          id,
+          name,
+          description,
+          meals {
+            id,
+            name,
+            description,
+            price,
+            time
+          }
+        }
+      }
+    }
+    `
+  }
+});

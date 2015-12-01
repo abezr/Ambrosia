@@ -17,14 +17,14 @@ export default class Start extends React.Component {
   componentDidMount () {
     if(!this.props.user.user.userID) {console.log('Start:ComponentDidMount', this.props.user.user.userID);
       this.props.history.pushState({
-        previousPath: '/start'
+        previousPath: '/start/card'
       }, '/register');}
   }
 
   componentWillReceiveProps (newProps) {
     console.log('Start:componentWillReceiveProps', newProps.user.user.userID);
     if (!newProps.user.user.userID) {this.props.history.pushState({
-        previousPath: '/start'
+        previousPath: '/start/card'
       }, '/register');}
   }
 
@@ -45,6 +45,7 @@ export default class Start extends React.Component {
 
   render() {
     var location = this._findLocation();
+    console.log(this.props.location.pathname);
     var pathName = this.props.location.pathname.match(/card|settings|map/)[0];
     return (
       <div className='start-index'>

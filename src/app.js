@@ -97,9 +97,9 @@
 	
 	var _componentsBoardTimeline2 = _interopRequireDefault(_componentsBoardTimeline);
 	
-	var _componentsBoardCard = __webpack_require__(/*! ./components/board/card */ 484);
+	var _componentsBoardCardcomponent = __webpack_require__(/*! ./components/board/cardcomponent */ 484);
 	
-	var _componentsBoardCard2 = _interopRequireDefault(_componentsBoardCard);
+	var _componentsBoardCardcomponent2 = _interopRequireDefault(_componentsBoardCardcomponent);
 	
 	var _componentsBoardSettings = __webpack_require__(/*! ./components/board/settings */ 486);
 	
@@ -226,7 +226,7 @@
 	      { path: 'board/:id', component: _componentsBoardBoard2['default'], queries: FullQuery },
 	      _react2['default'].createElement(_reactRouter.Route, { path: '/settings/:id', component: _componentsBoardSettings2['default'], queries: RestaurantQuery }),
 	      _react2['default'].createElement(_reactRouter.Route, { path: '/timeline/:id', component: _componentsBoardTimeline2['default'], queries: RestaurantQuery }),
-	      _react2['default'].createElement(_reactRouter.Route, { path: '/card/:id', component: _componentsBoardCard2['default'], queries: RestaurantQuery })
+	      _react2['default'].createElement(_reactRouter.Route, { path: '/card/:id', component: _componentsBoardCardcomponent2['default'], queries: RestaurantQuery })
 	    )
 	  )
 	), document.getElementById('app'));
@@ -51247,7 +51247,7 @@
 	      if (!this.props.user.user.userID) {
 	        console.log('Start:ComponentDidMount', this.props.user.user.userID);
 	        this.props.history.pushState({
-	          previousPath: '/start'
+	          previousPath: '/start/card'
 	        }, '/register');
 	      }
 	    }
@@ -51257,7 +51257,7 @@
 	      console.log('Start:componentWillReceiveProps', newProps.user.user.userID);
 	      if (!newProps.user.user.userID) {
 	        this.props.history.pushState({
-	          previousPath: '/start'
+	          previousPath: '/start/card'
 	        }, '/register');
 	      }
 	    }
@@ -51265,6 +51265,7 @@
 	    key: 'render',
 	    value: function render() {
 	      var location = this._findLocation();
+	      console.log(this.props.location.pathname);
 	      var pathName = this.props.location.pathname.match(/card|settings|map/)[0];
 	      return _react2['default'].createElement(
 	        'div',
@@ -51504,7 +51505,7 @@
 	
 	var card = {
 	  name: 'Your restaurant\'s name',
-	  description: 'Describe you restaurant',
+	  description: 'Describe your restaurant',
 	  foods: [{
 	    id: '_' + Math.random().toString(36).substr(2, 9),
 	    name: 'the food\'s name',
@@ -52338,7 +52339,6 @@
 	  return Board;
 	})(_react2['default'].Component);
 	
-	exports['default'] = Board;
 	exports['default'] = _reactRelay2['default'].createContainer(Board, {
 	  fragments: {
 	    restaurant: function restaurant() {
@@ -52774,9 +52774,9 @@
 
 /***/ },
 /* 484 */
-/*!*********************************************!*\
-  !*** ./src/client/components/board/card.js ***!
-  \*********************************************/
+/*!******************************************************!*\
+  !*** ./src/client/components/board/cardcomponent.js ***!
+  \******************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52797,15 +52797,13 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var _reactRelay = __webpack_require__(/*! react-relay */ 200);
-	
-	var _reactRelay2 = _interopRequireDefault(_reactRelay);
-	
 	var _react = __webpack_require__(/*! react */ 3);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactRouter = __webpack_require__(/*! react-router */ 1);
+	var _reactRelay = __webpack_require__(/*! react-relay */ 200);
+	
+	var _reactRelay2 = _interopRequireDefault(_reactRelay);
 	
 	var _classnames = __webpack_require__(/*! classnames */ 461);
 	
@@ -52815,11 +52813,9 @@
 	
 	var _mutationsUpdatecardmutation2 = _interopRequireDefault(_mutationsUpdatecardmutation);
 	
+	var card;
 	//list of var to be used on each component
 	var updateClass;
-	var card;
-	/**The 1st class Component Card inherit restaurants props;
-	 */
 	
 	var Card = (function (_React$Component) {
 	  _inherits(Card, _React$Component);
@@ -52832,7 +52828,7 @@
 	    _get(Object.getPrototypeOf(Card.prototype), 'constructor', this).call(this, props, context);
 	
 	    this._add = function () {
-	      card.foods.push({
+	      _this.state.foods.push({
 	        id: '_' + Math.random().toString(36).substr(2, 9),
 	        name: 'the food\'s name',
 	        description: 'the food\'s description',
@@ -52844,13 +52840,7 @@
 	          time: 0
 	        }]
 	      });
-	      updateClass();
-	    };
-	
-	    this._onChange = function (e) {
-	      console.log('onChange');
-	      card[e.target.id] = e.target.value;
-	      updateClass();
+	      _this.setState({ foods: _this.state.foods });
 	    };
 	
 	    this._cardUpdateMutation = function () {
@@ -52870,12 +52860,20 @@
 	      _reactRelay2['default'].Store.update(new _mutationsUpdatecardmutation2['default']({ card: resto, restaurant: _this.props.restaurant.restaurant }));
 	    };
 	
-	    var restaurant = this.props.restaurant.restaurant;
-	    card = {
-	      name: restaurant.name,
-	      description: restaurant.description,
-	      foods: restaurant.foods
+	    this._onChange = function (e) {
+	      console.log('onChange');
+	      card[e.target.id] = e.target.value;
+	      updateClass();
 	    };
+	
+	    if (this.props.restaurant.restaurant) {
+	      var restaurant = this.props.restaurant.restaurant;
+	      card = {
+	        name: restaurant.name,
+	        description: restaurant.description,
+	        foods: restaurant.foods
+	      };
+	    }
 	    this.state = card;
 	    this.state.save = false;
 	    updateClass = function () {
@@ -52885,6 +52883,11 @@
 	  }
 	
 	  _createClass(Card, [{
+	    key: 'componentWillLeave',
+	    value: function componentWillLeave() {
+	      this.props.update('card', card);
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var createFood = function createFood(food, index) {
@@ -52892,19 +52895,28 @@
 	      };
 	      return _react2['default'].createElement(
 	        'div',
-	        { className: 'card' },
+	        { className: 'openarestaurant' },
+	        _react2['default'].createElement(
+	          'span',
+	          { className: (0, _classnames2['default'])('submit', { hidden: !this.state.save }) },
+	          'Save changes'
+	        ),
 	        _react2['default'].createElement(
 	          'div',
 	          { className: 'brand' },
 	          _react2['default'].createElement(
 	            'h1',
 	            { className: 'name' },
-	            _react2['default'].createElement('input', { type: 'text', id: 'name', value: this.state.name, onChange: this._onChange })
+	            _react2['default'].createElement('input', { type: 'text', id: 'name', value: this.state.name, style: {
+	                width: this.state.name.length / 2 + 'em'
+	              }, onChange: this._onChange })
 	          ),
 	          _react2['default'].createElement(
 	            'h2',
 	            { className: 'description' },
-	            _react2['default'].createElement('input', { type: 'text', id: 'description', value: this.state.description, onChange: this._onChange })
+	            _react2['default'].createElement('textarea', { type: 'text', id: 'description', value: this.state.description, style: {
+	                width: this.state.description.length / 2 + 'em'
+	              }, onChange: this._onChange })
 	          )
 	        ),
 	        _react2['default'].createElement(
@@ -52912,25 +52924,14 @@
 	          { className: 'nav' },
 	          _react2['default'].createElement(
 	            'div',
-	            { className: 'flex-item-2' },
-	            _react2['default'].createElement(
-	              'span',
-	              { className: 'plus', onClick: this._add },
-	              'Plus'
-	            )
+	            { className: 'flex-item-2', onClick: this._add },
+	            _react2['default'].createElement(Plus, null)
 	          )
 	        ),
 	        _react2['default'].createElement(
 	          'div',
 	          { className: 'foods nav-wrap' },
 	          this.state.foods.map(createFood)
-	        ),
-	        _react2['default'].createElement(
-	          'span',
-	          { className: (0, _classnames2['default'])('submit', {
-	              hidden: !this.state.save
-	            }), onClick: this._cardUpdateMutation },
-	          'Save Changes'
 	        )
 	      );
 	    }
@@ -52938,6 +52939,8 @@
 	
 	  return Card;
 	})(_react2['default'].Component);
+	
+	exports.Card = Card;
 	
 	var Food = (function (_React$Component2) {
 	  _inherits(Food, _React$Component2);
@@ -52999,15 +53002,19 @@
 	      };
 	      return _react2['default'].createElement(
 	        'div',
-	        { className: 'food flex-item-2', onClick: this._switchExpand },
-	        _react2['default'].createElement('span', { className: 'close', onClick: this._close }),
-	        _react2['default'].createElement('input', { id: 'name', type: 'text', value: this.props.name, onChange: this._onChange, onClick: function (e) {
-	            return e.stopPropagation();
-	          } }),
+	        { className: 'food flex-item-2' },
+	        _react2['default'].createElement(
+	          'span',
+	          { className: 'close', onClick: this._close },
+	          _react2['default'].createElement(Close, null)
+	        ),
+	        _react2['default'].createElement('input', { id: 'name', type: 'text', style: {
+	            width: this.props.name.length / 2 + 'em'
+	          }, value: this.props.name, onChange: this._onChange }),
 	        _react2['default'].createElement('br', null),
-	        _react2['default'].createElement('input', { id: 'description', type: 'text', value: this.props.description, onChange: this._onChange, onClick: function (e) {
-	            return e.stopPropagation();
-	          } }),
+	        _react2['default'].createElement('input', { id: 'description', type: 'text', style: {
+	            width: this.props.description.length / 2 + 'em'
+	          }, value: this.props.description, onChange: this._onChange }),
 	        _react2['default'].createElement(
 	          'div',
 	          { className: (0, _classnames2['default'])('meals', {
@@ -53017,9 +53024,18 @@
 	          _react2['default'].createElement(
 	            'span',
 	            { className: 'plus', onClick: this._addMeal },
-	            'Plus'
+	            _react2['default'].createElement(Plus, null)
 	          ),
 	          this.props.meals.map(createMeal)
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { onClick: this._switchExpand },
+	          _react2['default'].createElement(
+	            'svg',
+	            { className: 'expand-icon-svg', viewBox: '0 0 80 60' },
+	            _react2['default'].createElement('path', { className: 'expand-icon-path', d: this.state.expand ? 'M0,60 L40,0 L80,60' : 'M0,0 L40,60 L80,0', fill: 'white', stroke: 'black', strokeWidth: 10 })
+	          )
 	        )
 	      );
 	    }
@@ -53067,27 +53083,75 @@
 	      return _react2['default'].createElement(
 	        'div',
 	        { className: 'meal flex-item-2' },
-	        _react2['default'].createElement('span', { className: 'close', onClick: this._close }),
-	        _react2['default'].createElement('input', { type: 'text', id: 'name', value: this.props.name, onChange: this._onChange, onClick: function (e) {
-	            return e.stopPropagation();
+	        _react2['default'].createElement(
+	          'span',
+	          { className: 'close', onClick: this._close },
+	          _react2['default'].createElement(Close, null)
+	        ),
+	        _react2['default'].createElement('input', { onChange: this._onChange, type: 'text', id: 'name', value: this.props.name, style: {
+	            width: this.props.name.length / 2 + 'em'
 	          } }),
 	        _react2['default'].createElement('br', null),
-	        _react2['default'].createElement('input', { type: 'text', id: 'description', value: this.props.description, onChange: this._onChange, onClick: function (e) {
-	            return e.stopPropagation();
+	        _react2['default'].createElement('input', { onChange: this._onChange, type: 'text', id: 'description', value: this.props.description, style: {
+	            width: this.props.description.length / 2 + 'em'
 	          } }),
 	        _react2['default'].createElement('br', null),
-	        _react2['default'].createElement('input', { type: 'number', id: 'price', value: this.props.price, onChange: this._onChange, onClick: function (e) {
-	            return e.stopPropagation();
-	          } }),
+	        _react2['default'].createElement('input', { type: 'number', id: 'price', value: this.props.price, onChange: this._onChange }),
+	        'mB',
 	        _react2['default'].createElement('br', null),
-	        _react2['default'].createElement('input', { type: 'number', id: 'time', value: this.props.time, onChange: this._onChange, onClick: function (e) {
-	            return e.stopPropagation();
-	          } })
+	        _react2['default'].createElement('input', { type: 'number', id: 'time', value: this.props.time, onChange: this._onChange }),
+	        'min'
 	      );
 	    }
 	  }]);
 	
 	  return Meal;
+	})(_react2['default'].Component);
+	
+	var Plus = (function (_React$Component4) {
+	  _inherits(Plus, _React$Component4);
+	
+	  function Plus() {
+	    _classCallCheck(this, Plus);
+	
+	    _get(Object.getPrototypeOf(Plus.prototype), 'constructor', this).apply(this, arguments);
+	  }
+	
+	  _createClass(Plus, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2['default'].createElement(
+	        'svg',
+	        { className: 'plus-icon-svg', viewBox: '0 0 80 80' },
+	        _react2['default'].createElement('path', { d: 'M0,40 L80,40 M40,0 L40,80' })
+	      );
+	    }
+	  }]);
+	
+	  return Plus;
+	})(_react2['default'].Component);
+	
+	var Close = (function (_React$Component5) {
+	  _inherits(Close, _React$Component5);
+	
+	  function Close() {
+	    _classCallCheck(this, Close);
+	
+	    _get(Object.getPrototypeOf(Close.prototype), 'constructor', this).apply(this, arguments);
+	  }
+	
+	  _createClass(Close, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2['default'].createElement(
+	        'svg',
+	        { className: 'close-icon-svg', viewBox: '0 0 80 80' },
+	        _react2['default'].createElement('path', { d: 'M10,10 L70,70 M70,10 L10,70' })
+	      );
+	    }
+	  }]);
+	
+	  return Close;
 	})(_react2['default'].Component);
 	
 	exports['default'] = _reactRelay2['default'].createContainer(Card, {
@@ -53097,7 +53161,7 @@
 	    restaurant: function restaurant() {
 	      return (function (sub_0) {
 	        var GraphQL = _reactRelay2['default'].QL.__GraphQL;
-	        return new GraphQL.QueryFragment('Card', 'Root', [new GraphQL.Field('restaurant', [new GraphQL.Field('id', null, null, null, null, null, {
+	        return new GraphQL.QueryFragment('Cardcomponent', 'Root', [new GraphQL.Field('restaurant', [new GraphQL.Field('id', null, null, null, null, null, {
 	          'parentType': 'Restaurant',
 	          'requisite': true
 	        }), new GraphQL.Field('name', null, null, null, null, null, {
@@ -53135,7 +53199,6 @@
 	    }
 	  }
 	});
-	module.exports = exports['default'];
 
 /***/ },
 /* 485 */
