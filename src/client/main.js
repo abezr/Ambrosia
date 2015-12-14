@@ -16,6 +16,8 @@ import Users from './components/users';
 import Start from './components/start/start';
 import StartCard from './components/start/card';
 import StartSettings from './components/start/settings';
+import StartMap from './components/start/map';
+import StartSubmit from './components/start/submit';
 import Board from './components/board/board';
 import BoardTimeLine from './components/board/timeline';
 import BoardCard from './components/board/cardcomponent';
@@ -103,6 +105,9 @@ ReactDom.render(
       <Route path="start" component={Start} queries={ViewerQuery}>
         <Route path='card' component={StartCard}/>
         <Route path='settings' component={StartSettings}/>
+        <Route path='map' component={StartMap}>
+          <Route path='/start/submit' component={StartSubmit}/>
+        </Route>
       </Route>
       <Route path="register" component={Login} queries={ViewerQuery} />
       <Route path="board/:id" component={Board} queries={FullQuery}>

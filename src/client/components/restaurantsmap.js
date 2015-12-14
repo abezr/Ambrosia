@@ -45,9 +45,7 @@ var getScoreColor = (score) => {
     average += mark
   });
   average /= score.length;
-  console.log('getScoreColor', average);
   var color = `rgba(${average > 2.5 ? Math.floor((5-average)/2.5 * 255) : 255}, ${average < 2.5 ? Math.floor((average/2.5 * 255)) : 255}, 0, 0.5)`;
-  console.log(color);
   return color;
 }
 
@@ -55,48 +53,64 @@ export default class Map extends React.Component {
 
   constructor(props, context) {
     super(props, context);
+    this.markers = [];
   }
 
   componentDidMount () {
-    this.map = L.map('map', {zoomControl: false});
+    setTimeout(() => {
+      this.refs.map.style.height = this.refs.mapContainer.clientHeight + 'px';
+      this.map = L.map('map', {zoomControl: false});
+      if(this.props.geolocation) {
+        this._setMap();
+        this._setMarkers(this.props);
+      }
+    }, 20);
+  }
+
+  componentWillReceiveProps (newProps) {
+    console.log('componentWillReceiveProps')
     if(this.props.geolocation) {
       this._setMap();
-      this._setMarkers();
+      this._setMarkers(newProps);
     }
   }
 
-  componentDidUpdate () {
-    if(this.props.geolocation) {
-      this._setMap();
-      this._setMarkers();
-    }
-  }
-
-  _setMarkers = () => {
-    var restaurants = this.props.restaurants;
-    console.log('_setMarkers', restaurants);
-    if (restaurants.edges.length) {
-      restaurants.edges.map((restaurant) => {
-        var marker = L.marker([restaurant.node.location.coordinates[1], restaurant.node.location.coordinates[0]], {icon: lollipopMarker}).addTo(this.map);
-        // marker.bindPopup(
-        //   `<div>
-        //     ${restaurant.node.name} <br/>
-        //     ${restaurant.node.description}
-        //   </div>`
-        // );
-        var popup = L.popup({closeButton: false, closeOnClick: true, offset: L.point(0,-15), className:'restaurant-popup'}).setContent(
-          `<a class='popup' href='http://localhost:3800/restaurant/${restaurant.node.id}'>
-            <strong>${restaurant.node.name}</strong><br/>
-            ${restaurant.node.description}<br/>
-            à ${Math.round(restaurant.node.distance)/1000} Km
-
-          </a>`
-        ).setLatLng([restaurant.node.location.coordinates[1], restaurant.node.location.coordinates[0]]);
-        marker.on('mouseover', () => {
-          popup.openOn(this.map);
-          document.querySelector('.leaflet-popup-content-wrapper').style.backgroundColor = restaurant.node.scorable ? getScoreColor(restaurant.node.score) : 'white';
-          console.log(document.querySelector('.leaflet-popup-content-wrapper').style.backgroundColor);
-        });
+  _setMarkers = (props) => {
+    var restaurants = props.restaurants;
+    if (restaurants.length) {
+      if(restaurants.length < this.markers.length) {
+        for (var i = restaurants.length; i < this.markers.length; i++) {
+          this.map.removeLayer(this.markers[i].marker);
+          this.map.removeLayer(this.markers[i].popup);
+        }
+        this.markers.slice(restaurants.length, this.markers.length - restaurants.length);
+      }
+      restaurants.map((restaurant, i) => {
+        if(!this.markers[i]) {
+          var marker = L.marker([restaurant.node.location.coordinates[1], restaurant.node.location.coordinates[0]], {icon: lollipopMarker}).addTo(this.map);
+          var popup = L.popup({closeButton: false, closeOnClick: true, offset: L.point(0,-15), className:'restaurant-popup'}).setContent(
+            `<a class='popup' href='http://localhost:3800/restaurant/${restaurant.node.id}'>
+              <strong>${restaurant.node.name}</strong><br/>
+              ${restaurant.node.description}<br/>
+              à ${Math.round(restaurant.node.distance)/1000} Km
+            </a>`
+          ).setLatLng([restaurant.node.location.coordinates[1], restaurant.node.location.coordinates[0]]);
+          marker.on('mouseover', () => {
+            popup.openOn(this.map);
+            document.querySelector('.leaflet-popup-content-wrapper').style.backgroundColor = restaurant.node.scorable ? getScoreColor(restaurant.node.score) : 'white';
+          });
+          this.markers.push({marker: marker, popup: popup});
+        }
+        else { //in case we do have a this.markers[i]
+          this.markers[i].marker.setLatLng([restaurant.node.location.coordinates[1], restaurant.node.location.coordinates[0]]);
+          this.markers[i].popup.setContent(
+            `<a class='popup' href='http://localhost:3800/restaurant/${restaurant.node.id}'>
+              <strong>${restaurant.node.name}</strong><br/>
+              ${restaurant.node.description}<br/>
+              à ${Math.round(restaurant.node.distance)/1000} Km
+            </a>`
+          ).setLatLng([restaurant.node.location.coordinates[1], restaurant.node.location.coordinates[0]]);
+        }
       });
     }
   }
@@ -112,9 +126,9 @@ export default class Map extends React.Component {
 
   render() {
     return (
-      <div className='restaurants-map'>
+      <div className='restaurants-map' ref='mapContainer'>
         {this.props.geolocation ? '' : <span className='geolocalization'>geolocalization... Please wait</span>}
-        <div id='map'>
+        <div id='map' ref='map'>
         </div>
       </div>
     );

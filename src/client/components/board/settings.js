@@ -136,6 +136,7 @@ class Day extends React.Component {
           <span className='button flex-item-3' onClick={this._addHours}>And...</span>
         </div>
         <strong className={classnames('day-title', {hidden: this.state.expand})}>{schedule.day}</strong>
+        <br/>
         <svg className='day' viewBox='0 0 864 25'>
           {schedule.openHours.map(createSVG)}
         </svg>

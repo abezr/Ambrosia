@@ -241,11 +241,7 @@ export var RestaurantMutation = mutationWithClientMutationId({
       }
     }
   },
-  mutateAndGetPayload: ({
-    restaurant, userID
-  }, {
-    rootValue
-  }) => co(function*() {
+  mutateAndGetPayload: ({restaurant, userID}, {rootValue}) => co(function*() {
     var newRestaurant = yield addRestaurant({restaurant, userID}, rootValue);
     return {
       newRestaurant, userID, rootValue

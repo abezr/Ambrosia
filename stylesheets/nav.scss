@@ -5,6 +5,9 @@ body {
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
+  .nav-item {
+    margin: 0 1em;
+  }
 }
 .nav-wrap {
   @extend .nav;

@@ -3,7 +3,10 @@ import Relay from 'react-relay';
 import {Link} from 'react-router';
 import classnames from 'classnames';
 
-var defaultSettings;
+var Settings = {
+  scorable : false,
+  schedule: [{day: 'monday', openHours:[{from: 0, to:0}]}, {day: 'tuesday', openHours:[{from: 0, to:0}]}, {day: 'wednesday', openHours:[{from: 0, to:0}]}, {day: 'thursday', openHours:[{from: 0, to:0}]}, {day: 'friday', openHours:[{from: 0, to:0}]}, {day: 'saturday', openHours:[{from: 0, to:0}]}, {day: 'sunday', openHours:[{from: 0, to:0}]}]
+};
 var _update;
 var midnightDate;
 
@@ -11,16 +14,18 @@ export default class StartSettings extends React.Component {
 
   constructor(props, context) {
     super(props, context);
-    defaultSettings = {
-      scorable : false,
-      open: false,
-      schedule: [{day: 'monday', openHours:[{from: 0, to:0}]}, {day: 'tuesday', openHours:[{from: 0, to:0}]}, {day: 'wednesday', openHours:[{from: 0, to:0}]}, {day: 'thursday', openHours:[{from: 0, to:0}]}, {day: 'friday', openHours:[{from: 0, to:0}]}, {day: 'saturday', openHours:[{from: 0, to:0}]}, {day: 'sunday', openHours:[{from: 0, to:0}]}]
-    };
+    console.log('settings constructor');
+    if(localStorage.settings) {
+      Settings = JSON.parse(localStorage.settings);
+    }
     _update = () => {
-      this.state.save = true;
       this.forceUpdate();
     }
     this.state = {save: false};
+  }
+
+  componentWillUnmount () {
+    localStorage.settings = JSON.stringify(Settings);
   }
 
   render() {
@@ -36,12 +41,11 @@ export default class StartSettings extends React.Component {
           Check your restaurant settings.
         </h1>
         <div>
-          <div className='setting'>let clients note your restaurant<Cursor state={defaultSettings.scorable} cursor='scorable'/></div>
-          <div className='setting'>is your restaurant open <Cursor state={defaultSettings.open} cursor='open'/></div>
+          <div className='setting'>let clients note your restaurant<Cursor state={Settings.scorable} cursor='scorable'/></div>
         </div>
         <h2>Check out your opening hours</h2>
         <div className='opening-hours nav-wrap'>
-          {defaultSettings.schedule.map(createWeek)}
+          {Settings.schedule.map(createWeek)}
         </div>
       </div>
     );
@@ -53,7 +57,7 @@ class Cursor extends React.Component {
     super(props, context);
   }
   _switch = (e) => {
-    defaultSettings[this.props.cursor] = !defaultSettings[this.props.cursor];
+    Settings[this.props.cursor] = !Settings[this.props.cursor];
     _update()
   }
   render() {
@@ -78,18 +82,18 @@ class Day extends React.Component {
     this.setState({expand: !this.state.expand});
   }
   _addHours = () => {
-    defaultSettings.schedule[this.props.index].openHours.push({
+    Settings.schedule[this.props.index].openHours.push({
       from: 0,
       to: 0
     });
     _update();
   }
   _removeHours = (index) => {
-    defaultSettings.schedule[this.props.index].openHours.splice(index, 1);
+    Settings.schedule[this.props.index].openHours.splice(index, 1);
     _update();
   }
   render() {
-    var schedule = defaultSettings.schedule[this.props.index];
+    var schedule = Settings.schedule[this.props.index];
     var createSVG = (time, index) => {
       var date = {
         from: new Date(midnightDate + time.from),
@@ -116,18 +120,18 @@ class Day extends React.Component {
     }
 
     return (
-      <div>
-        <div className={classnames('flex-center', {'nav-wrap': this.state.expand, hidden: !this.state.expand})}>
-          {schedule.openHours.map(createPickers)}
-          <span className='button flex-item-3' onClick={this._addHours}>And...</span>
-        </div>
-        <strong className={classnames('day-title', {hidden: this.state.expand})}>{schedule.day}</strong>
+      <div className='day-container'>
+        <br/>
+          <div className={classnames('flex-center', {'nav-wrap': this.state.expand, hidden: !this.state.expand})}>
+            {schedule.openHours.map(createPickers)}
+            <span className='button flex-item-3' onClick={this._addHours}>And...</span>
+          </div>
         <svg className='day' viewBox='0 0 864 25' onClick={this._switch}>
           {schedule.openHours.map(createSVG)}
+          <text x={432} y={15} style={{textAnchor: 'middle'}}>{schedule.day}</text>
         </svg>
       </div>
-
-    )
+    );
   }
 }
 class Timepicker extends React.Component {
@@ -139,14 +143,14 @@ class Timepicker extends React.Component {
     if (Math.abs(e.target.value > 24)) return;
     date.setHours(Math.abs(e.target.value));
     console.log(24*60*60*1000, date.getTime()-midnightDate, e.target.value);
-    defaultSettings.schedule[this.props.index].openHours[this.props.from !== undefined ? this.props.from : this.props.to][this.props.from !== undefined ? 'from' : 'to'] = date.getTime() - midnightDate;
+    Settings.schedule[this.props.index].openHours[this.props.from !== undefined ? this.props.from : this.props.to][this.props.from !== undefined ? 'from' : 'to'] = date.getTime() - midnightDate;
     _update();
   }
 
   _changeMinutes = (e, date) => {
     if (Math.abs(e.target.value > 60)) return;
     date.setMinutes(Math.abs(e.target.value));
-    defaultSettings.schedule[this.props.index].openHours[this.props.from !== undefined ? this.props.from : this.props.to][this.props.from !== undefined ? 'from' : 'to'] = date.getTime() - midnightDate;
+    Settings.schedule[this.props.index].openHours[this.props.from !== undefined ? this.props.from : this.props.to][this.props.from !== undefined ? 'from' : 'to'] = date.getTime() - midnightDate;
     _update();
   }
 
@@ -154,14 +158,14 @@ class Timepicker extends React.Component {
     console.log('incPlusHours');
     if (time > 23*60*60*1000) return;
     else {
-      defaultSettings.schedule[this.props.index].openHours[this.props.from !== undefined ? this.props.from : this.props.to][this.props.from !== undefined ? 'from' : 'to'] += 60*60*1000;
+      Settings.schedule[this.props.index].openHours[this.props.from !== undefined ? this.props.from : this.props.to][this.props.from !== undefined ? 'from' : 'to'] += 60*60*1000;
     }
     _update();
   }
   _incLessHours = (time) => {
     if (time < 60*60*1000) return;
     else {
-      defaultSettings.schedule[this.props.index].openHours[this.props.from !== undefined ? this.props.from : this.props.to][this.props.from !== undefined ? 'from' : 'to'] -= 60*60*1000;
+      Settings.schedule[this.props.index].openHours[this.props.from !== undefined ? this.props.from : this.props.to][this.props.from !== undefined ? 'from' : 'to'] -= 60*60*1000;
     }
     _update();
   }
@@ -169,7 +173,7 @@ class Timepicker extends React.Component {
     console.log('incPlusMinutes');
     if (time > (24*60*60*1000 - 60*1000)) return;
     else {
-      defaultSettings.schedule[this.props.index].openHours[this.props.from !== undefined ? this.props.from : this.props.to][this.props.from !== undefined ? 'from' : 'to'] += 60*1000;
+      Settings.schedule[this.props.index].openHours[this.props.from !== undefined ? this.props.from : this.props.to][this.props.from !== undefined ? 'from' : 'to'] += 60*1000;
     }
     _update();
   }
@@ -177,12 +181,12 @@ class Timepicker extends React.Component {
     console.log('incLessMinutes');
     if (time < 60*1000) return;
     else {
-      defaultSettings.schedule[this.props.index].openHours[this.props.from !== undefined ? this.props.from : this.props.to][this.props.from !== undefined ? 'from' : 'to'] -= 60*1000;
+      Settings.schedule[this.props.index].openHours[this.props.from !== undefined ? this.props.from : this.props.to][this.props.from !== undefined ? 'from' : 'to'] -= 60*1000;
     }
     _update();
   }
   render () {
-    var time = defaultSettings.schedule[this.props.index].openHours[this.props.from !== undefined ? this.props.from : this.props.to][this.props.from !== undefined ? 'from' : 'to'];
+    var time = Settings.schedule[this.props.index].openHours[this.props.from !== undefined ? this.props.from : this.props.to][this.props.from !== undefined ? 'from' : 'to'];
     var date = new Date(midnightDate+time);
     return (
       <div className = 'timepicker'>

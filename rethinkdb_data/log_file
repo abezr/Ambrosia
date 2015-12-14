@@ -147,3 +147,18 @@
 2015-12-01T18:33:38.583414000 2.078190s info: Table dafc11b4-4f4e-47c2-a34a-6000b4c7e6cf: This server is Raft leader for term 9. Latest log index is 24.
 2015-12-01T18:33:38.601790000 2.096565s info: Table 578b2270-57ee-493f-8653-096715d52f57: Starting a new Raft election for term 9.
 2015-12-01T18:33:38.648418000 2.143246s info: Table 578b2270-57ee-493f-8653-096715d52f57: This server is Raft leader for term 9. Latest log index is 26.
+2015-12-01T21:14:04.847523000 0.002613s notice: Running rethinkdb 2.1.1 (CLANG 6.1.0 (clang-602.0.53))...
+2015-12-01T21:14:04.878255000 0.033342s notice: Running on Darwin 15.0.0 x86_64
+2015-12-01T21:14:04.878298000 0.033384s notice: Loading data from directory /Users/belenduchene/Sites/homemade-relay/rethinkdb_data
+2015-12-01T21:14:05.091980000 0.247066s info: Automatically using cache size of 1889 MB
+2015-12-01T21:14:05.092459000 0.247545s notice: Listening for intracluster connections on port 29015
+2015-12-01T21:14:07.749282000 2.904534s info: Table 578b2270-57ee-493f-8653-096715d52f57: Starting a new Raft election for term 10.
+2015-12-01T21:14:08.319455000 3.474707s notice: Listening for client driver connections on port 28015
+2015-12-01T21:14:08.319599000 3.474851s notice: Listening for administrative HTTP connections on port 8080
+2015-12-01T21:14:08.319601000 3.474853s notice: Listening on addresses: 127.0.0.1, ::1
+2015-12-01T21:14:08.319601001 3.474853s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2015-12-01T21:14:08.319602000 3.474854s notice: Server ready, "MacBook_Pro_de_BELEN_local_hbf" 65c48902-2425-4ca6-9250-b1b20f6df9e5
+2015-12-01T21:14:08.774958000 3.930210s notice: A newer version of the RethinkDB server is available: 2.2.1. You can read the changelog at <https://github.com/rethinkdb/rethinkdb/releases>.
+2015-12-01T21:14:08.921562000 4.076899s info: Table 578b2270-57ee-493f-8653-096715d52f57: This server is Raft leader for term 10. Latest log index is 30.
+2015-12-01T21:14:09.768870000 4.924207s info: Table dafc11b4-4f4e-47c2-a34a-6000b4c7e6cf: Starting a new Raft election for term 10.
+2015-12-01T21:14:10.347700000 5.503037s info: Table dafc11b4-4f4e-47c2-a34a-6000b4c7e6cf: This server is Raft leader for term 10. Latest log index is 28.

@@ -3,6 +3,8 @@ import Relay from 'react-relay';
 import classnames from 'classnames';
 import OrderMutation from '../mutations/ordermutation';
 
+import Close from './icons/close';
+
 //var caddy = [];
 var update;
 var _modal;
@@ -14,7 +16,14 @@ class Restaurant extends React.Component {
     super(props, context);
     this.state = {caddy: [], modal: false, order: null};
     update = (item) => {
-      this.state.caddy.push(item);
+      var match = false;
+      this.state.caddy.forEach(order => {
+        if(item.id === order.id) {
+          order.times ? order.times += 1 : order.times = 2;
+          match = true;
+        }
+      });
+      if(!match) this.state.caddy.push(item);
       this.forceUpdate();
       //this.setState({caddy: caddy.push(item)});
     }
@@ -85,6 +94,7 @@ class Meal extends React.Component {
       <div className='meal flex-item-2' onClick={this._addItem}>
         <strong className='name'>{this.props.name}</strong><br/>
         <div className='description'>{this.props.description}</div>
+        <div className='price'>{this.props.price + 'mB'}</div>
       </div>
     );
   }
@@ -122,15 +132,21 @@ class Caddy extends React.Component {
   _sum = () => {
     var value = 0;
     this.props.caddy.forEach(function(item) {
+      if(item.times) {
+        value += item.price * item.times;
+        return;
+      }
       value += item.price;
     });
     return value;
   }
   render () {
-    console.log(this.props);
     var createItems = function(item) {
+      console.log(item);
       return (
         <div className='flex-item-2 item'>
+          <span className='times'>{item.times ? item.times + 'X' : ''}</span>
+          <Close/>
           {item.parent}<br/>
           {item.name}<br/>
           {item.price} mɃ
@@ -142,8 +158,7 @@ class Caddy extends React.Component {
       <div className='caddy'>
         <div className='nav'>
           {this.props.caddy.map(createItems)}<br/>
-        <div className={classnames('command flex-item-2', {hidden: !this.props.caddy.length})} onClick={this._order}><strong>{sum} mɃ</strong><br/>
-            Order!
+        <div className={classnames('command flex-item-2', {hidden: !this.props.caddy.length})} onClick={this._order}><strong>{sum} mɃ </strong>order!
         </div>
         </div>
       </div>

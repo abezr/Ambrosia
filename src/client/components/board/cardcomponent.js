@@ -83,10 +83,10 @@ export class Card extends React.Component {
         </span>
         <div className='brand'>
           <h1 className='name'><input type='text' id='name' value={this.state.name} style={{
-      width: this. state. name. length / 2 + 'em'
+      width: this.state.name.length / 2 + 'em'
       }} onChange={this._onChange}/></h1>
           <h2 className='description'><textarea type='text' id='description' value={this.state.description} style={{
-      width: this. state. description. length / 2 + 'em'
+      width: this.state.description.length / 2 + 'em'
       }} onChange={this._onChange}/></h2>
         </div>
         <div className='nav'>

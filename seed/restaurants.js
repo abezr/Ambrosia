@@ -14,7 +14,7 @@ var millisecondsPerDay = 24*60*60*1000;
  */
 var openHours = [[{from: millisecondsPerDay/10, to: millisecondsPerDay/3}, {from: millisecondsPerDay/1.5, to: millisecondsPerDay/1.2}], [{from: millisecondsPerDay/3, to: millisecondsPerDay/2}, {from: millisecondsPerDay/1.4, to: millisecondsPerDay/1.2}], [{from: millisecondsPerDay/10, to: millisecondsPerDay/4}, {from: millisecondsPerDay/3, to: millisecondsPerDay/1.5}, {from: millisecondsPerDay/1.2, to: millisecondsPerDay}]];
 var getRandomLocation = () => {
-  var location = [23.5 + Math.random(), 49 + Math.random()];
+  var location = [6.8 + Math.random(), 47.2 + Math.random()];
   return r.point(location[0],location[1]);
 };
 

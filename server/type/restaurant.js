@@ -231,7 +231,15 @@ var GraphQLOpenHours = new GraphQLObjectType({
   }
 });
 
-var GraphQLDay = new GraphQLObjectType({
+var GraphQLInputOpenHours = new GraphQLInputObjectType({
+  name: 'InputOpenHours',
+  fields: {
+    from: {type: GraphQLInt},
+    to: {type: GraphQLInt}
+  }
+});
+
+export var GraphQLDay = new GraphQLObjectType({
   name: 'Day',
   fields: {
     day: {
@@ -244,8 +252,33 @@ var GraphQLDay = new GraphQLObjectType({
   }
 });
 
+export var GraphQLInputDay = new GraphQLInputObjectType({
+  name: 'InputDay',
+  fields: {
+    day: {
+      type: GraphQLString,
+      description: 'day of the week'
+    },
+    openHours: {
+      type: new GraphQLList(GraphQLInputOpenHours)
+    }
+  }
+});
+
 var GraphQLLocation = new GraphQLObjectType({
   name: 'Location',
+  fields: {
+    coordinates: {
+      type: new GraphQLList(GraphQLFloat)
+    },
+    type: {
+      type: GraphQLString
+    }
+  }
+});
+
+export var GraphQLInputLocation = new GraphQLInputObjectType({
+  name: 'InputLocation',
   fields: {
     coordinates: {
       type: new GraphQLList(GraphQLFloat)
@@ -317,27 +350,6 @@ export var GraphQLRestaurant = new GraphQLObjectType({
   }
 });
 
-var GraphQLInputOpenHours = new GraphQLInputObjectType({
-  name: 'InputOpenHours',
-  fields: {
-    from: {type: GraphQLInt},
-    to: {type: GraphQLInt}
-  }
-});
-
-export var GraphQLInputDay = new GraphQLInputObjectType({
-  name: 'InputDay',
-  fields: {
-    day: {
-      type: GraphQLString,
-      description: 'day of the week'
-    },
-    openHours: {
-      type: new GraphQLList(GraphQLInputOpenHours)
-    }
-  }
-})
-
 export var GraphQLInputRestaurant = new GraphQLInputObjectType({
   name: 'InputRestaurant',
   fields: {
@@ -352,10 +364,6 @@ export var GraphQLInputRestaurant = new GraphQLInputObjectType({
     scorable: {
       type: GraphQLBoolean,
       description: 'is restaurant scorable'
-    },
-    open: {
-      type: GraphQLBoolean,
-      description: 'is your restaurant open'
     },
     score: {
       type: new GraphQLList(GraphQLInt),

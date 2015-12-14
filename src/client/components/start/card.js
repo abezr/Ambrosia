@@ -1,8 +1,9 @@
 import React from 'react';
 import Relay from 'react-relay';
+import Close from '../icons/close';
 import classnames from 'classnames';
 
-var card = {
+var restaurant = {
   name: 'Your restaurant\'s name',
   description: 'Describe your restaurant',
   foods: [
@@ -34,29 +35,34 @@ class Plus extends React.Component{
     );
   }
 }
+//
+// class Close extends React.Component {
+//   render() {
+//     return (
+//       <svg className='close-icon-svg' viewBox='0 0 80 80'>
+//         <path d='M10,10 L70,70 M70,10 L10,70'/>
+//       </svg>
+//     );
+//   }
+// }
 
-class Close extends React.Component {
-  render() {
-    return (
-      <svg className='close-icon-svg' viewBox='0 0 80 80'>
-        <path d='M10,10 L70,70 M70,10 L10,70'/>
-      </svg>
-    );
-  }
-}
-
-export default class Card extends React.Component {
+export default class Restaurant extends React.Component {
 
   constructor(props, context) {
     super(props, context);
-    this.state = card;
+    console.log('restaurant constructor');
+    if(localStorage.restaurant) {
+      restaurant = JSON.parse(localStorage.restaurant);
+    }
+    this.state = restaurant;
     updateClass = () => {
-      this.setState(card);
+      this.setState(restaurant);
     };
   }
 
-  componentWillLeave () {
-    this.props.update('card', card);
+  componentWillUnmount () {
+    console.log('RestaurantWillLeave');
+    localStorage.restaurant = JSON.stringify(restaurant);
   }
 
   _add = () => {
@@ -88,12 +94,12 @@ export default class Card extends React.Component {
   //     var error = transaction.getError() || new Error('Mutation failed.');
   //     console.error(error);
   //   };
-  //   Relay.Store.update(new RestaurantMutation({restaurant: card, user: this.props.user.user}), {onFailure, onSuccess});
+  //   Relay.Store.update(new RestaurantMutation({restaurant: restaurant, user: this.props.user.user}), {onFailure, onSuccess});
   // }
 
   _onChange = (e) => {
     console.log('onChange');
-    card[e.target.id] = e.target.value;
+    restaurant[e.target.id] = e.target.value;
     updateClass();
   }
 
@@ -142,7 +148,7 @@ class Food extends React.Component {
 
   _addMeal = (e) => {
     e.stopPropagation();
-    card.foods[this.props.index].meals.push({
+    restaurant.foods[this.props.index].meals.push({
       id: '_' + Math.random().toString(36).substr(2, 9),
       name: 'the meal\'s name',
       description: 'the meal\'s description',
@@ -160,12 +166,12 @@ class Food extends React.Component {
 
   _close = () => {
     console.log('close');
-    card.foods.splice(this.props.index, 1);
+    restaurant.foods.splice(this.props.index, 1);
     updateClass();
   }
 
   _onChange = (e) => {
-    card.foods[this.props.index][e.target.id] = e.target.value;
+    restaurant.foods[this.props.index][e.target.id] = e.target.value;
     updateClass();
   }
 
@@ -174,14 +180,14 @@ class Food extends React.Component {
     var createMeal = (meal, index) => <Meal {...meal} parentIndex={this.props.index} index={index} key={meal.id}/>;
     return (
       <div className='food flex-item-2'>
-        <span className='close' onClick={this._close}>
+        <span onClick={this._close}>
           <Close/>
         </span>
         <input id='name' type='text' style={{
-        width: this. props. name. length / 2 + 'em'
+        width: this.props.name.length / 2 + 'em'
         }} value={this.props.name} onChange={this._onChange}/><br/>
         <input id='description' type='text' style={{
-        width: this. props. description. length / 2 + 'em'
+        width: this.props.description.length / 2 + 'em'
         }} value={this.props.description} onChange={this._onChange}/>
         <div className={classnames('meals', {
           'nav-wrap': this.state.expand,
@@ -221,12 +227,12 @@ class Meal extends React.Component {
 
   _close = (e) => {
     e.stopPropagation();
-    card.foods[this.props.parentIndex].meals.splice(this.props.index, 1);
+    restaurant.foods[this.props.parentIndex].meals.splice(this.props.index, 1);
     updateClass();
   }
 
   _onChange = (e) => {
-    card.foods[this.props.parentIndex].meals[this.props.index][e.target.id] = e.target.type === 'number'
+    restaurant.foods[this.props.parentIndex].meals[this.props.index][e.target.id] = e.target.type === 'number'
       ? Math.abs(e.target.value)
       : e.target.value;
     updateClass();

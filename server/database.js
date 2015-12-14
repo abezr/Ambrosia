@@ -225,14 +225,12 @@ export function getRestaurantsByName(args, rootValue) {
       r.table('restaurant').getNearest(r.point(args.location[0], args.location[1]), {
         index: 'location',
         maxDist: 1000000
-          //filter is'nt working with that regex
       }).run(rootValue.conn, (err, res) => {
         if (err) reject(err);
         if (res) {
           res.toArray((err, res) => {
             var filtre = res.filter((restaurant) => {
               var re = new RegExp(`${args.name}`, 'gi');
-              console.log(restaurant.doc['name'].match(re), args.name, restaurant.doc.name);
               return restaurant.doc['name'].match(re);
             });
             if (err) reject(err);
@@ -243,7 +241,7 @@ export function getRestaurantsByName(args, rootValue) {
               return resto;
             });
             resolve(newResult);
-          })
+          });
         }
       });
     });

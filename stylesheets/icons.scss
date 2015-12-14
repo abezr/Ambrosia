@@ -1,0 +1,36 @@
+.close-icon {
+  cursor: pointer;
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+}
+
+.center-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  .center-item {
+    align-self: center;
+    transform-origin: center;
+  }
+}
+
+@keyframes rotate {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+}
+
+.loading-icon {
+  z-index: 10;
+  animation-name: rotate;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  align-self: center;
+  transform-origin: center;
+}

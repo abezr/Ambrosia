@@ -6,8 +6,8 @@
 @import "timepicker";
 @import "profile";
 @import "board";
-@import "card";
 @import "leaflet";
+@import "icons";
 .text-center {
   text-align: center;
 }
@@ -34,18 +34,6 @@ svg {
 .restaurant-popup {
   text-align: center;
 }
-#map {
-  height: 1000px;
-}
-.close-icon {
-  background-image: url('/stylesheets/icons/close-black.svg');
-  height: 1em;
-  width: 1em;
-  position: absolute;
-  &:hover {
-    border: 1px solid;
-  }
-}
 body {
   margin: 0;
   overflow: hidden;
@@ -62,13 +50,8 @@ body {
   }
 }
 section {
-  border: 1px solid;
   position: relative;
   overflow-y: scroll;
-  .close-icon {
-    right: 1em;
-    top: 1em;
-  }
 }
 nav.nav-brand {
   border-bottom: 1px solid;

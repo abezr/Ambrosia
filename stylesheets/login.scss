@@ -1,4 +1,4 @@
-div.modal {
+.modal {
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
@@ -8,7 +8,7 @@ div.modal {
   height: 100%;
   width: 100%;
   background-color: rgba(10, 10, 10, 0.9);
-  div.form {
+  .form {
     @extend .flex-item-2;
     align-self: center;
     transform-origin: center;

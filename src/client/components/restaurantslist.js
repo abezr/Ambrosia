@@ -2,6 +2,17 @@ import React from 'react';
 import Relay from 'react-relay';
 import classnames from 'classnames';
 import {Link} from 'react-router';
+import Loading from './icons/loading';
+import Score from './icons/score';
+
+var averageScore = (restaurant) => {
+  if(!restaurant.scorable) return 0;
+  var stamp = 0;
+  restaurant.score.map(mark => {
+    stamp += mark;
+  });
+  return stamp /= restaurant.score.length;
+};
 
 export default class RestaurantsList extends React.Component {
 
@@ -18,9 +29,10 @@ export default class RestaurantsList extends React.Component {
     };
     return (
       <div className='center-text' onScroll = {this.checkBottom}>
-        <h1>Restaurants-list</h1>
-        <div className='restaurant-list'>{restaurants.edges.length ? restaurants.edges.map(createRestaurant) : 'Geolocalization... Please Wait'}</div>
-        {this.props.loading ? 'loading...' : ''}
+        <div className='restaurant-list'>{restaurants.length
+            ? restaurants.map(createRestaurant)
+            : <Loading size={'6em'}/>}</div>
+        {this.props.loading ? <Loading size = {'2em'}/> : ''}
       </div>
     );
   }
@@ -61,7 +73,8 @@ class Restaurant extends React.Component {
               <span className='restaurant-name'>{restaurant.name}</span><br/>
               <span className='restaurant-description'>{restaurant.description}</span>
               <span className='restaurant-distance'>à {Math.round(restaurant.distance)/1000} Km</span>
-              <Link className='order-button' to={path}>Order this one!</Link>
+              {restaurant.scorable ? <span className='restaurant-score'><Score score={averageScore(restaurant)} size={'5em'}/></span> : ''}
+              <Link className='order-button' to={path} onClick={(e)=>{e.stopPropagation()}}>Order this one!</Link>
             </div>
             <div className={classnames('foods', {'nav-wrap': this.state.expand}, {hidden: !this.state.expand})}>
               {restaurant.foods.map(createFoods)}

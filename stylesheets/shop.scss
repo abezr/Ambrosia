@@ -56,42 +56,56 @@ div.shop {
     position: fixed;
     bottom: 0;
     .item {
-      padding: 1em;
+      position: relative;
+      padding: 2em;
       border-right: 1px solid;
-      margin: 0;
+      margin: 0em;
+      .times {
+        position: absolute;
+        top: 0.5em;
+        left: 0.5em;
+      }
     }
     .command {
-      padding: 2em;
+      cursor: default;
+      padding: 0.25em;
+      margin: 0.5em;
       border: 1px solid;
-      border-radius: 10px;
+      border-radius: 0.5em;
       &:hover {
-        background-color: black;
+        background-color: green;
         color: white;
       }
     }
   }
+  .foods {
+    font-size: 1.5em;
+  }
   .food {
+    position: relative;
+    margin: 0.5em;
+    text-align: center;
     cursor: default;
-    border-radius: 10px;
     padding: 1em;
     border: 3px solid;
+    border-radius: 10px;
     .description {
       margin: 1em;
     }
     .name {
-      font-size: 1.5em;
+      font-size: 1em;
     }
     .meals {
       border-top: 1px solid;
       .meal {
         .name {
-          font-size: 1.5em;
+          font-size: 1em;
         }
         cursor: default;
-        padding: 1em;
+        padding: 0.25em;
         &:hover {
-          background-color: black;
-          color: white;
+          background-color: yellow;
+          border-radius: 5px;
         }
       }
     }

@@ -1,13 +1,25 @@
 div.restaurants-index {
+  .nav-link {
+    margin: 0.5em;
+    position: inherit;
+  }
+  .nav-tools {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    padding: 1em;
+    .search-container {
+      position: relative;
+      height: 2em;
+    }
+    .order-by {
+      position: relative;
+      height: 2em;
+    }
+  }
   .search-input {
     margin: 0 0.25em;
     font-size: 1.5em;
-  }
-  .search-container {
-    margin: 0.5em 0;
-    position: relative;
-    height: 2em;
-    padding: 1em;
   }
   .search-icon-wrapper {
     background: white;
@@ -17,6 +29,17 @@ div.restaurants-index {
     font-size: 1em;
     position: relative;
     padding: 1em 1em;
+  }
+  .flex-item-2 {
+    background-color: gainsboro;
+    border: 1px solid;
+    padding: 0 1em;
+    margin: 0.1em;
+  }
+  .selected {
+    padding: 0 1em;
+    border: 2px solid;
+    background-color: yellow;
   }
   .search-icon {
     position:absolute;
@@ -29,13 +52,12 @@ div.restaurants-index {
 }
 div.restaurants-map {
   text-align: center;
-  .geolocalization {
-    z-index: 1;
-    position: absolute;
-    top: 500px;
-  }
+  position: absolute;
+  height: 100%;
+  width: 100%;
 }
 div.restaurant-list {
+    margin-top: 5em;
   .restaurant {
     position: relative;
     padding: 1em;
@@ -70,6 +92,11 @@ div.restaurant-list {
     .restaurant-distance {
       position: absolute;
       top: 1em;
+      left: 1em;
+    }
+    .restaurant-score {
+      position: absolute;
+      bottom: 0;
       left: 1em;
     }
     .foods {
