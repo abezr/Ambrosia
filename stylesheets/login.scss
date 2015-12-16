@@ -1,49 +1,30 @@
-.modal {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
+span.close-icon {
   position: absolute;
   top: 0;
-  text-align: center;
-  height: 100%;
-  width: 100%;
-  background-color: rgba(10, 10, 10, 0.9);
-  .form {
-    @extend .flex-item-2;
-    align-self: center;
-    transform-origin: center;
+  width: 4em;
+  height: 4em;
+  top: 1em;
+  right: 1em;
+  &:hover {
     border: 2px solid;
-    color: white;
-    padding: 4em;
   }
-  span.close-icon {
-    position: absolute;
-    top: 0;
-    width: 4em;
-    height: 4em;
-    top: 1em;
-    right: 1em;
-    &:hover {
-      border: 2px solid;
-    }
-    background-image: url('/stylesheets/icons/close-white.svg');
+  background-image: url(/stylesheets/icons/close-white.svg);
+}
+input#submit {
+  font-size: 1em;
+  background-color: black;
+  padding: 0.5em;
+  border: 2px solid;
+  font-family: inherit;
+  border-radius: 10px;
+  &:hover {
+    color: black;
+    background-color: white;
   }
-  input#submit {
-    font-size: 1em;
-    color: white;
-    background-color: black;
-    padding: 0.5em;
-    border: 2px solid;
-    font-family: inherit;
-    border-radius: 10px;
-    &:hover {
-      color: black;
-      background-color: white;
-    }
-  }
+}
+#signup,#login {
   input {
     font-size: 1em;
-    color: white;
     background-color: rgba(10, 10, 10, 0);
     border: 2px solid;
     font-family: inherit;

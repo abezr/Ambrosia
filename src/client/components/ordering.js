@@ -4,18 +4,19 @@ import classnames from 'classnames';
 import OrderMutation from '../mutations/ordermutation';
 
 import Close from './icons/close';
+import Modal from './widget/modal';
 
 //var caddy = [];
-var update;
+var _pushCaddy;
+var _splitCaddy;
 var _modal;
 var _mutation;
-
 
 class Restaurant extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.state = {caddy: [], modal: false, order: null};
-    update = (item) => {
+    this.state = {caddy: localStorage[this.props.id] ? JSON.parse(localStorage[this.props.id]) : [], modalHidden: true, order: null};
+    _pushCaddy = (item) => {
       var match = false;
       this.state.caddy.forEach(order => {
         if(item.id === order.id) {
@@ -24,17 +25,30 @@ class Restaurant extends React.Component {
         }
       });
       if(!match) this.state.caddy.push(item);
+      localStorage[this.props.id] = JSON.stringify(this.state.caddy);
       this.forceUpdate();
-      //this.setState({caddy: caddy.push(item)});
+    }
+    _splitCaddy = (index) => {
+      if(this.state.caddy[index].times) {
+        this.state.caddy[index].times--;
+        this.forceUpdate();
+        return;
+      }
+      this.state.caddy.splice(index, 1);
+      localStorage[this.props.id] = JSON.stringify(this.state.caddy);
+      this.forceUpdate();
     }
     _modal = (order) => {
       this.state.order = order ? order : null;
-      this.state.modal = !this.state.modal;
+      this.state.modalHidden = !this.state.modalHidden;
       this.forceUpdate();
     }
     _mutation = (order) => {
       var onFailure = () => console.log('failuuuure!!!');
-      var onSuccess = () => this.setState({caddy: [], modal: false});
+      var onSuccess = () => {
+        localStorage[this.props.id] = '';
+        this.setState({caddy: [], modal: false});
+      };
       new Relay.Store.update(new OrderMutation({order: order, user: this.props.user.user, restaurant: this.props.restaurant.restaurant}), {onFailure, onSuccess});
     }
   }
@@ -50,7 +64,9 @@ class Restaurant extends React.Component {
         <h1>{restaurant.name}</h1>
         <h2>{restaurant.description}</h2>
         <div className='foods nav-wrap'>{restaurant.foods.map(createFoods)}</div>
-        <div className={classnames('modal-order',  {nav: this.state.modal, hidden: !this.state.modal})}><ModalOrder {...this.state.order} items={this.state.caddy}/></div>
+        <Modal hidden={this.state.modalHidden} border={'4px solid yellow'}>
+          <Order {...this.state.order} items={this.state.caddy}/>
+        </Modal>
       </div>
     );
   }
@@ -85,9 +101,9 @@ class Meal extends React.Component {
   }
   _addItem = (e) => {
     e.stopPropagation();
-    update({...this.props});
+    _pushCaddy({...this.props});
     //caddy.push({parent: this.props.parent, name: this.props.name, price: 1});
-    //update(caddy);
+    //pushCaddy(caddy);
   }
   render () {
     return (
@@ -140,13 +156,15 @@ class Caddy extends React.Component {
     });
     return value;
   }
+  _removeItem = () => {
+
+  }
   render () {
-    var createItems = function(item) {
-      console.log(item);
+    var createItems = function(item, i) {
       return (
         <div className='flex-item-2 item'>
+          <span onClick={e=>{_splitCaddy(i)}}><Close/></span>
           <span className='times'>{item.times ? item.times + 'X' : ''}</span>
-          <Close/>
           {item.parent}<br/>
           {item.name}<br/>
           {item.price} mɃ
@@ -166,113 +184,19 @@ class Caddy extends React.Component {
   }
 }
 
-var _getTime;
-
-class Timepicker extends React.Component {
+class Order extends React.Component {
   constructor(props, context) {
     super(props, context);
-    var d = new Date();
-    _getTime = () => {
-      return this.state;
+    this.state = {
+      orderReadyIn : this.props.busy ? this.props.busy : 0
     };
-    this.state = {time: {hours: d.getHours(), minutes: d.getMinutes()}};
-  }
-  _changeHours = (e) => {
-    console.log('changeHours');
-    var d = new Date();
-    if (e.target.value < d.getHours()) this.state.time.hours = d.getHours();
-    else {
-      this.state.time.hours = e.target.value;
-    }
-    this.forceUpdate();
-  }
-  _incPlusHours = () => {
-    console.log('incPlusHours');
-    var d = new Date();
-    if (this.state.time.hours === 24) {this.state.time.hours = 0;}
-    else {
-      this.state.time.hours += 1;
-    }
-    this.forceUpdate();
-  }
-  _incLessHours = () => {
-    console.log('incLessHours');
-    var d = new Date();
-    if ((this.state.time.hours === (d.getHours() + 1) && this.state.time.minutes <= d.getMinutes()) || this.state.time.hours === d.getHours()) {
-      this.state.time.hours = d.getHours();
-      this.state.time.minutes = d.getMinutes();
-    }
-    else if (this.state.time.hours === 0) {this.state.time.hours = 0}
-    else {
-      this.state.time.hours -= 1;
-    }
-    this.forceUpdate();
-  }
-  _changeMinutes = (e) => {
-    console.log('changeMinutes');
-    var d = new Date();
-    if ((e.target.value <= d.getMinutes()) && (this.state.time.hours === d.getHours())) this.state.time.hours = d.getMinutes();
-    else {
-      this.state.time.minutes = e.target.value;
-    }
-    this.forceUpdate();
-  }
-  _incPlusMinutes = () => {
-    console.log('incPlusMinutes');
-    var d = new Date();
-    if (this.state.time.minutes === 60) {
-      this.state.time.minutes = 0;
-      this.state.time.hours += 1;
-    }
-    else {
-      this.state.time.minutes += 1;
-    }
-    this.forceUpdate();
-  }
-  _incLessMinutes = () => {
-    console.log('incLessMinutes');
-    var d = new Date();
-    if (this.state.time.minutes === d.getMinutes() && this.state.time.hours === d.getHours()) this.state.time.minutes = d.getMinutes();
-    else if (this.state.time.minutes === 0) {this.state.time.minutes = 0}
-    else {
-      this.state.time.minutes -= 1;
-    }
-    this.forceUpdate();
-  }
-  render () {
-    return (
-      <div className = 'timepicker'>
-        <div className='flex-item-2'>
-          <span className='inc-plus' onClick={this._incPlusHours}>▲</span><br/>
-          <input type='number' className='hours' value={this.state.time.hours} onChange={this._changeHours}/> Hours<br/>
-          <span className='inc-less' onClick={this._incLessHours}>▼</span>
-        </div>
-        <div className='flex-item-2'>
-          <span className='inc-plus' onClick={this._incPlusMinutes}>▲</span><br/>
-          <input type='number' className='minutes' value={this.state.time.minutes} onChange={this._changeMinutes}/> Minutes<br/>
-          <span className='inc-less' onClick={this._incLessMinutes}>▼</span>
-        </div>
-      </div>
-    );
-  }
-}
-
-class ModalOrder extends React.Component {
-  constructor(props, context) {
-    super(props, context);
   }
   _order = () => {
-    var getDate = () => {
-      var time = _getTime().time;
-      var midnightTime = new Date().setHours(0, 0, 0, 0);
-      return midnightTime += (time.hours * 60 * 60 * 1000 + time.minutes * 60 * 1000);
-    };
-    console.log(getDate(), this.props.time);
+
     var order = {
       id: '_' + Math.random().toString(36).substr(2, 9),
-      date: getDate(),
       items: this.props.items.map((item) => { return {id:item.id, parent: item.parent, name:item.name};}),
-      time: this.props.time,
+      date: new Date().getTime(),
       payed: false,
       price: this.props.price
     };
@@ -284,23 +208,34 @@ class ModalOrder extends React.Component {
   _orderWithPay = () => {
     console.log('pay the command');
   }
+  _setMinutes = (e) => {
+    if(this.props.busy) {
+      if(e.target.value < this.props.busy) return;
+    }
+    if(e.target.value < 0) return;
+    this.setState({
+      orderReadyIn: e.target.value
+    });
+  }
   render () {
     var createItems = (item) => {
       return (
         <div className='flex-item-2 item'>
+          {item.times ? <div className='times'>{item.times+'X'}</div> : ''}
           {item.parent}<br/>
           {item.name}
         </div>
       );
     };
     return (
-      <div className='order flex-item-2'>
-        <span className='close' onClick={this._close}/>
+      <div className='order'>
+        <span onClick={e => {_modal()}}><Close stroke={'white'} size={'2em'}/></span>
         <div className='nav-wrap items'>
           {this.props.items.map(createItems)}
         </div>
         <div className='price'>Total : {this.props.price} mɃ</div>
-        <div className='date'>When do you want your command Ready? <Timepicker/></div>
+        <div className='date'>When do you want your command Ready? <br/>
+        in <input type='number' value = {this.state.orderReadyIn} onChange={this._setMinutes}/> minutes</div>
         <span className='pay' onClick={this._orderWithPay}>Pay Now</span><span className='nopay' onClick={this._order}>Pay Later</span>
       </div>
     );

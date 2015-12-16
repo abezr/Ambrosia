@@ -148,6 +148,7 @@ export function addRestaurant({
   return co(function*() {
     restaurant.orders = [];
     restaurant.userID = userID;
+    restaurant.location = r.point(restaurant.location[0], restaurant.location[1]);
     var data = yield r.table('restaurant').insert(restaurant, {
       returnChanges: true
     }).run(rootValue.conn, function(err, result) {});

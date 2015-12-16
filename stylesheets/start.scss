@@ -62,25 +62,6 @@ span.close {
 div.openarestaurant {
   text-align: center;
   margin: 1em;
-  input {
-    border: none;
-    font-size: inherit;
-    text-align: center;
-    margin: 0;
-    &:focus {
-      outline: none;
-    }
-  }
-  textarea {
-    border: none;
-    font-size: inherit;
-    text-align: center;
-    margin: 0;
-    height: 1.2em;
-    &:focus {
-      outline: none;
-    }
-  }
   div.brand {
     text-align: center;
     h1 {
@@ -146,21 +127,14 @@ div.restaurants-map {
       border: none;
     }
   }
-  .submit-modal {
-    z-index: 2;
-    .form {
-      position: relative;
-      color: white;
-    }
-    .submit-button {
-      cursor: pointer;
-      position: absolute;
-      width: 4em;
-      bottom: 1em;
-      right: 1em;
-      border: 1px solid white;
-      padding: 0.4em;
-      border-radius: 5px;
-    }
+  .submit-button {
+    cursor: pointer;
+    position: absolute;
+    width: 4em;
+    bottom: 1em;
+    right: 1em;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 0.4em;
   }
 }

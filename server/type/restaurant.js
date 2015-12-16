@@ -199,7 +199,8 @@ export var GraphQLInputOrder = new GraphQLInputObjectType({
       description: 'the order value, expressed with an integer'
     },
     time: {
-      type: GraphQLFloat
+      type: GraphQLFloat,
+      description: 'the time that it takes to treat the order'
     },
     payed: {
       type: GraphQLBoolean,
@@ -371,6 +372,10 @@ export var GraphQLInputRestaurant = new GraphQLInputObjectType({
     schedule: {
       type: new GraphQLList(GraphQLInputDay),
       description: 'restaurant schedule on a week basis'
+    },
+    location: {
+      type: new GraphQLList(GraphQLFloat),
+      description: 'restaurant latitude and longitude'
     },
     foods: {
       type: new GraphQLList(GraphQLInputFood),

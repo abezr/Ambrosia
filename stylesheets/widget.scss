@@ -1,0 +1,47 @@
+.modal {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(10, 10, 10, 0.9);
+  z-index: 5;
+  .form {
+    @extend .flex-item-2;
+    position: relative;
+    align-self: center;
+    transform-origin: center;
+    border: 2px solid;
+    color: white;
+  }
+}
+.flag {
+  position: absolute;
+  z-index: 5;
+  background-color: white;
+}
+
+.textarea-widget {
+  border: none;
+  font-size: inherit;
+  text-align: center;
+  margin: 0;
+  height: 1.2em;
+  resize: none;
+  &:focus {
+    outline: none;
+  }
+}
+
+.input-widget {
+  border: none;
+  font-size: inherit;
+  text-align: center;
+  margin: 0;
+  &:focus {
+    outline: none;
+  }
+}

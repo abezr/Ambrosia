@@ -1,3 +1,20 @@
+div.chief-index {
+  a.item {
+    @extend .flex-item-2;
+    border-radius: 0.25em;
+    color: #666666;
+    padding: 0.25em;
+    margin: 0.125em;
+    border: 1px solid;
+    text-decoration: none;
+  }
+  a.selected {
+    @extend a.item;
+    color: black;
+    box-shadow: 2px 2px 0px;
+  }
+}
+
 div.board {
   div.nav {
     a {

@@ -22,7 +22,7 @@ export default class Map extends React.Component {
   constructor(props, context) {
     super(props, context);
     address = {
-      latlng: localStorage.geolocation ? localStorage.geolocation : '',
+      latlng: localStorage.restaurantLocation ? JSON.parse(localStorage.restaurantLocation) : localStorage.geolocation ? JSON.parse(localStorage.geolocation) : '',
       street: 'restaurant street',
       city: 'restaurant city',
       zipCode: 'ZIP code',
@@ -77,9 +77,14 @@ export default class Map extends React.Component {
   }
 
   componentWillReceiveProps () {
-    if(localStorage.geolocation) {
-      this.getAddress(JSON.parse(localStorage.geolocation));
+    if(address.latlng) {
+      this.getAddress(address.latlng);
     }
+  }
+
+  componentWillUnmount () {
+    localStorage.restaurantLocation = JSON.stringify([address.latlng[0], address.latlng[1]]);
+    console.log('map:componentWillUnmount', localStorage.restaurantLocation);
   }
 
   componentDidMount () {
@@ -89,8 +94,8 @@ export default class Map extends React.Component {
       maxZoom: 25
     }).addTo(this.map);
     this.marker = L.marker([50.5, 30.5], {icon: hereYouAre}).addTo(this.map);
-    if(localStorage.geolocation) {
-      this.getAddress(JSON.parse(localStorage.geolocation));
+    if(address.latlng) {
+      this.getAddress(address.latlng);
     }
   }
 

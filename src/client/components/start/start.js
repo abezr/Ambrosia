@@ -20,8 +20,16 @@ export default class Start extends React.Component {
     }
     this._submit = () => {
       var restaurant = JSON.parse(localStorage.restaurant);
-      restaurant.location = JSON.parse(localStorage.geolocation);
-      restaurant.settings = JSON.parse(localStorage.settings);
+      var location = JSON.parse(localStorage.restaurantLocation);
+      var settings = JSON.parse(localStorage.settings);
+      var input = {
+        name: restaurant.name,
+        description: restaurant.description,
+        foods: restaurant.foods,
+        scorable: settings.scorable,
+        schedule: settings.schedule,
+        location: location
+      };
       var onSuccess = (res) => {
         var restaurantID = res.Restaurant.restaurantEdge.node.id;
         localStorage.restaurant = '';
@@ -34,7 +42,7 @@ export default class Start extends React.Component {
         var error = transaction.getError() || new Error('Mutation failed.');
         return error;
       };
-      return Relay.Store.update(new RestaurantMutation({restaurant: JSON.parse(localStorage.restaurant), user: this.props.user.user}), {onFailure, onSuccess});
+      return Relay.Store.update(new RestaurantMutation({restaurant: input, user: this.props.user.user}), {onFailure, onSuccess});
     }
   }
   componentDidMount () {

@@ -3,6 +3,8 @@ import Relay from 'react-relay';
 import {Link} from 'react-router';
 import classnames from 'classnames';
 
+import Close from '../icons/close';
+
 var Settings = {
   scorable : false,
   schedule: [{day: 'monday', openHours:[{from: 0, to:0}]}, {day: 'tuesday', openHours:[{from: 0, to:0}]}, {day: 'wednesday', openHours:[{from: 0, to:0}]}, {day: 'thursday', openHours:[{from: 0, to:0}]}, {day: 'friday', openHours:[{from: 0, to:0}]}, {day: 'saturday', openHours:[{from: 0, to:0}]}, {day: 'sunday', openHours:[{from: 0, to:0}]}]
@@ -113,7 +115,7 @@ class Day extends React.Component {
     var createPickers = (time, index) => {
       return (
         <div className='flex-item-2 picker-wrapper'>
-          <span className='close-icon' onClick={(e)=>this._removeHours(index)}/>
+          <span onClick={(e)=>this._removeHours(index)}><Close/></span>
           <Timepicker from={index} index={this.props.index}/><strong className='to'> to </strong><Timepicker to={index} index={this.props.index}/>
         </div>
       );
@@ -140,7 +142,7 @@ class Timepicker extends React.Component {
   }
 
   _changeHours = (e, date) => {
-    if (Math.abs(e.target.value > 24)) return;
+    if (Math.abs(e.target.value >= 24)) return;
     date.setHours(Math.abs(e.target.value));
     console.log(24*60*60*1000, date.getTime()-midnightDate, e.target.value);
     Settings.schedule[this.props.index].openHours[this.props.from !== undefined ? this.props.from : this.props.to][this.props.from !== undefined ? 'from' : 'to'] = date.getTime() - midnightDate;
@@ -148,7 +150,7 @@ class Timepicker extends React.Component {
   }
 
   _changeMinutes = (e, date) => {
-    if (Math.abs(e.target.value > 60)) return;
+    if (Math.abs(e.target.value >= 60)) return;
     date.setMinutes(Math.abs(e.target.value));
     Settings.schedule[this.props.index].openHours[this.props.from !== undefined ? this.props.from : this.props.to][this.props.from !== undefined ? 'from' : 'to'] = date.getTime() - midnightDate;
     _update();
@@ -156,7 +158,7 @@ class Timepicker extends React.Component {
 
   _incPlusHours = (time) => {
     console.log('incPlusHours');
-    if (time > 23*60*60*1000) return;
+    if (time >= 23*60*60*1000) return;
     else {
       Settings.schedule[this.props.index].openHours[this.props.from !== undefined ? this.props.from : this.props.to][this.props.from !== undefined ? 'from' : 'to'] += 60*60*1000;
     }
@@ -171,7 +173,7 @@ class Timepicker extends React.Component {
   }
   _incPlusMinutes = (time) => {
     console.log('incPlusMinutes');
-    if (time > (24*60*60*1000 - 60*1000)) return;
+    if (time >= (24*60*60*1000 - 60*1000)) return;
     else {
       Settings.schedule[this.props.index].openHours[this.props.from !== undefined ? this.props.from : this.props.to][this.props.from !== undefined ? 'from' : 'to'] += 60*1000;
     }

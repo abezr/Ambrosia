@@ -20,7 +20,7 @@ import StartMap from './components/start/map';
 import StartSubmit from './components/start/submit';
 import Board from './components/board/board';
 import BoardTimeLine from './components/board/timeline';
-import BoardCard from './components/board/cardcomponent';
+import BoardCard from './components/board/card';
 import BoardSettings from './components/board/settings';
 import Ordering from './components/ordering';
 import Profile from './components/profile';

@@ -5,6 +5,8 @@ import {Link} from 'react-router';
 import Login from './login.js';
 import LoginMutation from '../mutations/loginmutation';
 
+import Flag from './widget/flag';
+
 <section ref = 'header'>
   <article className='text-center'><h5><div className='button'>Become a Chief</div></h5></article>
 </section>
@@ -59,22 +61,22 @@ class LoginButton extends React.Component {
     Relay.Store.update(new LoginMutation({credentials: {pseudo:'', password:''}, user: this.props}));
   }
   _expand = () => {
-    this.setState({expand: true});
+    this.setState({expand: !this.state.expand});
   }
-  _retract = () => {
-    this.setState({expand: false});
-  }
+
   render() {
     if(this.props.mail === '') {
       return <Link to='/register' className='flex-item-4 login-link'><span>Login</span></Link>;
     } else {
       return (
         <div className='session flex-item-2'>
-          <div className= 'button' onMouseEnter={this._expand} onMouseLeave={this._retract}>{this.props.name ? this.props.name : this.props.mail} ▼</div>
-          <div className={classnames('menu', {hidden: !this.state.expand})} onMouseEnter={this._expand} onMouseLeave={this._retract}>
-            <div className='profile-link'><Link to='/profile'>Profile</Link></div>
-            <div className='button' onClick={this._logout}>Logout</div>
-          </div>
+          <div className= 'button' onClick={this._expand}>{this.props.name ? this.props.name : this.props.mail} ▼</div>
+          <Flag hidden={!this.state.expand} width={'10em'} top={'4em'} right={'0'}>
+            <div className={classnames('menu', {hidden: !this.state.expand})}>
+              <div className='profile-link'><Link to='/profile'>Profile</Link></div>
+              <div className='profile-link button' onClick={this._logout}>Logout</div>
+            </div>
+          </Flag>
         </div>
       );
     }

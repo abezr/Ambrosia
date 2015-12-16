@@ -18,7 +18,6 @@ export default class OrderMutation extends Relay.Mutation {
     return Relay.QL `mutation{Order}`;
   }
   getVariables() {
-      console.log(this.props.order);
       return {
         order: this.props.order,
         restaurantID: this.props.restaurant.id,
