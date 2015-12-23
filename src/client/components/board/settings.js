@@ -2,9 +2,10 @@ import React from 'react';
 import Relay from 'react-relay';
 import {Link} from 'react-router';
 import classnames from 'classnames';
-import UpdateSettingsMutation from '../../mutations/updatesettingsmutation';
+import UpdateRestaurantMutation from '../../mutations/updaterestaurantmutation';
 
 import Close from '../icons/close';
+import Cursor from '../widget/cursor';
 
 var Settings;
 var _update;
@@ -34,13 +35,25 @@ class BoardSettings extends React.Component {
       delete schedule.__dataID__
       schedule.openHours.map((hours) => delete hours.__dataID__);
     });
+    var resto = {
+      id: this.props.id,
+      scorable: scorable,
+      open: open,
+      schedule: schedule
+    };
     var onFailure = () => {
       console.log('onFailure');
     };
     var onSuccess = () => {
+      this.setState({save: false});
       console.log('onSuccess');
     };
-    Relay.Store.update(new UpdateSettingsMutation({schedule: schedule, scorable: scorable, open: open, restaurant: this.props.restaurant.restaurant}, {onFailure, onSuccess}));
+    Relay.Store.update(new UpdateRestaurantMutation({restaurant: resto}, {onFailure, onSuccess}));
+  }
+
+  _switch = (e) => {
+    Settings[e.currentTarget.id] = !Settings[e.currentTarget.id];
+    _update();
   }
 
   render() {
@@ -57,8 +70,8 @@ class BoardSettings extends React.Component {
           Check the settings you wish to settle for your restaurant.
         </h1>
         <div>
-          <div className='setting'>let clients note your restaurant<Cursor state={Settings.scorable} cursor='scorable'/></div>
-          <div className='setting'>is your restaurant open <Cursor state={Settings.open} cursor='open'/></div>
+          <div className='setting'>Let clients note your restaurant<Cursor id={'scorable'} size={'2em'} on={Settings.scorable} update={this._switch}/></div>
+          <div className='setting'>Is your restaurant open <Cursor id={'open'} size={'2em'} on={Settings.open} update={this._switch}/></div>
         </div>
         <h2>Check out your opening hours</h2>
         <div className='opening-hours nav-wrap'>
@@ -68,24 +81,24 @@ class BoardSettings extends React.Component {
     );
   }
 }
-
-class Cursor extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-  }
-  _switch = (e) => {
-    Settings[this.props.cursor] = !Settings[this.props.cursor];
-    _update()
-  }
-  render() {
-    return (
-      <svg id='timeline' className='cursor' viewBox="0 0 40 20" onClick={this._switch}>
-        <rect x='0' y='0' rx='10' ry='10' width='40' height='20' fill={this.props.state ? 'rgb(42, 195, 4)' : 'rgb(238, 17, 17)'}/>
-        <circle cx={this.props.state ? '10' : '30'} cy='10' r='9' fill='black'/>
-      </svg>
-    );
-  }
-}
+//
+// class Cursor extends React.Component {
+//   constructor(props, context) {
+//     super(props, context);
+//   }
+//   _switch = (e) => {
+//     Settings[this.props.cursor] = !Settings[this.props.cursor];
+//     _update()
+//   }
+//   render() {
+//     return (
+//       <svg id='timeline' className='cursor' viewBox="0 0 40 20" onClick={this._switch}>
+//         <rect x='0' y='0' rx='10' ry='10' width='40' height='20' fill={this.props.state ? 'rgb(42, 195, 4)' : 'rgb(238, 17, 17)'}/>
+//         <circle cx={this.props.state ? '10' : '30'} cy='10' r='9' fill='black'/>
+//       </svg>
+//     );
+//   }
+// }
 
 class Day extends React.Component {
   constructor(props, context) {
@@ -230,7 +243,6 @@ export default Relay.createContainer(BoardSettings, {
     restaurant: () => Relay.QL`
     fragment on Root {
       restaurant {
-        ${UpdateSettingsMutation.getFragment('restaurant')}
         id,
         scorable,
         score,

@@ -2,9 +2,12 @@ import React from 'react';
 import Relay from 'react-relay';
 import {Link} from 'react-router';
 import classnames from 'classnames';
+import UpdateOrderMutation from '../../mutations/updateordermutation';
+import UpdateRestaurantMutation from '../../mutations/updaterestaurantmutation';
 
-var commands = [];
-var id;
+import Cursor from '../widget/cursor';
+import Flag from '../widget/flag';
+
 /**
  * this is the board class
  * property: data for 3 days orders, date of the day,
@@ -17,6 +20,29 @@ const millisecondsPerDay = 24*60*60*1000;
 var midnightTime;
 var time;
 var setVariables;
+var params = {
+  payed: true,
+  unpayed: true,
+  treated: true,
+  untreated: true,
+  busy: 0
+};
+//TODO this function is called every seconds, find something to call it only when needed
+var filterOrder = (orders) => {
+  return orders.filter(order => {
+    var order = order.node;
+    var check = true;
+    var checking = (boolean) => {
+      if(!boolean) check = false;
+    };
+    if(!params.payed) order.payed ? checking(false) : checking(true);
+    if(!params.unpayed) order.payed ? checking(true) : checking(false);
+    if(!params.treated) order.treated ? checking(false) : checking(true);
+    if(!params.untreated) order.treated ? checking(true) : checking(false);
+    return check;
+  });
+};
+var _update;
 //type[string] id returned by setInterval to pass to clearInterval
 var intervalID;
 
@@ -24,11 +50,14 @@ class Board extends React.Component {
 
   constructor(props, context) {
     super(props, context);
-    id = this.props.id;
     midnightTime = new Date().setHours(0, 0, 0, 0);
     time = new Date().getTime();
+    if(localStorage.timelineParams) params = JSON.parse(localStorage.timelineParams);
     setVariables = (variables) => {
       this.props.relay.setVariables(variables);
+    }
+    _update = () => {
+      this.forceUpdate();
     }
     var updateTime = () => {
       time = new Date().getTime();
@@ -42,26 +71,23 @@ class Board extends React.Component {
   }
 
   render() {
-    console.log('render');
-    var orders = this.props.restaurant.restaurant.orders.edges;
+    var orders = filterOrder(this.props.restaurant.restaurant.orders.edges);
     return (
       <div className='board'>
-        <TimeLine orders= {orders} time ={time}/>
+        <TimeLine orders= {orders} time ={time} id = {this.props.id}/>
         <Dashboard orders = {orders}/>
       </div>
     );
   }
 }
 
-var timeLineDate;
+var timeLineDate = new Date();
 var timeLineWheel;
 var updateEachSeconds;
 class TimeLine extends React.Component {
 
   constructor(props, context) {
     super(props, context);
-    console.log((this.props.time - midnightTime)/10000);
-    timeLineDate = new Date();
     this.state = {
       x: (this.props.time - midnightTime)/10000,
       play: true
@@ -87,10 +113,6 @@ class TimeLine extends React.Component {
       });
     }
   }
-  onWheel = (event) => {
-    event.preventDefault();
-
-  }
 
   onPlay = () => {
     timeLineDate = new Date();
@@ -112,8 +134,36 @@ class TimeLine extends React.Component {
     console.log('TimeLine:onClick', 'width', this.width, 'event', event.clientX, event.pageX);
   }
 
-  componentWillMount = () => {
-    this.setState({commands: commands});
+  _switch = (e) => {
+    e.stopPropagation();
+    params[e.currentTarget.id] = !params[e.currentTarget.id];
+    localStorage.timelineParams = JSON.stringify(params);
+    this.forceUpdate();
+  }
+
+  _update = (e) => {
+    params[e.currentTarget.id] = e.currentTarget.value;
+    localStorage.timelineParams = JSON.stringify(params);
+    _update();
+  }
+
+  _updateRestaurantMutation = (e) => {
+    var resto = {
+      id: this.props.id,
+      [e.currentTarget.id]: e.currentTarget.value
+    };
+    console.log('restaurantMutation', resto);
+    var onFailure = () => console.log('failure');
+    var onSuccess = () => console.log('success');
+    Relay.Store.update(new UpdateRestaurantMutation({restaurant: resto}), {onFailure, onSuccess});
+  }
+
+  componentWillReceiveProps () {
+    console.log('componentWillReceiveProps');
+    if(this.state.play) {
+      timeLineDate = new Date();
+      this.setState({x: (this.props.time - midnightTime)/10000});
+    }
   }
 
   render() {
@@ -122,24 +172,39 @@ class TimeLine extends React.Component {
       var price = order.price * 10;
       var time = order.time * 6;
       return (
-          <rect x={(order.date - midnightTime)/10000} y={order.payed ? -price : 0} height={price} width={time} fill ='red'/>
+          <rect x={(order.date - midnightTime)/10000} y={order.payed ? 400-price : 400} height={price} width={20} fill ={order.payed ? 'green' : 'gainsboro'}/>
       );
     };
     var time = (this.props.time - midnightTime)/10000;
+    var busyFlagHidden= true;
     return (
     <div className='timeline' ref = {(item) => {this.width = item ? item.clientWidth : time}}>
-      <h1>{timeLineDate.getDate()} / {timeLineDate.getMonth() + 1} / {timeLineDate.getFullYear()}</h1>
-      <svg id='timeline' className= 'command' viewBox="0 -400 8640 800" onWheel = {timeLineWheel} onClick = {this.onClick}>
-        <rect x='0' y='-400' width={time < 0 ? 0 : time} height='800' fill = 'rgba(0, 0, 0, 0.8)'/>
-        <rect x={time} y='-400' width={8640 - time < 0 ? 0 : 8640 - time} height='800' fill = 'rgba(255, 255, 255, 0.8)'/>
-        <path d='M0,0 H8640' stroke = 'black' strokeWidth = '1'/>
-        <rect className = 'cursor' x={this.state.x} y='-400' width='80' height='800' fill = 'grey'/>
-      {this.props.orders.map(createOrders)}
+      <svg id='timeline' className= 'command' viewBox="0 0 8640 800" onWheel = {timeLineWheel} onClick = {this.onClick}>
+        <rect x='0' y='0' width={time < 0 ? 0 : time} height='800' fill = 'rgba(0, 0, 0, 0.8)'/>
+        <rect x={time} y='0' width={8640 - time < 0 ? 0 : 8640 - time} height='800' fill = 'rgba(255, 255, 255, 0.8)'/>
+        <path d='M0,400 H8640' stroke = 'black' strokeWidth = '1'/>
+        <rect className = 'cursor' x={this.state.x} y='0' width='20' height='800' fill = 'yellow'/>
+        {this.props.orders.map(createOrders)}
+        <text textAnchor='middle' x='4320' y='300' fill='rgba(255, 255, 255, 0.8)' fontSize='200'>{timeLineDate.getDate() +'/'+ (timeLineDate.getMonth() + 1) +'/'+ timeLineDate.getFullYear()}</text>
+        <text textAnchor='middle' x='4320' y='700' fill='rgba(255, 255, 255, 0.8)' fontSize='200'>{timeLineDate.getHours() +':'+ (timeLineDate.getMinutes() < 10 ? '0'+timeLineDate.getMinutes() : timeLineDate.getMinutes())}</text>
       </svg>
-      <div className='time'>
-        <span className={classnames('play', {hidden: this.state.play})} onClick={this.onPlay} />
-        <span className={classnames('pause', {hidden: !this.state.play})} />
-        <span className='time'>{timeLineDate.getHours()} : {timeLineDate.getMinutes() < 10 ? '0'+timeLineDate.getMinutes() : timeLineDate.getMinutes()}</span>
+      <div className='nav time'>
+        <span className={classnames('play flex-item-2', {hidden: this.state.play})} onClick={this.onPlay} />
+        <span className={classnames('pause flex-item-2', {hidden: !this.state.play})} />
+        <div className='flex-item-2 cursor-container'>
+          <span id='unpayed' className={classnames('cursor-wrapper', {red: !params.unpayed, green: params.unpayed})} onClick={this._switch}>unpayed <Cursor id={"unpayed"} on={params.unpayed} size={'0.75em'} update={this._switch}/></span>
+          <span id='payed' className={classnames('cursor-wrapper', {red: !params.payed, green: params.payed})} onClick={this._switch}>payed <Cursor id={"payed"} on={params.payed} size={'0.75em'} update={this._switch}/></span>
+          <span id='treated' className={classnames('cursor-wrapper', {red: !params.treated, green: params.treated})} onClick={this._switch}>treated <Cursor id={"treated"} on={params.treated} size={'0.75em'} update={this._switch}/></span>
+          <span id='untreated' className={classnames('cursor-wrapper end', {red: !params.untreated, green: params.untreated})} onClick={this._switch}>untreated <Cursor id={"untreated"} on={params.untreated}size={'0.75em'} update={this._switch}/></span>
+        </div>
+        <div className='flex-item-2 busy-container' onMouseEnter={e => busyFlagHidden = false} onMouseLeave={e => busyFlagHidden = true}>
+          <span className ='busy-wrapper'>
+            <Flag hidden={busyFlagHidden}>
+              <p>The time you need to treat comming orders</p>
+            </Flag>
+            Busy: <input type='number' id='busy' value={params.busy} onChange={this._update} onBlur={this._updateRestaurantMutation}/>minutes
+          </span>
+        </div>
       </div>
     </div>
     );
@@ -164,7 +229,7 @@ class Dashboard extends React.Component {
      * @return {[react element]}       []
      */
     var createOrder = function (order, index) {
-      if (order.node.date >= timeLineDate.getTime() && i < 5) {
+      if (order.node.date >= timeLineDate.getTime() && i < 10) {
         i++;
         return <Order key={order.node.id} order={order.node}/>;
       }
@@ -186,11 +251,33 @@ class Order extends React.Component {
     this.state = {expand: false};
   }
 
+  _update = (e) => {
+    e.stopPropagation();
+    var order = {
+      id: this.props.order.id,
+      restaurantID: '5c9499aa-f49a-4205-9f20-3c81b30920f1'
+    };
+    console.log(this.props.order[e.currentTarget.id]);
+    // var order = {
+    //   id : this.props.order.id,
+    //   restaurantID: '5c9499aa-f49a-4205-9f20-3c81b30920f1',
+    //   userID: '234',
+    //   price: this.props.order.price,
+    //   prepayed: false,
+    //   items: this.props.order.items,
+    //   date: this.props.order.date
+    // };
+    order[e.currentTarget.id] = !this.props.order[e.currentTarget.id];
+    var onFailure = () => console.log('failure');
+    var onSuccess = () => console.log('success');
+    Relay.Store.update(new UpdateOrderMutation({order: order}), {onFailure, onSuccess});
+  }
+
   render() {
     var order = this.props.order;
     var createItem = (item) => {
       return (
-        <div className = 'flex-item-2'>
+        <div className = 'flex-item-2 item'>
           {item.parent}<br/>
           {item.name}
         </div>
@@ -200,11 +287,17 @@ class Order extends React.Component {
     var Hours = date.getHours();
     var Minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
     return (
-      <div className={classnames('order', {hidden: order.date < timeLineDate, green: order.payed})} onClick={()=>{this.setState({expand: !this.state.expand});}} onWheel={(e) => {if(this.state.expand === true) e.stopPropagation();}}>
-        <h1>Mr Dupond<span className='price'>{order.price + 'mB'}</span><span className='time'>{Hours} : {Minutes}</span></h1>
+      <div className={classnames('order', {treated: order.treated, green: order.payed, red: !order.payed})} onClick={()=>{this.setState({expand: !this.state.expand});}} onWheel={(e) => {if(this.state.expand === true) e.stopPropagation();}}>
+        <h1>{order.userName}<span className='price'>{order.price + ' mB'}</span><span className='time'>{Hours} : {Minutes}</span></h1>
         <div className={classnames('items', {'nav-wrap': this.state.expand, hidden: !this.state.expand})}>
           {order.items.map(createItem)}
         </div>
+        <span className = 'cursor-payed'>
+          Payed <Cursor id={'payed'} on={order.payed} update={this._update}/>
+        </span>
+        <span className = 'cursor-treated'>
+          Treated <Cursor id={'treated'} on={order.treated} update={this._update}/>
+        </span>
       </div>
     );
   }
@@ -222,10 +315,14 @@ export default Relay.createContainer(Board, {
           edges {
             node {
               id,
+              userID,
+              userName,
+              restaurantID,
               date,
               payed,
+              prepayed,
+              treated,
               price,
-              time,
               items {
                 id,
                 name,

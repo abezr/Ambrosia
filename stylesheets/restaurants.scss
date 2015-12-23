@@ -50,6 +50,20 @@ div.restaurants-index {
     background-image: url("/stylesheets/icons/search.svg");
   }
 }
+
+@keyframes appear {
+  from {
+    height: 0em;
+    margin-bottom: 0;
+    padding: 0em;
+  }
+  to {
+    height: 4em;
+    padding: 1em;
+    margin-bottom: 1em;
+  }
+}
+
 div.restaurants-map {
   text-align: center;
   position: absolute;

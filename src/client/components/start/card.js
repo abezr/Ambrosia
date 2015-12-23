@@ -1,6 +1,8 @@
 import React from 'react';
 import Relay from 'react-relay';
 import Close from '../icons/close';
+import Input from '../widget/input';
+import Textarea from '../widget/textarea';
 import classnames from 'classnames';
 
 var restaurant = {
@@ -97,7 +99,7 @@ export default class Restaurant extends React.Component {
   //   Relay.Store.update(new RestaurantMutation({restaurant: restaurant, user: this.props.user.user}), {onFailure, onSuccess});
   // }
 
-  _onChange = (e) => {
+  _update = (e) => {
     console.log('onChange');
     restaurant[e.target.id] = e.target.value;
     updateClass();
@@ -112,12 +114,12 @@ export default class Restaurant extends React.Component {
     return (
       <div className='openarestaurant'>
         <div className='brand'>
-          <h1 className='name'><input type='text' id='name' value={this.state.name} style={{
-      width: this. state. name. length / 2 + 'em'
-      }} onChange={this._onChange}/></h1>
-          <h2 className='description'><textarea type='text' id='description' value={this.state.description} style={{
-      width: this. state. description. length / 2 + 'em'
-      }} onChange={this._onChange}/></h2>
+          <h1 className='name'>
+            <Input id={'name'} value={this.state.name} default={'restaurant-name'} update={this._update}/>
+          </h1>
+          <h2 className='description'>
+            <Textarea id={'description'} value={this.state.description} default={'restaurant-description'} update={this._update}/>
+          </h2>
         </div>
         <div className='nav'>
           <div className='flex-item-2' onClick={this._add}>
@@ -170,7 +172,7 @@ class Food extends React.Component {
     updateClass();
   }
 
-  _onChange = (e) => {
+  _update = (e) => {
     restaurant.foods[this.props.index][e.target.id] = e.target.value;
     updateClass();
   }
@@ -180,15 +182,11 @@ class Food extends React.Component {
     var createMeal = (meal, index) => <Meal {...meal} parentIndex={this.props.index} index={index} key={meal.id}/>;
     return (
       <div className='food flex-item-2'>
-        <span onClick={this._close}>
+        <span className='close' onClick={this._close}>
           <Close/>
         </span>
-        <input id='name' type='text' style={{
-        width: this.props.name.length / 2 + 'em'
-        }} value={this.props.name} onChange={this._onChange}/><br/>
-        <input id='description' type='text' style={{
-        width: this.props.description.length / 2 + 'em'
-        }} value={this.props.description} onChange={this._onChange}/>
+        <Input id={'name'} value={this.props.name} default={'food-name'} update={this._update}/><br/>
+        <Input id={'description'} value={this.props.description} default={'food-name'} update={this._update}/>
         <div className={classnames('meals', {
           'nav-wrap': this.state.expand,
           'hidden': !this.state.expand
@@ -231,7 +229,7 @@ class Meal extends React.Component {
     updateClass();
   }
 
-  _onChange = (e) => {
+  _update = (e) => {
     restaurant.foods[this.props.parentIndex].meals[this.props.index][e.target.id] = e.target.type === 'number'
       ? Math.abs(e.target.value)
       : e.target.value;
@@ -245,16 +243,9 @@ class Meal extends React.Component {
         <span className='close' onClick={this._close}>
           <Close/>
         </span>
-        <input onChange={this._onChange} type='text' id='name' value={this.props.name} style={{
-        width: this.props.name.length / 2 + 'em'
-        }}/><br/>
-        <input onChange={this._onChange} type='text' id='description' value={this.props.description} style={{
-        width: this.props.description.length / 2 + 'em'
-        }}/><br/>
-        <input type='number' id='price' value={this.props.price} onChange={this._onChange}/>
-        mB<br/>
-        <input type='number' id='time' value={this.props.time} onChange={this._onChange}/>
-        min
+        <Input id={'name'} value={this.props.name} default={'meal-name'} update={this._update}/><br/>
+        <Input id={'description'} value={this.props.description} default={'meal-description'} update={this._update}/><br/>
+        <Input type={'number'} id='price' default={0} value={this.props.price} update={this._update}/>mB<br/>
       </div>
     );
   }

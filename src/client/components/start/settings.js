@@ -4,6 +4,7 @@ import {Link} from 'react-router';
 import classnames from 'classnames';
 
 import Close from '../icons/close';
+import Cursor from '../widget/cursor';
 
 var Settings = {
   scorable : false,
@@ -26,6 +27,11 @@ export default class StartSettings extends React.Component {
     this.state = {save: false};
   }
 
+  _switch = (e) => {
+    Settings[e.currentTarget.id] = !Settings[e.currentTarget.id];
+    _update();
+  }
+
   componentWillUnmount () {
     localStorage.settings = JSON.stringify(Settings);
   }
@@ -43,31 +49,13 @@ export default class StartSettings extends React.Component {
           Check your restaurant settings.
         </h1>
         <div>
-          <div className='setting'>let clients note your restaurant<Cursor state={Settings.scorable} cursor='scorable'/></div>
+          <div className='setting'>let clients note your restaurant<Cursor id={'scorable'} size={'2em'} on={Settings.scorable} update={this._switch}/></div>
         </div>
         <h2>Check out your opening hours</h2>
         <div className='opening-hours nav-wrap'>
           {Settings.schedule.map(createWeek)}
         </div>
       </div>
-    );
-  }
-}
-
-class Cursor extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-  }
-  _switch = (e) => {
-    Settings[this.props.cursor] = !Settings[this.props.cursor];
-    _update()
-  }
-  render() {
-    return (
-      <svg id='timeline' className='cursor' viewBox="0 0 40 20" onClick={this._switch}>
-        <rect x='0' y='0' rx='10' ry='10' width='40' height='20' fill={this.props.state ? 'rgb(42, 195, 4)' : 'rgb(238, 17, 17)'}/>
-        <circle cx={this.props.state ? '10' : '30'} cy='10' r='10' fill='black'/>
-      </svg>
     );
   }
 }

@@ -74,7 +74,8 @@ export default class Start extends React.Component {
 
   render() {
     var location = this._findLocation();
-    var pathName = this.props.location.pathname.match(/card|settings|map|submit/)[0];
+    var pathName = this.props.location.pathname.match(/card|settings|map|submit/);
+    pathName = pathName ? pathName[0] : 'card';
     return (
       <div className='start-index'>
         {this.renderChildren()}

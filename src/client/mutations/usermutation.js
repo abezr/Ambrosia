@@ -35,7 +35,7 @@ export default class UserMutation extends Relay.Mutation {
       user: {
         id: this.props.user.id,
         name: this.props.update.name || this.props.user.name || '',
-        mail: this.props.update.name || this.props.user.name,
+        mail: this.props.update.mail || this.props.user.mail,
         profilePicture: this.props.update.profilePicture || this.props.user.profilePicture || null
       }
     };

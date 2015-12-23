@@ -34,6 +34,16 @@ r.connect(config.rethinkdb, function(error, conn) {
             console.log('Table restaurant created');
             r.table('restaurant').indexCreate('userID').run(conn);
           });
+          r.tableCreate('order').run(conn, function(err, result) {
+            if ((err) && (!err.message.match(/Table `.*` already exists/))) {
+              console.log("Could not create the table `order`");
+              console.log(err);
+              process.exit(1);
+            }
+            r.table('order').indexCreate('userID').run(conn);
+            r.table('order').indexCreate('restaurantID').run(conn);
+            console.log('Table `order` created.');
+          });
         });
       }
       conn.close();

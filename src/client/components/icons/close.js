@@ -7,7 +7,7 @@ export default class Close extends React.Component {
 
   render() {
     return (
-      <svg className='close-icon' viewBox='0 0 80 80' height={this.props.size || '1em'} width={this.props.size || '1em'}>
+      <svg className='close-icon' viewBox='0 0 80 80' onClick={this.props.onClick} height={this.props.size || '1em'} width={this.props.size || '1em'}>
         <path d='M10 10 L70 70' stroke={this.props.stroke || 'black'} strokeWidth={this.props.strokeWidth || 3} />
         <path d='M70 10 L10 70' stroke={this.props.stroke || 'black'} strokeWidth={this.props.strokeWidth || 3} />
       </svg>

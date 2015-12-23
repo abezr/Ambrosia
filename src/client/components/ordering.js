@@ -1,10 +1,11 @@
 import React from 'react';
 import Relay from 'react-relay';
 import classnames from 'classnames';
-import OrderMutation from '../mutations/ordermutation';
+import OrderMutation from '../mutations/newordermutation';
 
 import Close from './icons/close';
 import Modal from './widget/modal';
+import Textarea from './widget/textarea';
 
 //var caddy = [];
 var _pushCaddy;
@@ -44,12 +45,17 @@ class Restaurant extends React.Component {
       this.forceUpdate();
     }
     _mutation = (order) => {
-      var onFailure = () => console.log('failuuuure!!!');
+      var onFailure = () => {
+        console.log('failuuuure!!!');
+        order.id = '_' + Math.random().toString(36).substr(2, 9);
+      };
       var onSuccess = () => {
         localStorage[this.props.id] = '';
         this.setState({caddy: [], modal: false});
       };
-      new Relay.Store.update(new OrderMutation({order: order, user: this.props.user.user, restaurant: this.props.restaurant.restaurant}), {onFailure, onSuccess});
+      order.userID = this.props.user.user.userID;
+      order.restaurantID = this.props.restaurant.restaurant.id;
+      Relay.Store.update(new OrderMutation({order: order}), {onFailure, onSuccess});
     }
   }
   render() {
@@ -65,7 +71,7 @@ class Restaurant extends React.Component {
         <h2>{restaurant.description}</h2>
         <div className='foods nav-wrap'>{restaurant.foods.map(createFoods)}</div>
         <Modal hidden={this.state.modalHidden} border={'4px solid yellow'}>
-          <Order {...this.state.order} items={this.state.caddy}/>
+          <Order {...this.state.order} busy={restaurant.busy} items={this.state.caddy}/>
         </Modal>
       </div>
     );
@@ -188,7 +194,8 @@ class Order extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      orderReadyIn : this.props.busy ? this.props.busy : 0
+      orderReadyIn : this.props.busy ? this.props.busy : 0,
+      message: 'less than 70 caracteres'
     };
   }
   _order = () => {
@@ -198,6 +205,7 @@ class Order extends React.Component {
       items: this.props.items.map((item) => { return {id:item.id, parent: item.parent, name:item.name};}),
       date: new Date().getTime(),
       payed: false,
+      message: this.state.message,
       price: this.props.price
     };
     _mutation(order);
@@ -217,6 +225,12 @@ class Order extends React.Component {
       orderReadyIn: e.target.value
     });
   }
+  //function to update the additional details message
+  _update = (e) => {
+    if (e.currentTarget.value.length > 70) return;
+    this.state[e.currentTarget.id] = e.currentTarget.value;
+    this.forceUpdate();
+  }
   render () {
     var createItems = (item) => {
       return (
@@ -234,6 +248,10 @@ class Order extends React.Component {
           {this.props.items.map(createItems)}
         </div>
         <div className='price'>Total : {this.props.price} mɃ</div>
+        <div className='details'>Send additional details on your order<br/>
+          <span>{70 - this.state.message.length}</span><br/>
+          <Textarea id={'message'} value={this.state.message} update={this._update}/>
+        </div>
         <div className='date'>When do you want your command Ready? <br/>
         in <input type='number' value = {this.state.orderReadyIn} onChange={this._setMinutes}/> minutes</div>
         <span className='pay' onClick={this._orderWithPay}>Pay Now</span><span className='nopay' onClick={this._order}>Pay Later</span>
@@ -243,24 +261,22 @@ class Order extends React.Component {
 }
 
 export default Relay.createContainer(Restaurant, {
-  initialVariables: {
-    midnightTime: new Date().setHours(0, 0, 0, 0)
-  },
   fragments: {
     user: () => Relay.QL`
     fragment on Root {
       user {
-        ${OrderMutation.getFragment('user')}
+        id,
+        userID
       }
     }
     `,
     restaurant: () => Relay.QL`
     fragment on Root {
       restaurant {
-        ${OrderMutation.getFragment('restaurant')}
         id,
         name,
         description,
+        busy,
         foods {
           id,
           name,

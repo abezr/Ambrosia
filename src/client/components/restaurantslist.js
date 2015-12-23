@@ -8,10 +8,12 @@ import Score from './icons/score';
 var averageScore = (restaurant) => {
   if(!restaurant.scorable) return 0;
   var stamp = 0;
-  restaurant.score.map(mark => {
-    stamp += mark;
-  });
-  return stamp /= restaurant.score.length;
+  if(restaurant.score) {
+    restaurant.score.map(mark => {
+      stamp += mark;
+    });
+    return stamp /= restaurant.score.length;
+  }
 };
 
 export default class RestaurantsList extends React.Component {

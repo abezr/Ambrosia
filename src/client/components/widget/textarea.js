@@ -7,7 +7,7 @@ export default class Textarea extends React.Component {
   }
 
   _update = (e) => {
-    this.props.update(e.target.value, this.props.id);
+    this.props.update(e);
   }
 
   _onValid = (e) => {

@@ -1,15 +1,4 @@
-span.close-icon {
-  position: absolute;
-  top: 0;
-  width: 4em;
-  height: 4em;
-  top: 1em;
-  right: 1em;
-  &:hover {
-    border: 2px solid;
-  }
-  background-image: url(/stylesheets/icons/close-white.svg);
-}
+
 input#submit {
   font-size: 1em;
   background-color: black;
@@ -17,17 +6,20 @@ input#submit {
   border: 2px solid;
   font-family: inherit;
   border-radius: 10px;
+  margin: 1em;
   &:hover {
     color: black;
     background-color: white;
   }
 }
 #signup,#login {
+  color: white;
   input {
     font-size: 1em;
     background-color: rgba(10, 10, 10, 0);
     border: 2px solid;
     font-family: inherit;
+    color: white;
   }
   div.question {
     margin: 2em;
@@ -43,6 +35,9 @@ input#submit {
     margin: 1em;
   }
   div.social {
+    margin-top: 2em;
+    margin: 2em auto auto auto;
+    width: 80%;
     cursor: default;
     border: 2px solid blue;
     padding: 0.5em;

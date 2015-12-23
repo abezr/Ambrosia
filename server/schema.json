@@ -541,12 +541,48 @@
               "deprecationReason": null
             },
             {
+              "name": "userID",
+              "description": "the orderer user-id",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "restaurantID",
+              "description": "the restaurant who get ordered",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "price",
               "description": "the order value, expressed with an integer",
               "args": [],
               "type": {
                 "kind": "SCALAR",
                 "name": "Int",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "message",
+              "description": "a message along the order",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -569,12 +605,12 @@
               "deprecationReason": null
             },
             {
-              "name": "time",
-              "description": "how much time does it take to fullfill this order in milliseconds",
+              "name": "prepayed",
+              "description": "is the order prepayed",
               "args": [],
               "type": {
                 "kind": "SCALAR",
-                "name": "Int",
+                "name": "Boolean",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -582,7 +618,19 @@
             },
             {
               "name": "payed",
-              "description": "is the order payed?",
+              "description": "is the order payed ?",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "treated",
+              "description": "is the order processed ?",
               "args": [],
               "type": {
                 "kind": "SCALAR",
@@ -599,6 +647,18 @@
               "type": {
                 "kind": "SCALAR",
                 "name": "Int",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "userName",
+              "description": "orderer name if no name return mail",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -993,6 +1053,18 @@
                   "name": "Int",
                   "ofType": null
                 }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "busy",
+              "description": "time needed to treat coming orders in milliseconds",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -1608,6 +1680,33 @@
               "deprecationReason": null
             },
             {
+              "name": "UpdateRestaurant",
+              "description": null,
+              "args": [
+                {
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "UpdateRestaurantInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "UpdateRestaurantPayload",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "Order",
               "description": null,
               "args": [
@@ -1635,7 +1734,7 @@
               "deprecationReason": null
             },
             {
-              "name": "UpdateCard",
+              "name": "UpdateOrder",
               "description": null,
               "args": [
                 {
@@ -1646,7 +1745,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "UpdateCardInput",
+                      "name": "UpdateOrderInput",
                       "ofType": null
                     }
                   },
@@ -1655,34 +1754,7 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "UpdateCardPayload",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "UpdateSettings",
-              "description": null,
-              "args": [
-                {
-                  "name": "input",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "UpdateSettingsInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "UpdateSettingsPayload",
+                "name": "UpdateOrderPayload",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -2072,6 +2144,16 @@
           "fields": null,
           "inputFields": [
             {
+              "name": "id",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "name",
               "description": "the name of the restaurant",
               "type": {
@@ -2088,6 +2170,20 @@
                 "kind": "SCALAR",
                 "name": "String",
                 "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "foods",
+              "description": "List of foods",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "InputFood",
+                  "ofType": null
+                }
               },
               "defaultValue": null
             },
@@ -2116,6 +2212,26 @@
               "defaultValue": null
             },
             {
+              "name": "busy",
+              "description": "time needed to treat coming orders in milliseconds",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "open",
+              "description": "is your restaurant open",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "schedule",
               "description": "restaurant schedule on a week basis",
               "type": {
@@ -2130,82 +2246,16 @@
               "defaultValue": null
             },
             {
-              "name": "foods",
-              "description": "List of foods",
+              "name": "location",
+              "description": "restaurant latitude and longitude",
               "type": {
                 "kind": "LIST",
                 "name": null,
                 "ofType": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "InputFood",
+                  "kind": "SCALAR",
+                  "name": "Float",
                   "ofType": null
                 }
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "INPUT_OBJECT",
-          "name": "InputDay",
-          "description": null,
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "day",
-              "description": "day of the week",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "openHours",
-              "description": null,
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "InputOpenHours",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "INPUT_OBJECT",
-          "name": "InputOpenHours",
-          "description": null,
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "from",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "to",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
               },
               "defaultValue": null
             }
@@ -2331,6 +2381,72 @@
           "possibleTypes": null
         },
         {
+          "kind": "INPUT_OBJECT",
+          "name": "InputDay",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "day",
+              "description": "day of the week",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "openHours",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "InputOpenHours",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "InputOpenHours",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "from",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "to",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
           "kind": "OBJECT",
           "name": "RestaurantPayload",
           "description": null,
@@ -2383,6 +2499,80 @@
         },
         {
           "kind": "INPUT_OBJECT",
+          "name": "UpdateRestaurantInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "restaurant",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "InputRestaurant",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "UpdateRestaurantPayload",
+          "description": null,
+          "fields": [
+            {
+              "name": "restaurant",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Restaurant",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
           "name": "OrderInput",
           "description": null,
           "fields": null,
@@ -2393,26 +2583,6 @@
               "type": {
                 "kind": "INPUT_OBJECT",
                 "name": "inputOrder",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "restaurantID",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "userID",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
                 "ofType": null
               },
               "defaultValue": null
@@ -2453,6 +2623,26 @@
               "defaultValue": null
             },
             {
+              "name": "userID",
+              "description": "the orderer user-id",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "restaurantID",
+              "description": "the restaurant who get ordered",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "price",
               "description": "the order value, expressed with an integer",
               "type": {
@@ -2463,18 +2653,38 @@
               "defaultValue": null
             },
             {
-              "name": "time",
-              "description": null,
+              "name": "message",
+              "description": "a message along the order",
               "type": {
                 "kind": "SCALAR",
-                "name": "Float",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "prepayed",
+              "description": "is the order payed?",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "treated",
+              "description": "is the order treated",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
                 "ofType": null
               },
               "defaultValue": null
             },
             {
               "name": "payed",
-              "description": "is the order payed?",
+              "description": "is the order payed",
               "type": {
                 "kind": "SCALAR",
                 "name": "Boolean",
@@ -2498,7 +2708,7 @@
             },
             {
               "name": "date",
-              "description": "the time by which the order has been done in milliseconds since january 1920",
+              "description": "the time in milliseconds by which the order has been done since january 1920",
               "type": {
                 "kind": "SCALAR",
                 "name": "Int",
@@ -2629,26 +2839,16 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "UpdateCardInput",
+          "name": "UpdateOrderInput",
           "description": null,
           "fields": null,
           "inputFields": [
             {
-              "name": "card",
+              "name": "order",
               "description": null,
               "type": {
                 "kind": "INPUT_OBJECT",
-                "name": "InputRestaurant",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "restaurantID",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
+                "name": "inputOrder",
                 "ofType": null
               },
               "defaultValue": null
@@ -2674,124 +2874,16 @@
         },
         {
           "kind": "OBJECT",
-          "name": "UpdateCardPayload",
+          "name": "UpdateOrderPayload",
           "description": null,
           "fields": [
             {
-              "name": "restaurant",
+              "name": "order",
               "description": null,
               "args": [],
               "type": {
                 "kind": "OBJECT",
-                "name": "Restaurant",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "clientMutationId",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "INPUT_OBJECT",
-          "name": "UpdateSettingsInput",
-          "description": null,
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "restaurantID",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "scorable",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "open",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "schedule",
-              "description": null,
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "InputDay",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "clientMutationId",
-              "description": null,
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "UpdateSettingsPayload",
-          "description": null,
-          "fields": [
-            {
-              "name": "restaurant",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "Restaurant",
+                "name": "Order",
                 "ofType": null
               },
               "isDeprecated": false,

@@ -29,6 +29,18 @@ export function getUser(rootValue) {
   });
 }
 
+export function getUserByID(id, rootValue) {
+  return co(function*() {
+    var p = new Promise(function(resolve, reject) {
+      r.table('user').get(id).run(rootValue.conn, function(error, result) {
+        if (error) reject(error);
+        resolve(result);
+      });
+    });
+    return yield p;
+  });
+}
+
 export function getUserByCredentials(credentials, rootValue) {
   return co(function*() {
     if (credentials.mail === '') {
@@ -278,32 +290,30 @@ export function getUserRestaurants(userID, rootValue) {
  * @param {[object]} rootValue    [description]
  * @return {[array]} [array of both changed fields restaurant and user]
  */
-export function addOrder(restaurantID, userID, order, rootValue) {
+export function addOrder(order, rootValue) {
+  console.log('database:addOrder', rootValue, order);
   return co(function*() {
-    var p = new Promise(function(resolve, reject) {
-      //find a solution to fullfill an agenda
-      //for now we just add the orders in any order
-      r.table('restaurant').get(restaurantID).update({
-        orders: r.row('orders').append(order)
-      }, {
-        returnChanges: true
-      }).run(rootValue.conn, function(err, res) {
-        if (err) reject(err);
-        resolve(res.changes[0].new_val.orders);
+    var p = new Promise((resolve, reject) => {
+      r.table('order').insert(order, {returnChanges: true}).run(rootValue.conn, (err, res) => {
+        console.log('database:addOrder:res', res, err);
+        if(err) reject(err);
+        resolve(res.changes[0].new_val);
       });
     });
-    //TODO we do not get the right userID here, we got logID instead
-    var q = new Promise(function(resolve, reject) {
-      r.table('user').get(userID).update({
-        orders: r.row('orders').append(order)
-      }, {
-        returnChanges: true
-      }).run(rootValue.conn, function(err, res) {
+    return yield p;
+  });
+}
+
+export function updateOrder(order, rootValue) {
+  return co(function*() {
+    var p = new Promise((resolve, reject) => {
+      r.table('order').get(order.id).update(order, {returnChanges: true}).run(rootValue.conn, (err, res) => {
         if (err) reject(err);
-        resolve(res.changes[0].new_val.orders);
+        console.log('database:updateOrder', res.changes);
+        resolve(res.changes[0].new_val);
       });
     });
-    return yield [p, q];
+    return yield p;
   });
 }
 
@@ -311,7 +321,7 @@ export function getRestaurantOrders(args, rootValue) {
   //var endofDay = args.midnightTime + 24*60*60*1000;
   return co(function*() {
     var p = new Promise(function(resolve, reject) {
-      r.table('restaurant').get(args.restaurantID)('orders').filter(r.row("date").gt(args.midnightTime)).orderBy('date').run(rootValue.conn, function(err, res) {
+      r.table('order').getAll(args.restaurantID, {index:'restaurantID'}).filter(r.row("date").gt(args.midnightTime)).orderBy('date').run(rootValue.conn, function(err, res) {
         if (err) reject(err);
         resolve(res);
       });
@@ -324,7 +334,7 @@ export function getUserOrders(userID, rootValue) {
   if (!userID) return [];
   return co(function*() {
     var p = new Promise(function(resolve, reject) {
-      r.table('user').get(userID)('orders').run(rootValue.conn, function(err, res) {
+      r.table('order').getAll(userID, {index:'userID'}).run(rootValue.conn, function(err, res) {
         if (res) {
           res.toArray(function(err, res) {
             if (err) reject(err);
@@ -352,6 +362,21 @@ export function updateRestaurantCard(args, rootValue) {
         description: args.card.description,
         foods: args.card.foods
       }, {
+        returnChanges: true
+      }).run(rootValue.conn, function(err, res) {
+        if (err) reject(err);
+        if (!res.changes[0]) return null;
+        resolve(res.changes[0].new_val);
+      });
+    });
+    return yield p;
+  });
+}
+
+export function updateRestaurant(restaurant, rootValue) {
+  return co(function*() {
+    var p = new Promise(function(resolve, reject) {
+      r.table('restaurant').get(restaurant.id).update(restaurant, {
         returnChanges: true
       }).run(rootValue.conn, function(err, res) {
         if (err) reject(err);

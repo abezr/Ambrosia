@@ -25,7 +25,7 @@ import {
 }
 from 'graphql-relay';
 
-import {getRestaurantOrders} from '../database';
+import {getRestaurantOrders, getUserByID} from '../database';
 
 import co from 'co';
 
@@ -165,25 +165,50 @@ export var GraphQLOrder = new GraphQLObjectType({
   name: 'Order',
   fields: {
     id: globalIdField('Order'),
+    userID: {
+      type: GraphQLString,
+      description: 'the orderer user-id'
+    },
+    restaurantID: {
+      type: GraphQLString,
+      description: 'the restaurant who get ordered'
+    },
     price: {
       type: GraphQLInt,
       description: 'the order value, expressed with an integer'
+    },
+    message: {
+      type: GraphQLString,
+      description: 'a message along the order'
     },
     items: {
       type: new GraphQLList(GraphQLItem),
       description: 'the items in that order'
     },
-    time: {
-      type: GraphQLInt,
-      description: 'how much time does it take to fullfill this order in milliseconds'
+    prepayed: {
+      type: GraphQLBoolean,
+      description: 'is the order prepayed'
     },
     payed: {
       type: GraphQLBoolean,
-      description: 'is the order payed?'
+      description: 'is the order payed ?'
+    },
+    treated: {
+      type: GraphQLBoolean,
+      description: 'is the order processed ?'
     },
     date: {
       type: GraphQLInt,
       description: 'the time by which the order has been done in milliseconds since january 1920'
+    },
+    userName: {
+      type: GraphQLString,
+      description: 'orderer name if no name return mail',
+      resolve: (order, args, {rootValue}) => co(function*() {
+        console.log('GraphQLInputOrder:order', order.userID);
+        var user = yield getUserByID(order.userID, rootValue);
+        return user.name || user.mail;
+      })
     }
   }
 });
@@ -194,17 +219,33 @@ export var GraphQLInputOrder = new GraphQLInputObjectType({
     id: {
       type: GraphQLString
     },
+    userID: {
+      type: GraphQLString,
+      description: 'the orderer user-id'
+    },
+    restaurantID: {
+      type: GraphQLString,
+      description: 'the restaurant who get ordered'
+    },
     price: {
       type: GraphQLFloat,
       description: 'the order value, expressed with an integer'
     },
-    time: {
-      type: GraphQLFloat,
-      description: 'the time that it takes to treat the order'
+    message: {
+      type: GraphQLString,
+      description: 'a message along the order'
+    },
+    prepayed: {
+      type: GraphQLBoolean,
+      description: 'is the order payed?'
+    },
+    treated: {
+      type: GraphQLBoolean,
+      description: 'is the order treated'
     },
     payed: {
       type: GraphQLBoolean,
-      description: 'is the order payed?'
+      description:  'is the order payed'
     },
     items: {
       type: new GraphQLList(GraphQLInputItem),
@@ -212,7 +253,7 @@ export var GraphQLInputOrder = new GraphQLInputObjectType({
     },
     date: {
       type: GraphQLInt,
-      description: 'the time by which the order has been done in milliseconds since january 1920'
+      description: 'the time in milliseconds by which the order has been done since january 1920'
     }
   }
 });
@@ -326,6 +367,10 @@ export var GraphQLRestaurant = new GraphQLObjectType({
       type: new GraphQLList(GraphQLInt),
       description: 'restaurant score'
     },
+    busy: {
+      type: GraphQLInt,
+      description: 'time needed to treat coming orders in milliseconds'
+    },
     open: {
       type: GraphQLBoolean,
       description: 'is your restaurant open'
@@ -354,6 +399,9 @@ export var GraphQLRestaurant = new GraphQLObjectType({
 export var GraphQLInputRestaurant = new GraphQLInputObjectType({
   name: 'InputRestaurant',
   fields: {
+    id: {
+      type: GraphQLString
+    },
     name: {
       type: GraphQLString,
       description: 'the name of the restaurant'
@@ -362,12 +410,24 @@ export var GraphQLInputRestaurant = new GraphQLInputObjectType({
       type: GraphQLString,
       description: 'restaurant\'s description'
     },
+    foods: {
+      type: new GraphQLList(GraphQLInputFood),
+      description: 'List of foods'
+    },
     scorable: {
       type: GraphQLBoolean,
       description: 'is restaurant scorable'
     },
     score: {
       type: new GraphQLList(GraphQLInt),
+    },
+    busy: {
+      type: GraphQLInt,
+      description: 'time needed to treat coming orders in milliseconds'
+    },
+    open: {
+      type: GraphQLBoolean,
+      description: 'is your restaurant open'
     },
     schedule: {
       type: new GraphQLList(GraphQLInputDay),
@@ -377,10 +437,6 @@ export var GraphQLInputRestaurant = new GraphQLInputObjectType({
       type: new GraphQLList(GraphQLFloat),
       description: 'restaurant latitude and longitude'
     },
-    foods: {
-      type: new GraphQLList(GraphQLInputFood),
-      description: 'List of foods'
-    }
   }
 });
 

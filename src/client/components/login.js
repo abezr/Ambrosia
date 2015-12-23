@@ -4,20 +4,12 @@ import request from 'superagent';
 import {Link} from 'react-router';
 import classnames from 'classnames';
 import validate from '../validate';
+import Modal from './widget/modal';
+import Close from './icons/close';
 import SignupMutation from '../mutations/signupmutation';
 import LoginMutation from '../mutations/loginmutation';
 
 class Auth extends React.Component {
-  render() {
-    return (
-      <div className='modal'>
-        <Login {...this.props}/>
-      </div>
-    );
-  }
-}
-
-class Login extends React.Component {
 
   constructor(props, context) {
     super(props, context);
@@ -27,43 +19,43 @@ class Login extends React.Component {
   render() {
     const {user} = this.props.user;
     return (
-      <div className='form'>
+      <Modal hidden={false}>
         <form id='signup' className={classnames('signup', {hidden: !this.state.toggle})} onSubmit={this._signup}>
-          <span className='close-icon' onClick={this._close}/>
+          <Close onClick={this._close} stroke={'white'} size={'1em'}/>
           <div className='log' key='mail'>Mail<br/>
             <span className='error'>{this.state.errors.mail}</span>
             <input id='mail' key='input-mail' className='signup' type='email'/>
-          </div><br/>
-        <div className='log' key='password'>Password<br/>
+          </div>
+          <div className='log' key='password'>Password<br/>
             <span className='error'>{this.state.errors.password}</span>
             <input id='password' key='input-password' className='signup' type= 'password'/>
-          </div><br/>
-        <div className='log' key='confirmPassword'>
+          </div>
+          <div className='log' key='confirmPassword'>
             <span className="confirmPassword">Confirm your Password</span><br/>
             <span className='error'>{this.state.errors.match}</span>
             <input id='confirmPassword' key='input-confirmPassword' className='signup' type= 'password'/>
             <div className='question' onClick={this._switch}>allready a member?</div>
-          </div><br/>
-        <input type='submit' key='submit' value='Signup' form='signup' id='submit'/>
+          </div>
+          <input type='submit' key='submit' value='Signup' form='signup' id='submit'/>
         </form>
       <form id='login' className={classnames('login', {hidden: this.state.toggle})} onSubmit={this._login}>
-        <span className='close-icon' onClick={this._close}/>
+        <Close onClick={this._close} stroke={'white'} size={'1em'}/>
         <div className='social' ref='fb'><span className='facebook-icon'/>Sign in with facebook</div>
         <br/>
         <div className='log' ref='pseudo'>
           Pseudo<br/>
-          <span className='error'>{this.state.errors.pseudo}</span>
+          <span className='error'>{this.state.errors.pseudo}</span><br/>
           <input id='pseudo' ref ='pseudo-input' className='login' type='text'/>
-        </div><br/>
+        </div>
         <div className='log' ref='password'>
           Password<br/>
-          <span className='error'>{this.state.errors.password}</span>
+        <span className='error'>{this.state.errors.password}</span><br/>
           <input id='password' ref='password-input' className='login' type='password'/>
           <div className='question' onClick={this._switch}>not a member yet?</div>
-        </div><br/>
+        </div>
       <input type='submit' value='Log-In' form='login' id='submit'/>
       </form>
-    </div>
+    </Modal>
     );
   }
 
@@ -79,6 +71,9 @@ class Login extends React.Component {
   _login = (e) => {
       e.preventDefault();
       var onSuccess = ({Login}) => {
+        for (var key in localStorage) {
+          localStorage.removeItem(key);
+        }
         this.props.location.state ? this.props.history.pushState({}, this.props.location.state.previousPath) : this.props.history.goBack();
         console.log('Mutation successful!');
         //loginRequest(Login.user);
@@ -108,6 +103,9 @@ class Login extends React.Component {
     e.preventDefault();
     var onSuccess = ({Login}) => {
       console.log('Mutation successful!');
+      for (var key in localStorage) {
+        localStorage.removeItem(key);
+      }
       this.props.location.state ? this.props.history.pushState({}, this.props.location.state.previousPath) : this.props.history.goBack();
       //loginRequest(Login.user);
     };

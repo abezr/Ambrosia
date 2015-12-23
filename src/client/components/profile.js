@@ -25,14 +25,12 @@ class Profile extends React.Component {
 
   componentDidMount () {
     if(!this.props.user.user.userID) {
-      console.log('Start:ComponentDidMount', this.props.user.user.userID);
       this.props.history.pushState({previousPath: '/start'}, '/register');
     }
   }
 
   componentWillReceiveProps(newProps) {
     var user = newProps.user.user;
-    console.log('Start:componentWillReceiveProps', newProps.user.user.userID);
     if(!newProps.user.user.userID) {
       this.props.history.pushState({previousPath: '/start'}, '/register');
     }
@@ -47,7 +45,6 @@ class Profile extends React.Component {
   }
 
   _onChange = (e) => {
-    console.log('onchange');
     this.state.update[e.target.id] = e.target.value;
     this.setState({
       update: this.state.update,
@@ -56,9 +53,11 @@ class Profile extends React.Component {
   }
 
   _onKeyUp = (e) => {
-    console.log('onkeyUp', e.keyCode);
+    var onSuccess = () => {
+    }
+    var onFailure = () => console.log('failure');
     if(e.keyCode === 13) {
-      new Relay.Store.update(new UserMutation({user: this.props.user.user, update: this.state.update}));
+      new Relay.Store.update(new UserMutation({user: this.props.user.user, update: this.state.update}), {onFailure, onSuccess});
       e.target.blur();
     }
     if(e.keyCode === 27) {

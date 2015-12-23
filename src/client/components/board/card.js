@@ -1,7 +1,7 @@
 import React from 'react';
 import Relay from 'react-relay';
 import classnames from 'classnames';
-import UpdateCardMutation from '../../mutations/updatecardmutation';
+import UpdateRestaurantMutation from '../../mutations/updaterestaurantmutation';
 
 import Input from '../widget/input';
 import Textarea from '../widget/textarea';
@@ -45,7 +45,6 @@ export class Card extends React.Component {
           name: 'the meal\'s name',
           description: 'the meal\'s description',
           price: 0,
-          time: 0
         }
       ]
     });
@@ -59,12 +58,15 @@ export class Card extends React.Component {
       food.meals.map((meal) => delete meal.__dataID__);
     });
     var resto = {
+      id: this.props.id,
       name: this.state.name,
       description: this.state.description,
       foods: this.state.foods
     };
-    console.log(this.state.foods);
-    Relay.Store.update(new UpdateCardMutation({card: resto, restaurant: this.props.restaurant.restaurant}));
+    console.log(resto);
+    var onFailure = () => console.log('failure');
+    var onSuccess = () => this.setState({save: false});
+    Relay.Store.update(new UpdateRestaurantMutation({restaurant: resto}), {onFailure, onSuccess});
   }
 
   _update = (e) => {
@@ -73,6 +75,7 @@ export class Card extends React.Component {
   }
 
   render () {
+    console.log('render', this.state.save);
     var createFood = (food, index) => {
       return(
         <Food {...food} index={index} key={food.id}/>
@@ -125,7 +128,6 @@ class Food extends React.Component {
       name: 'the meal\'s name',
       description: 'the meal\'s description',
       price: 0,
-      time: 0
     });
     updateClass();
   }
@@ -215,10 +217,7 @@ class Meal extends React.Component {
         </span>
         <Input id={'name'} value={this.props.name} default={'meal-name'} update={this._update}/><br/>
         <Input id={'description'} value={this.props.description} default={'meal-description'} update={this._update}/><br/>
-        <Input type={'number'} id='price' default={0} value={this.props.price} update={this._update}/>
-        mB<br/>
-      <Input type={'number'} id='time' default={0} value={this.props.time} update={this._update}/>
-        min
+        <Input type={'number'} id='price' default={0} value={this.props.price} update={this._update}/>mB<br/>
       </div>
     );
   }
@@ -251,7 +250,6 @@ export default Relay.createContainer(Card, {
     restaurant: () => Relay.QL `
     fragment on Root {
       restaurant {
-        ${UpdateCardMutation.getFragment('restaurant')}
         id,
         name,
         description,

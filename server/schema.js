@@ -41,8 +41,8 @@ import {
   UserMutation,
   RestaurantMutation,
   OrderMutation,
-  UpdateCardMutation,
-  UpdateSettingsMutation
+  UpdateRestaurantMutation,
+  UpdateOrderMutation
 }
 from './mutation';
 
@@ -150,7 +150,6 @@ var queryType = new GraphQLObjectType({
         return id || {};
       }
     },
-
     node: nodeField
   })
 });
@@ -162,9 +161,9 @@ var mutationType = new GraphQLObjectType({
     Login: LoginMutation,
     User: UserMutation,
     Restaurant: RestaurantMutation,
+    UpdateRestaurant: UpdateRestaurantMutation,
     Order: OrderMutation,
-    UpdateCard: UpdateCardMutation,
-    UpdateSettings: UpdateSettingsMutation
+    UpdateOrder: UpdateOrderMutation
   })
 });
 

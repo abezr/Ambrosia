@@ -9,7 +9,7 @@ import {
 from 'graphql-relay';
 
 import {
-  addUser, getUser, updateUser, newUser, getUserByCredentials, addOrder, getRestaurant, getUserRestaurants, addRestaurant, updateRestaurantCard, updateRestaurantSettings
+  addUser, getUser, updateUser, newUser, getUserByCredentials, addOrder, updateOrder, getRestaurant, getUserRestaurants, addRestaurant, updateRestaurant, updateRestaurantCard, updateRestaurantSettings
 }
 from './database';
 
@@ -19,7 +19,7 @@ import {
 from './type/user';
 
 import {
-  GraphQLRestaurant, GraphQLInputRestaurant, GraphQLRestaurantEdge, GraphQLInputOrder, GraphQLOrderEdge, GraphQLInputFood, GraphQLInputDay
+  GraphQLRestaurant, GraphQLInputRestaurant, GraphQLRestaurantEdge, GraphQLOrder, GraphQLInputOrder, GraphQLOrderEdge, GraphQLInputFood, GraphQLInputDay
 }
 from './type/restaurant';
 
@@ -128,27 +128,21 @@ export var LoginMutation = mutationWithClientMutationId({
     return newUser;
   })
 });
-
+//TODO remove restaurantID and userID fields and add them in order object
 export var OrderMutation = mutationWithClientMutationId({
   name: 'Order',
 
   inputFields: {
     order: {
       type: GraphQLInputOrder
-    },
-    restaurantID: {
-      type: GraphQLString
-    },
-    userID: {
-      type: GraphQLString
     }
   },
   outputFields: {
     restaurant: {
       type: GraphQLRestaurant,
-      resolve: ({restaurantID, rootValue}) => co(function* () {
+      resolve: ({order, rootValue}) => co(function* () {
         console.log('mutation:restaurant');
-        return yield getRestaurant(restaurantID, rootValue);
+        return yield getRestaurant(order.restaurantID, rootValue);
       })
     },
     user: {
@@ -193,13 +187,12 @@ export var OrderMutation = mutationWithClientMutationId({
     rootValue
   }) => co(function*() {
     //we need restaurant id plus order
-    var restaurantID = fromGlobalId(args.restaurantID).id;
-    var userID = args.userID;
     var order = args.order;
-    console.log('schema:ordermutation', restaurantID, args.userID);
-    //orders[0] = restaurantOrder, orders[1] = userOrder
-    var orders = yield addOrder(restaurantID, userID, order, rootValue);
-    return {restaurantID, userID, orders, order, rootValue};
+    order.restaurantID = fromGlobalId(order.restaurantID).id;
+    console.log('schema:ordermutation', order);
+    var orders = yield addOrder(order, rootValue);
+    console.log('schema:ordermutation', orders);
+    return {orders, order, rootValue};
   })
 })
 
@@ -249,14 +242,11 @@ export var RestaurantMutation = mutationWithClientMutationId({
   })
 });
 
-export var UpdateCardMutation = mutationWithClientMutationId({
-  name: 'UpdateCard',
+export var UpdateRestaurantMutation = mutationWithClientMutationId({
+  name: 'UpdateRestaurant',
   inputFields: {
-    card: {
+    restaurant: {
       type: GraphQLInputRestaurant
-    },
-    restaurantID: {
-      type: GraphQLString
     }
   },
   outputFields: {
@@ -265,36 +255,27 @@ export var UpdateCardMutation = mutationWithClientMutationId({
       resolve: (restaurant) => restaurant
     }
   },
-  mutateAndGetPayload: ({restaurantID, card}, {rootValue}) => co(function*() {
-    restaurantID = fromGlobalId(restaurantID).id;
-    return yield updateRestaurantCard({restaurantID, card}, rootValue);
+  mutateAndGetPayload: ({restaurant}, {rootValue}) => co(function*() {
+    restaurant.id = fromGlobalId(restaurant.id).id;
+    return yield updateRestaurant(restaurant, rootValue);
   })
-})
+});
 
-export var UpdateSettingsMutation = mutationWithClientMutationId({
-  name: 'UpdateSettings',
+export var UpdateOrderMutation = mutationWithClientMutationId({
+  name: 'UpdateOrder',
   inputFields: {
-    restaurantID: {
-      type: GraphQLString
+    order: {
+      type: GraphQLInputOrder
     },
-    scorable: {
-      type: GraphQLBoolean
-    },
-    open: {
-      type: GraphQLBoolean
-    },
-    schedule: {
-      type: new GraphQLList(GraphQLInputDay)
-    }
   },
   outputFields: {
-    restaurant: {
-      type: GraphQLRestaurant,
-      resolve: (restaurant) => restaurant
+    order: {
+      type: GraphQLOrder,
+      resolve: (order) => order
     }
   },
   mutateAndGetPayload: (args, {rootValue}) => co(function*() {
-    args.restaurantID = fromGlobalId(args.restaurantID).id;
-    return yield updateRestaurantSettings(args, rootValue);
+    args.order.id = fromGlobalId(args.order.id).id;
+    return yield updateOrder(args.order, rootValue);
   })
 })
