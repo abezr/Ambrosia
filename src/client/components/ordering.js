@@ -93,8 +93,8 @@ class Food extends React.Component {
     };
     return (
       <div className='food flex-item-2' onClick={this._switch}>
-        <strong className='name'>{this.props.name}</strong><br/>
-        <div className='description'>{this.props.description}</div>
+        <strong className='name'>{this.props.name}</strong>
+        <div className='description'>{this.state.expand ? '' : this.props.description}</div>
         <div className={classnames('meals', {nav: this.state.expand, hidden: !this.state.expand})}>{this.props.meals.map(createMeals)}</div>
       </div>
     );
@@ -114,7 +114,7 @@ class Meal extends React.Component {
   render () {
     return (
       <div className='meal flex-item-2' onClick={this._addItem}>
-        <strong className='name'>{this.props.name}</strong><br/>
+        <strong className='name'>{this.props.name}</strong>
         <div className='description'>{this.props.description}</div>
         <div className='price'>{this.props.price + 'mB'}</div>
       </div>
