@@ -9,6 +9,7 @@ import parseBody from 'co-body';
 import path from 'path';
 import {getUserByCredentials} from './server/database';
 
+import co from 'co';
 // import React from 'react';
 // import Relay from 'react-relay';
 // import ReactRouter from 'react-router';
@@ -17,9 +18,7 @@ import webpack from 'webpack';
 import WebpackDevMiddleware from 'koa-webpack-dev-middleware';
 
 import r from 'rethinkdb';
-import {
-  graphql
-} from 'graphql';
+import {graphql} from 'graphql';
 import debug from 'debug';
 var config = {
   host: 'localhost',
@@ -30,9 +29,11 @@ var config = {
 var err = debug('server:error');
 var log = debug('server');
 
-import {
-  Schema
-} from './server/schema';
+import {usersSeed} from './seed/users';
+import {restaurantsSeed} from './seed/restaurants';
+import {ordersSeed} from './seed/orders';
+
+import {Schema} from './server/schema';
 
 let port = process.env.PORT || 3800;
 let routes = new koaRouter();
@@ -57,7 +58,7 @@ server.use(serve('.'));
 
 server.use(session(server));
 
-server.use(function* (next) {
+server.use(function * (next) {
   yield r.connect(config, function(error, conn) {
     if (error) {
       err(error);
@@ -69,20 +70,29 @@ server.use(function* (next) {
   yield next;
 });
 
-server.use(function* (next) {
+server.use(function * (next) {
   yield next;
 });
 // server.use(mount('/graphql', graphqlHTTP({ schema: Schema })));
+//
+// routes.get('/login', function* (next) {
+//   yield this.cookies.set('userID', this.query.userID);
+//   console.log('server:login', this.query);
+//   this.body = {cookie: 'well'};
+// });
 
-routes.get('/login', function* (next) {
-  yield this.cookies.set('userID', this.query.userID);
-  console.log('server:login', this.query);
-  this.body = {cookie: 'well'};
+routes.post('/populate', function * (next) {
+  console.log('populate');
+  var geolocation = JSON.parse(this.query.params);
+  yield usersSeed(this._rdbConn);
+  yield restaurantsSeed(this._rdbConn, geolocation);
+  yield ordersSeed(this._rdbConn);
+  this.body = 'database populated';
 });
 
-routes.post('/graphql', function* (next) {
+routes.post('/graphql', function * (next) {
   //looks like my cookie is'nt writable or readable under the post request;
-//TODO pass the session object for being identicating
+  //TODO pass the session object for being identicating
   yield graphqlHTTP({
     schema: Schema,
     rootValue: {
@@ -103,7 +113,7 @@ server.use(routes.middleware());
 //   yield next;
 // });id = "${userID}"
 
-server.use(function* (next) {
+server.use(function * (next) {
   //let's try to pass the session object into a script tag
   var userID = this.cookies.get('userID') || '';
   yield next;
@@ -129,7 +139,7 @@ server.use(function* (next) {
 //   this.body = html;
 // });
 
-server.use(function* (next) {
+server.use(function * (next) {
   this._rdbConn.close();
   yield next;
 });
@@ -149,7 +159,6 @@ r.connect(config, function(error, conn) {
             process.exit(1);
           }
           console.log('Database `' + config.db + '` created.');
-
           r.tableCreate('user').run(conn, function(err, result) {
             if ((err) && (!err.message.match(/Table `.*` already exists/))) {
               console.log("Could not create the table `users`");
@@ -157,17 +166,56 @@ r.connect(config, function(error, conn) {
               process.exit(1);
             }
             console.log('Table `users` created.');
-            r.tableCreate('restaurant').run(conn, function(err, result) {
-              if ((err) && (!err.message.match(/Table `.*` already exists/))) {
-                console.log("Could not create the table `users`");
-                console.log(err);
-                process.exit(1);
-              }
-              console.log('Table restaurant created');
-              r.table('restaurant').indexCreate('userID').run(conn, function(err, result) {
-                if(err) console.log(err);
-                conn.close();
-
+            co(function * () {
+              var p = new Promise((resolve, reject) => {
+                r.tableCreate('restaurant').run(conn, function(err, result) {
+                  if ((err) && (!err.message.match(/Table `.*` already exists/))) {
+                    console.log("Could not create the table `users`");
+                    console.log(err);
+                    process.exit(1);
+                  }
+                  console.log('Table restaurant created');
+                  //create location index on restaurant as well!
+                  r.table('restaurant').indexCreate('userID').run(conn, function(err, result) {
+                    if (err) {
+                      console.log(err);
+                      process.exit(1);
+                    }
+                    r.table('restaurant').indexCreate('location', {geo: true}).run(conn, (err, result) => {
+                      if (err) {
+                        console.log(err);
+                        process.exit(1);
+                      }
+                      resolve(result);
+                    });
+                  });
+                });
+              });
+              var q = new Promise((resolve, reject) => {
+                r.tableCreate('order').run(conn, function(err, result) {
+                  if ((err) && (!err.message.match(/Table `.*` already exists/))) {
+                    console.log("Could not create the table `order`");
+                    console.log(err);
+                    process.exit(1);
+                  }
+                  console.log('Table order created');
+                  r.table('order').indexCreate('userID').run(conn, function(err, result) {
+                    if (err) console.log(err);
+                    r.table('order').indexCreate('restaurantID').run(conn, function(err, result) {
+                      if (err) {
+                        console.log(err);
+                        process.exit(1);
+                      }
+                      resolve(result);
+                    });
+                  });
+                });
+              });
+              return yield[p, q];
+            }).then((value) => {
+              conn.close();
+              server.listen(port, () => {
+                console.log('server is listening on ' + port);
               });
             });
           });
@@ -181,7 +229,6 @@ r.connect(config, function(error, conn) {
     });
   }
 });
-
 
 //require('./rdbConnect');
 

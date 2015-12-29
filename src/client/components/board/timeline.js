@@ -316,9 +316,9 @@ export default Relay.createContainer(Board, {
             node {
               id,
               userID,
-              userName,
               restaurantID,
               date,
+              userName,
               payed,
               prepayed,
               treated,

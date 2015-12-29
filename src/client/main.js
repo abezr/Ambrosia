@@ -13,6 +13,7 @@ import RestaurantsIndex, {RestaurantsIndexComponent} from './components/restaura
 import RestaurantsMap from './components/restaurantsmap';
 import RestaurantsList from './components/restaurantslist';
 import Users from './components/users';
+import Home from './components/home';
 import Start from './components/start/start';
 import StartCard from './components/start/card';
 import StartSettings from './components/start/settings';
@@ -33,7 +34,7 @@ import ReactRouterRelay from 'react-router-relay';
 
 Relay.injectNetworkLayer(
   new Relay.DefaultNetworkLayer('/graphql', {
-    credentials: 'same-origin',
+    credentials: 'same-origin'
   })
 );
 
@@ -95,7 +96,7 @@ ReactDom.render(
     history={histori}
   >
     <Route path='/' component={IndexContainer} queries={ViewerQuery}>
-      <IndexRoute component={Users} queries={ViewerQuery}/>
+      <IndexRoute component={Home} queries={ViewerQuery}/>
       <Route path='restaurant/:id' component={Ordering} queries={FullQuery}/>
       <Route path='profile' component={Profile} queries={ViewerQuery}/>
       <Route path="restaurants" component={RestaurantsIndex} queries={RestaurantsQuery}>

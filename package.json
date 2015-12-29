@@ -39,7 +39,7 @@
     "react-dom": "0.14.0",
     "react-relay": "0.5.0",
     "react-router": "1.0.0-rc1",
-    "react-router-relay": "^0.7.0",
+    "react-router-relay": "0.7.0",
     "rethinkdb": "^2.0.2",
     "superagent": "^1.2.0"
   },

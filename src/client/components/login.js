@@ -133,8 +133,6 @@ class Auth extends React.Component {
 export default Relay.createContainer(Auth, {
 
   fragments: {
-    //Question: Is fragment on mutation available on the component himself? no it's not
-    //and you use a mutation you have to call mutation fragment if not you get a warning
     user: () => Relay.QL`
     fragment on Root {
       user {
