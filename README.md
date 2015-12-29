@@ -23,16 +23,14 @@
 ###install rethinkdb on your system
 https://www.rethinkdb.com/docs/install/
 
-###Run some NPM scripts to get the app up and running
-
-In your terminal, paste these lines in that order
-  * npm install
-  * npm run seed (populate app with randomly generated datas)
 
 ###Run the app
 
+open a terminal and follow the step in that order
+
+  * paste 'npm install'
   * open a new window in your terminal and run a rethinkdb instance, just tap 'rethinkdb'
-  * open a new window and tap npm run webpack
-  * open a new window and start the server with npm run nodemon
+  * open a new window and tap 'npm run webpack'
+  * open a new window and start the server with 'npm run nodemon'
 
 Open a Browser window at http://localhost:3800/
