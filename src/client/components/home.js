@@ -20,9 +20,12 @@ export class Home extends React.Component {
   }
 
   _populate = () => {
+    if(!localStorage.geolocation) {
+      this.setState({error: 'geolocalization please wait...'});
+      return;
+    }
     this.setState({loading: true});
     var geolocation = JSON.parse(localStorage.geolocation);
-    console.log(geolocation[0]);
     request.post('http://localhost:3800/populate')
     .query({
       params: localStorage.geolocation
@@ -51,6 +54,7 @@ export class Home extends React.Component {
     return (
       <div className='center-text'>
         <h1>Lets put some random data</h1>
+        {this.state.error || ''}
         <span className='button' onClick={this._populate}>Populate!{this.state.loading ? <Loading/> : ''}</span><br/>
         <Modal hidden={this.state.hidden}>
           <p>You have been logged in as 'Duduche'</p>

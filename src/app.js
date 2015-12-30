@@ -51770,9 +51770,12 @@
 	    _get(Object.getPrototypeOf(Home.prototype), 'constructor', this).call(this, props, context);
 	
 	    this._populate = function () {
+	      if (!localStorage.geolocation) {
+	        _this.setState({ error: 'geolocalization please wait...' });
+	        return;
+	      }
 	      _this.setState({ loading: true });
 	      var geolocation = JSON.parse(localStorage.geolocation);
-	      console.log(geolocation[0]);
 	      _superagent2['default'].post('http://localhost:3800/populate').query({
 	        params: localStorage.geolocation
 	      }).end(function (err, res) {
@@ -51822,6 +51825,7 @@
 	          null,
 	          'Lets put some random data'
 	        ),
+	        this.state.error || '',
 	        _react2['default'].createElement(
 	          'span',
 	          { className: 'button', onClick: this._populate },
@@ -52694,7 +52698,7 @@
 	        null,
 	        _react2['default'].createElement('input', { className: 'input-widget', type: this.props.type ? this.props.type : 'text', id: this.props.id, value: this.props.value, onChange: this._update, onBlur: this._onValid, onKeyDown: function (e) {
 	            if (e.keyCode === 13) e.target.blur();
-	          }, style: { width: (this.props.value.length + 1) / 2 + 'em' } })
+	          }, style: { width: this.props.value ? (this.props.value.length + 1) / 2 + 'em' : '1em' } })
 	      );
 	    }
 	  }]);

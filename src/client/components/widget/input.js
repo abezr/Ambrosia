@@ -18,7 +18,7 @@ export default class Input extends React.Component {
   render() {
     return (
       <span>
-        <input className='input-widget' type={this.props.type ? this.props.type : 'text'} id={this.props.id} value={this.props.value} onChange={this._update} onBlur={this._onValid} onKeyDown={e => {if(e.keyCode === 13) e.target.blur()}} style={{width: (this.props.value.length + 1) / 2 + 'em'}}/>
+        <input className='input-widget' type={this.props.type ? this.props.type : 'text'} id={this.props.id} value={this.props.value} onChange={this._update} onBlur={this._onValid} onKeyDown={e => {if(e.keyCode === 13) e.target.blur()}} style={{width: this.props.value ? (this.props.value.length + 1) / 2 + 'em' : '1em'}}/>
       </span>
     );
   }
