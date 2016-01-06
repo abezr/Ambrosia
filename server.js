@@ -8,6 +8,7 @@ import session from 'koa-session';
 import parseBody from 'co-body';
 import path from 'path';
 import {getUserByCredentials} from './server/database';
+import BWS from 'bitcore-wallet-service';
 
 import co from 'co';
 // import React from 'react';
@@ -143,6 +144,8 @@ server.use(function * (next) {
   this._rdbConn.close();
   yield next;
 });
+
+BWS.Start;
 
 r.connect(config, function(error, conn) {
   if (error) {

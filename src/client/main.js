@@ -2,7 +2,7 @@ require('../../stylesheets/home.scss');
 
 import {
   IndexRoute,
-  Router,
+  browserHistory,
   Route
 } from 'react-router';
 import IndexContainer from './components/index';
@@ -30,7 +30,7 @@ import ReactDom from 'react-dom';
 import {createHistory} from 'history';
 import Relay from 'react-relay';
 // import rootQuery from '../indexroute.js';
-import ReactRouterRelay from 'react-router-relay';
+import { RelayRouter } from 'react-router-relay';
 
 Relay.injectNetworkLayer(
   new Relay.DefaultNetworkLayer('/graphql', {
@@ -38,63 +38,25 @@ Relay.injectNetworkLayer(
   })
 );
 
-const histori = createHistory();
-
-window.variables = {};
-console.log('main', window.variables);
-
-var ViewerQuery = {
-  user: (Component) => Relay.QL `
-  query {
-    root {
-      ${Component.getFragment('user')},
-    },
-  }
-  `
+const ViewerQuery = {
+  user: () => Relay.QL `query { root }`
 };
 
-var RestaurantQuery = {
-  restaurant: (Component) => Relay.QL `
-  query {
-    root (id: $id) {
-      ${Component.getFragment('restaurant')}
-    }
-  }
-  `
+const RestaurantQuery = {
+  restaurant: () => Relay.QL `query {root (id: $id)}`
 };
 
-var RestaurantsQuery = {
-  restaurant: (Component) => Relay.QL `
-  query {
-    root {
-      ${Component.getFragment('restaurant')}
-    }
-  }
-  `
+const RestaurantsQuery = {
+  restaurant: () => Relay.QL `query {root}`
 };
 //I pass restaurant id to root and then from root to restaurant in the schema.js field
-var FullQuery = {
-  user: (Component) => Relay.QL`
-  query {
-    root (id: $id) {
-      ${Component.getFragment('user')}
-    },
-  }
-  `,
-  restaurant: (Component) => Relay.QL`
-  query {
-    root (id: $id) {
-      ${Component.getFragment('restaurant')}
-    }
-  }
-  `
+const FullQuery = {
+  user: () => Relay.QL`query {root (id: $id)}`,
+  restaurant: () => Relay.QL`query {root (id: $id)}`
 };
 
 ReactDom.render(
-  <Router
-    createElement={ReactRouterRelay.createElement}
-    history={histori}
-  >
+  <RelayRouter  history={browserHistory}>
     <Route path='/' component={IndexContainer} queries={ViewerQuery}>
       <IndexRoute component={Home} queries={ViewerQuery}/>
       <Route path='restaurant/:id' component={Ordering} queries={FullQuery}/>
@@ -117,4 +79,4 @@ ReactDom.render(
         <Route path="/card/:id" component = {BoardCard} queries={RestaurantQuery}/>
       </Route>
     </Route>
-  </Router>, document.getElementById('app'));
+  </RelayRouter>, document.getElementById('app'));
