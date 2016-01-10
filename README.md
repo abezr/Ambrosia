@@ -1,6 +1,6 @@
 #An Uber-like restauration app made with React and Relay-GraphQL
 
-##The application target is to fit both customer and takeaway professional, it implement different features such as:
+##The application target is to fit both customer and takeaway professional, it implements different features such as:
 
 ### Customer Side:
 
