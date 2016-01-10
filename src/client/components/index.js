@@ -35,11 +35,13 @@ export class Index extends React.Component {
     return (
       <div>
       <header ref = 'header'>
-      <nav className='nav nav-brand'>
-        <div className='flex-item-1 title'><Link to='/' >Ambrosia</Link></div>
-        <Link to='/restaurants/list' className='flex-item-2'>Restaurants</Link>
-        <Link to='/start/card' className='flex-item-2'>Start!</Link>
-        <LoginButton {...user}/>
+      <nav className='navbar'>
+        <div className='title'><Link to='/' >Ambrosia</Link></div>
+        <ul className='float-right nav-list'>
+          <li className= 'top-item'><Link to='/restaurants/list' className=''>Restaurants</Link></li>
+          <li className= 'top-item'><Link to='/start/card' className=''>Start!</Link></li>
+          <li className= 'top-item'><LoginButton {...user}/></li>
+        </ul>
       </nav>
       </header>
       <section ref = 'content' onScroll = {this.contentScroll} className='content'>
@@ -69,15 +71,13 @@ class LoginButton extends React.Component {
       return <Link to='/register' className='flex-item-4 login-link'><span>Login</span></Link>;
     } else {
       return (
-        <div className='session flex-item-2'>
-          <div className= 'button' onClick={this._expand}>{this.props.name ? this.props.name : this.props.mail} ▼</div>
-          <Flag hidden={!this.state.expand} width={'10em'} top={'4em'} right={'0'}>
-            <div className={classnames('menu', {hidden: !this.state.expand})}>
-              <div className='profile-link'><Link to='/profile'>Profile</Link></div>
-              <div className='profile-link button' onClick={this._logout}>Logout</div>
-            </div>
-          </Flag>
-        </div>
+        <nav className='session navlist'>
+          <ul className= 'list-container'>
+            <li className= 'button' onClick={this._expand}>{this.props.name ? this.props.name : this.props.mail} ▼</li>
+            <li className={classnames('profile-link', {hidden: !this.state.expand})}><Link to='/profile'>Profile</Link></li>
+            <li className={classnames('profile-link button', {hidden: !this.state.expand})} onClick={this._logout}>Logout</li>
+          </ul>
+        </nav>
       );
     }
   }

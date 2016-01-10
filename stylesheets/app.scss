@@ -10,8 +10,18 @@
 @import "leaflet";
 @import "icons";
 @import "widget";
+@import "index";
 .flex-center {
   justify-content: center;
+}
+.float-left {
+  float: left;
+}
+.float-right {
+  float: right;
+}
+.inline {
+  display: inline;
 }
 .flex {
   display: flex;
@@ -49,33 +59,9 @@ body {
   }
 }
 section {
+  width: 100%;
   position: relative;
   overflow-y: scroll;
-}
-nav.nav-brand {
-  border-bottom: 1px solid;
-  a {
-    padding: 1em;
-    @include button;
-  }
-  div.title {
-    a {
-      padding: 0.25em;
-    }
-  }
-  div.session {
-    position: relative;
-    .profile-link {
-      margin: 1em;
-      a {
-        margin-top: 2em;
-        width: 100%;
-      }
-      .button {
-        margin: 1em;
-      }
-    }
-  }
 }
 .button {
   padding: 1em;

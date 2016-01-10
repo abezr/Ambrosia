@@ -2,7 +2,6 @@ import r from 'rethinkdb';
 import config from '../config';
 import co from 'co';
 
-var userIDs = ["ebe5b9c2-ea9e-4c90-b3f0-0ef86f15bba1", "969a9c63-12ed-4813-85c1-83bde28e9c57", "9934e0b7-e4df-448f-b931-082d5c50982e", "9ef198e8-8240-47fd-9d53-b763fba6ee9a"];
 var messages = ['sans oignons sauce blanche le kebab stp!', 'sans anchois la margarita thanks!', 'fais moi rever toto!', 'charge bien sur la mayonnaise stp', 'sans tomate la Napolitaine svp', 'passe le bonjour à ton père!']
 
 var card = [{

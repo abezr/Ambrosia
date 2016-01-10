@@ -72,8 +72,8 @@ var GraphQLRoot = new GraphQLObjectType({
     restaurant: {
       type: GraphQLRestaurant,
       resolve: (id, args, {rootValue}) => co(function*() {
-        console.log('schema:Root:getRestaurant', fromGlobalId(id).id);
         var restaurant = yield getRestaurant(fromGlobalId(id).id, rootValue);
+        //console.log('schema:Root:getRestaurant', restaurant);
         return restaurant;
       })
     },

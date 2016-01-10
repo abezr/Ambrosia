@@ -159,7 +159,7 @@ class TimeLine extends React.Component {
   }
 
   componentWillReceiveProps () {
-    console.log('componentWillReceiveProps');
+    //console.log('componentWillReceiveProps');
     if(this.state.play) {
       timeLineDate = new Date();
       this.setState({x: (this.props.time - midnightTime)/10000});

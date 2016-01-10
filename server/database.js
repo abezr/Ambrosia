@@ -169,6 +169,7 @@ export function addRestaurant({
 }
 
 export function getRestaurant(id, rootValue) {
+  console.log('database:getRestaurant:id', id);
   return co(function*() {
     var p = new Promise(function(resolve, reject) {
       r.table('restaurant').get(id).run(rootValue.conn, function(err, res) {
@@ -177,6 +178,7 @@ export function getRestaurant(id, rootValue) {
       });
     });
     return yield p.then(function(value) {
+      //console.log('database:getRestaurant:value', value);
       var data = value || null;
       return data;
     });

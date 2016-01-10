@@ -198,14 +198,14 @@ export var GraphQLOrder = new GraphQLObjectType({
       description: 'is the order processed ?'
     },
     date: {
-      type: GraphQLInt,
+      type: GraphQLFloat,
       description: 'the time by which the order has been done in milliseconds since january 1920'
     },
     userName: {
       type: GraphQLString,
       description: 'orderer name if no name return mail',
       resolve: (order, args, {rootValue}) => co(function*() {
-        console.log('GraphQLInputOrder:order', order.userID);
+        //console.log('GraphQLInputOrder:order', order.userID);
         var user = yield getUserByID(order.userID, rootValue);
         return user.name || user.mail;
       })
@@ -252,7 +252,7 @@ export var GraphQLInputOrder = new GraphQLInputObjectType({
       description: 'the items in that order'
     },
     date: {
-      type: GraphQLInt,
+      type: GraphQLFloat,
       description: 'the time in milliseconds by which the order has been done since january 1920'
     }
   }
@@ -383,13 +383,14 @@ export var GraphQLRestaurant = new GraphQLObjectType({
       type: ordersConnection,
       args: { // is graphQLDateType an input type as well?
         midnightTime:
-          {type: GraphQLInt, description: 'only require order of the day'},
+          {type: GraphQLFloat, description: 'only require order of the day'},
           ...connectionArgs
       },
       description: 'all the orders of the restaurant',
       resolve: (restaurant, {midnightTime, ...args}, {rootValue}) => co(function*() {
         var restaurantID = restaurant.id;
         var orders = yield getRestaurantOrders({midnightTime, restaurantID}, rootValue);
+        console.log('schema:restaurant:getOrders', orders);
         return connectionFromArray(orders, args);
       })
     }

@@ -17,7 +17,7 @@ class Board extends React.Component {
   }
   componentWillReceiveProps (newProps) {
     if(!newProps.user.user.userID) {console.log('ChiefIndex:componentWillReceiveProps', newProps.user.user.userID);
-      this.props.history.pushState({
+      this.context.router.pushState({
         previousPath: this.props.location.pathname
       }, '/register');}
   }
