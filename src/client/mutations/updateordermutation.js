@@ -1,6 +1,6 @@
 import Relay from 'react-relay';
 
-export default class UpdateCardMutation extends Relay.Mutation {
+export default class UpdateOrderMutation extends Relay.Mutation {
   getMutation() {
     return Relay.QL`mutation{UpdateOrder}`;
   }

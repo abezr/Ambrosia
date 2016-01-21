@@ -1,5 +1,6 @@
 import React from 'react';
 import Relay from 'react-relay';
+import request from 'superagent';
 import {Link} from 'react-router';
 import classnames from 'classnames';
 import UpdateOrderMutation from '../../mutations/updateordermutation';
@@ -74,8 +75,8 @@ class Board extends React.Component {
     var orders = filterOrder(this.props.restaurant.restaurant.orders.edges);
     return (
       <div className='board'>
-        <TimeLine orders= {orders} time ={time} id = {this.props.id}/>
-        <Dashboard orders = {orders}/>
+        <TimeLine orders={orders} relay={this.props.relay} time={time} id={this.props.id}/>
+        <Dashboard orders = {orders} restaurantID={this.props.id}/>
       </div>
     );
   }
@@ -158,6 +159,21 @@ class TimeLine extends React.Component {
     Relay.Store.update(new UpdateRestaurantMutation({restaurant: resto}), {onFailure, onSuccess});
   }
 
+  _populate = () => {
+    request.post('http://localhost:3800/populate/order')
+    .query({
+      params: this.props.id
+    })
+    .end((err, res) => {
+      if(err) console.error(err);
+      this.props.relay.forceFetch({
+        midnightTime: midnightTime
+      }, (readyState) => {
+        if(readyState.done) console.log('updated!!!')
+      })
+    });
+  }
+
   componentWillReceiveProps () {
     //console.log('componentWillReceiveProps');
     if(this.state.play) {
@@ -188,24 +204,25 @@ class TimeLine extends React.Component {
         <text textAnchor='middle' x='4320' y='300' fill='rgba(255, 255, 255, 0.8)' fontSize='200'>{timeLineDate.getDate() +'/'+ (timeLineDate.getMonth() + 1) +'/'+ timeLineDate.getFullYear()}</text>
         <text textAnchor='middle' x='4320' y='700' fill='rgba(255, 255, 255, 0.8)' fontSize='200'>{timeLineDate.getHours() +':'+ (timeLineDate.getMinutes() < 10 ? '0'+timeLineDate.getMinutes() : timeLineDate.getMinutes())}</text>
       </svg>
-      <div className='nav time'>
+      <nav className='nav-list'>
         <span className={classnames('play flex-item-2', {hidden: this.state.play})} onClick={this.onPlay} />
         <span className={classnames('pause flex-item-2', {hidden: !this.state.play})} />
-        <div className='flex-item-2 cursor-container'>
-          <span id='unpayed' className={classnames('cursor-wrapper', {red: !params.unpayed, green: params.unpayed})} onClick={this._switch}>unpayed <Cursor id={"unpayed"} on={params.unpayed} size={'0.75em'} update={this._switch}/></span>
-          <span id='payed' className={classnames('cursor-wrapper', {red: !params.payed, green: params.payed})} onClick={this._switch}>payed <Cursor id={"payed"} on={params.payed} size={'0.75em'} update={this._switch}/></span>
-          <span id='treated' className={classnames('cursor-wrapper', {red: !params.treated, green: params.treated})} onClick={this._switch}>treated <Cursor id={"treated"} on={params.treated} size={'0.75em'} update={this._switch}/></span>
-          <span id='untreated' className={classnames('cursor-wrapper end', {red: !params.untreated, green: params.untreated})} onClick={this._switch}>untreated <Cursor id={"untreated"} on={params.untreated}size={'0.75em'} update={this._switch}/></span>
-        </div>
-        <div className='flex-item-2 busy-container' onMouseEnter={e => busyFlagHidden = false} onMouseLeave={e => busyFlagHidden = true}>
-          <span className ='busy-wrapper'>
-            <Flag hidden={busyFlagHidden}>
-              <p>The time you need to treat comming orders</p>
-            </Flag>
-            Busy: <input type='number' id='busy' value={params.busy} onChange={this._update} onBlur={this._updateRestaurantMutation}/>minutes
-          </span>
-        </div>
-      </div>
+        <ul className='cursor-container'>
+          <li><span id='unpayed' className={classnames('cursor-wrapper', {red: !params.unpayed, green: params.unpayed})} onClick={this._switch}>unpayed <Cursor id={"unpayed"} on={params.unpayed} size={'0.75em'} update={this._switch}/></span></li>
+          <li><span id='payed' className={classnames('cursor-wrapper', {red: !params.payed, green: params.payed})} onClick={this._switch}>payed <Cursor id={"payed"} on={params.payed} size={'0.75em'} update={this._switch}/></span></li>
+          <li><span id='treated' className={classnames('cursor-wrapper', {red: !params.treated, green: params.treated})} onClick={this._switch}>treated <Cursor id={"treated"} on={params.treated} size={'0.75em'} update={this._switch}/></span></li>
+          <li><span id='untreated' className={classnames('cursor-wrapper end', {red: !params.untreated, green: params.untreated})} onClick={this._switch}>untreated <Cursor id={"untreated"} on={params.untreated}size={'0.75em'} update={this._switch}/></span></li>
+          <li className='busy-container' onMouseEnter={e => busyFlagHidden = false} onMouseLeave={e => busyFlagHidden = true}>
+            <span className ='busy-wrapper'>
+              <Flag hidden={busyFlagHidden}>
+                <p>The time you need to treat comming orders</p>
+              </Flag>
+              Busy: <input type='number' id='busy' value={params.busy} onChange={this._update} onBlur={this._updateRestaurantMutation}/>minutes
+            </span>
+          </li>
+        </ul>
+        <span className='button fulfill' onClick={this._populate}>Fulfill with orders</span>
+      </nav>
     </div>
     );
   }
@@ -228,10 +245,10 @@ class Dashboard extends React.Component {
      * @param  {[int]} index [description]
      * @return {[react element]}       []
      */
-    var createOrder = function (order, index) {
+    var createOrder = (order, index) => {
       if (order.node.date >= timeLineDate.getTime() && i < 10) {
         i++;
-        return <Order key={order.node.id} order={order.node}/>;
+        return <Order key={order.node.id} order={order.node} restaurantID={this.props.restaurantID}/>;
       }
     };
     return (
@@ -255,7 +272,7 @@ class Order extends React.Component {
     e.stopPropagation();
     var order = {
       id: this.props.order.id,
-      restaurantID: '5c9499aa-f49a-4205-9f20-3c81b30920f1'
+      restaurantID: this.props.restaurantID
     };
     console.log(this.props.order[e.currentTarget.id]);
     // var order = {
@@ -277,7 +294,7 @@ class Order extends React.Component {
     var order = this.props.order;
     var createItem = (item) => {
       return (
-        <div className = 'flex-item-2 item'>
+        <div className = 'item'>
           {item.parent}<br/>
           {item.name}
         </div>
@@ -289,7 +306,7 @@ class Order extends React.Component {
     return (
       <div className={classnames('order', {treated: order.treated, green: order.payed, red: !order.payed})} onClick={()=>{this.setState({expand: !this.state.expand});}} onWheel={(e) => {if(this.state.expand === true) e.stopPropagation();}}>
         <h1>{order.userName}<span className='price'>{order.price + ' mB'}</span><span className='time'>{Hours} : {Minutes}</span></h1>
-        <div className={classnames('items', {'nav-wrap': this.state.expand, hidden: !this.state.expand})}>
+        <div className={classnames('items', {hidden: !this.state.expand})}>
           {order.items.map(createItem)}
         </div>
         <span className = 'cursor-payed'>

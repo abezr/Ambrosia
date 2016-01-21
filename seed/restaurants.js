@@ -38,13 +38,9 @@ function getRandomScore() {
 }
 
 function getRandomSchedule() {
- var week = ['monday', 'tuesday', 'wednesday', 'thirsday', 'friday', 'saturday', 'sunday'];
  var schedule = [];
  for (var i = 0; i<7; i++) {
-   schedule.push({
-     day: week[i],
-     openHours: openHours[getRandomInt(0, 3)]
-   });
+   schedule.push({openHours: openHours[getRandomInt(0, 3)]});
  }
  return schedule;
 }

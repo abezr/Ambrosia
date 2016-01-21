@@ -82,7 +82,7 @@ export class Card extends React.Component {
       );
     }
     return (
-      <div className='openarestaurant'>
+      <div className='card-edit'>
         <span className={classnames('submit', {hidden: !this.state.save})} onClick={this._cardUpdateMutation}>
           Save changes
         </span>
@@ -94,12 +94,7 @@ export class Card extends React.Component {
             <Textarea id={'description'} value={this.state.description} default={'restaurant-description'} update={this._update}/>
           </h2>
         </div>
-        <div className='nav'>
-          <div className='flex-item-2' onClick={this._add}>
-            <Plus />
-          </div>
-        </div>
-        <div className='foods nav-wrap'>
+        <div className='foods'>
           {this.state.foods.map(createFood)}
         </div>
       </div>
@@ -160,7 +155,6 @@ class Food extends React.Component {
         <Input id={'name'} value={this.props.name} default={'food-name'} update={this._update}/><br/>
         <Input id={'description'} value={this.props.description} default={'food-name'} update={this._update}/>
         <div className={classnames('meals', {
-          'nav-wrap': this.state.expand,
           'hidden': !this.state.expand
         })}>
           <span className='plus' onClick={this._addMeal}>
@@ -217,7 +211,7 @@ class Meal extends React.Component {
         </span>
         <Input id={'name'} value={this.props.name} default={'meal-name'} update={this._update}/><br/>
         <Input id={'description'} value={this.props.description} default={'meal-description'} update={this._update}/><br/>
-        <Input type={'number'} id='price' default={0} value={this.props.price} update={this._update}/>mB<br/>
+        <span id='price'><Input type={'number'} id='price' default={0} value={this.props.price} update={this._update}/>mB</span><br/>
       </div>
     );
   }

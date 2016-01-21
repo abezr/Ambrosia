@@ -30,10 +30,8 @@ export default class RestaurantsList extends React.Component {
           );
     };
     return (
-      <div className='center-text' onScroll = {this.checkBottom}>
-        <div className='restaurant-list'>{restaurants.length
-            ? restaurants.map(createRestaurant)
-            : <Loading size={'6em'}/>}</div>
+      <div className='center-text'>
+        <div className={'restaurant-grid-'+this.props.display.length}>{restaurants.length ? restaurants.map(createRestaurant) : <Loading size={'6em'}/>}</div>
         {this.props.loading ? <Loading size = {'2em'}/> : ''}
       </div>
     );
@@ -45,6 +43,12 @@ class Restaurant extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {expand: false};
+  }
+
+  _switchExpand = () => {
+    this.setState({
+      expand: !this.state.expand
+    });
   }
 
   render() {
@@ -70,24 +74,18 @@ class Restaurant extends React.Component {
       );
     };
     return (
-          <div className='restaurant' key={restaurant.id} onClick={this._switchExpand}>
+          <div className={classnames('restaurant', {selected: this.state.expand, open: restaurant.open})} key={restaurant.id} onClick={this._switchExpand}>
             <div>
               <span className='restaurant-name'>{restaurant.name}</span><br/>
               <span className='restaurant-description'>{restaurant.description}</span>
               <span className='restaurant-distance'>à {Math.round(restaurant.distance)/1000} Km</span>
               {restaurant.scorable ? <span className='restaurant-score'><Score score={averageScore(restaurant)} size={'5em'}/></span> : ''}
-              <Link className='order-button' to={path} onClick={(e)=>{e.stopPropagation()}}>Order this one!</Link>
+              <Link className='order-button' to={path} onClick={(e)=>{e.stopPropagation()}}>Order!</Link>
             </div>
-            <div className={classnames('foods', {'nav-wrap': this.state.expand}, {hidden: !this.state.expand})}>
+            <div className={classnames('foods', {'flex': this.state.expand}, {hidden: !this.state.expand})}>
               {restaurant.foods.map(createFoods)}
             </div>
           </div>
         );
-  }
-
-  _switchExpand = () => {
-    this.setState({
-      expand: !this.state.expand
-    });
   }
 }

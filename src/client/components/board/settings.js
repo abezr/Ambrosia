@@ -70,8 +70,8 @@ class BoardSettings extends React.Component {
           Check the settings you wish to settle for your restaurant.
         </h1>
         <div>
-          <div className='setting'>Let clients note your restaurant<Cursor id={'scorable'} size={'2em'} on={Settings.scorable} update={this._switch}/></div>
-          <div className='setting'>Is your restaurant open <Cursor id={'open'} size={'2em'} on={Settings.open} update={this._switch}/></div>
+          <div className='setting'><Cursor id={'scorable'} size={'1em'} on={Settings.scorable} update={this._switch}/>   Let clients note your restaurant</div>
+          <div className='setting'><Cursor id={'open'} size={'1em'} on={Settings.open} update={this._switch}/>   Is your restaurant open</div>
         </div>
         <h2>Check out your opening hours</h2>
         <div className='opening-hours nav-wrap'>
@@ -142,7 +142,7 @@ class Day extends React.Component {
     }
     var createPickers = (time, index) => {
       return (
-        <div className='flex-item-2 picker-wrapper'>
+        <div className='picker-wrapper'>
           <span onClick={(e)=>this._removeHours(index)}><Close/></span>
           <Timepicker from={index} index={this.props.index}/><strong className='to'> to </strong><Timepicker to={index} index={this.props.index}/>
         </div>
@@ -152,9 +152,9 @@ class Day extends React.Component {
     return (
       <div className='day-container'>
         <br/>
-          <div className={classnames('flex-center', {'nav-wrap': this.state.expand, hidden: !this.state.expand})}>
+          <div className={classnames('picker-container', {hidden: !this.state.expand})}>
             {schedule.openHours.map(createPickers)}
-            <span className='button flex-item-3' onClick={this._addHours}>And...</span>
+            <span className='button' onClick={this._addHours}>And...</span>
           </div>
         <svg className='day' viewBox='0 0 864 25' onClick={this._switch}>
           {schedule.openHours.map(createSVG)}
@@ -248,7 +248,6 @@ export default Relay.createContainer(BoardSettings, {
         score,
         open,
         schedule {
-          day,
           openHours {
             from,
             to

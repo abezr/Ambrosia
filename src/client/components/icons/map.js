@@ -7,7 +7,7 @@ export default class Map extends React.Component {
 
   render() {
     return (
-      <svg className='map-icon' viewBox="0 0 612 612" height={this.props.size || "1em"} width={this.props.size || "1em"}>
+      <svg className='icon-map' viewBox="0 0 612 612" height={this.props.size || "1em"} width={this.props.size || "1em"}>
       <g>
       	<path d="M516.316,337.52l94.233,193.581c3.832,7.873-0.196,14.314-8.952,14.314H10.402c-8.756,0-12.785-6.441-8.952-14.314
       		L95.684,337.52c1.499-3.079,5.528-5.599,8.952-5.599h80.801c2.49,0,5.853,1.559,7.483,3.442

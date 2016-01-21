@@ -32,6 +32,7 @@ var log = debug('server');
 import {usersSeed} from './seed/users';
 import {restaurantsSeed} from './seed/restaurants';
 import {ordersSeed} from './seed/orders';
+import {ordersSeedById} from './seed/orders';
 
 import {Schema} from './server/schema';
 
@@ -89,10 +90,14 @@ routes.post('/populate', function * (next) {
   yield ordersSeed(this._rdbConn);
   this.body = 'database populated';
 });
+import {fromGlobalId} from 'graphql-relay';
+routes.post('/populate/order', function * (next) {
+  console.log('populate/order');
+  yield ordersSeedById(fromGlobalId(this.query.params).id, this._rdbConn);
+  this.body = 'database populated';
+});
 
 routes.post('/graphql', function * (next) {
-  //looks like my cookie is'nt writable or readable under the post request;
-  //TODO pass the session object for being identicating
   yield graphqlHTTP({
     schema: Schema,
     rootValue: {
@@ -103,15 +108,6 @@ routes.post('/graphql', function * (next) {
 });
 
 server.use(routes.middleware());
-//
-// //NOTE I decided to handle redirection into index component himself
-// server.use(function* (next) {
-//   ReactRouter.run(require('../client/components/routes'), this.path, (error, initialState, transition) => {
-//     var html = React.renderToStaticMarkup(<ReactRouter {...initialState}/>);
-//     this.body = renderFullPage(html);
-//   });
-//   yield next;
-// });id = "${userID}"
 
 server.use(function * (next) {
   //let's try to pass the session object into a script tag
@@ -129,15 +125,6 @@ server.use(function * (next) {
                 </html>`;
 });
 
-// server.use(function* (next) {
-//   //var root = React.createFactory(require('../client/components/html.jsx'));
-//   var hello = React.createFactory(require('../client/components/index.js'));
-//   var html = React.renderToString(hello({
-//     className: 'hello'
-//   }));
-//   yield next;
-//   this.body = html;
-// });
 
 server.use(function * (next) {
   this._rdbConn.close();

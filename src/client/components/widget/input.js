@@ -7,18 +7,24 @@ export default class Input extends React.Component {
   }
 
   _update = (e) => {
+    console.log(e.keyCode)
+    if(e.keyCode === 13 || e.keyCode === 27) e.target.blur()
     this.props.update(e);
   }
 
   _onValid = (e) => {
-    if (e.target.value === '') e.target.value = this.props.default;
+    if (e.target.value === '') e.target.value = this.props.default || '';
     this.props.update(e);
   }
 
   render() {
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext("2d");
+    ctx.font = "11px BlinkMacSystemFont";
+    var width = ctx.measureText(this.props.value).width * 2.1 + (this.props.type === 'number' ? 20 : 0);
     return (
       <span>
-        <input className='input-widget' type={this.props.type ? this.props.type : 'text'} id={this.props.id} value={this.props.value} onChange={this._update} onBlur={this._onValid} onKeyDown={e => {if(e.keyCode === 13) e.target.blur()}} style={{width: this.props.value ? (this.props.value.length + 1) / 2 + 'em' : '1em'}}/>
+        <input className='widget-input' type={this.props.type ? this.props.type : 'text'} id={this.props.id} defaultValue={this.props.value} onBlur={this._onValid} onKeyDown={this._update} style={{width: width + 'px'}}/>
       </span>
     );
   }

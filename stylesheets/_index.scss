@@ -1,53 +1,123 @@
-nav.navbar {
-  border-bottom: 1px solid;
+header {
+  background-color: black;
   a {
-    padding: 1em;
-    text-decoration: none;
-    color: black;
-    &:hover {
-      color: gray;
-    }
+    color: grey;
   }
   div.title {
     display: inline-flex;
-  }
-  .session {
-    display: inline;
-    position: relative;
-    width: 100%;
-    .profile-link {
-      margin: 1em;
-      a {
-        margin-top: 2em;
-      }
-      .button {
-        margin: 1em;
+    a {
+      color: grey;
+      font-weight: bold;
+      font-size: 2em;
+      padding: 0.25em 1em;
+      &:hover {
+        color: yellow;
       }
     }
   }
-
+  .auth {
+    position: relative;
+    &:hover {
+      .dropdown-content {
+        display: block;
+      }
+    }
+    .auth-btn {
+      a {
+        color: grey;
+        font-weight: bold;
+        font-size: 2em;
+        padding: 0.25em 1em;
+        &:hover {
+          color: yellow;
+        }
+      }
+    }
+    .dropdown-content {
+      width: 100%;
+      display: none;
+      position: absolute;
+      z-index: 5;
+      background-color: black;
+    }
+    .profile-link {
+      &:hover {
+        color: white;
+        border-left: 1px solid black;
+      }
+    }
+  }
+  li a,
+  .nav-item {
+    &:hover {
+      color: yellow;
+    }
+  }
+}
+a {
+  padding: 1em;
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+}
+nav.nav-list {
+  position: relative;
   ul {
     list-style-type: none;
     margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
+    &.center {
+      text-align: center;
+    }
+    &.left {
+      text-align: left;
+    }
+    &.right {
+      text-align: right;
+    }
   }
-
-li {
-    float: left;
-}
-
-li a {
+  li {
+    position: relative;
+    display: inline-block;
+  }
+  li a,
+  .nav-item {
     display: block;
-    color: white;
     text-align: center;
-    padding: 14px 16px;
+    padding: 1em;
     text-decoration: none;
+  }
 }
-
-/* Change the link color to #111 (black) on hover */
-li a:hover {
-    background-color: #111;
-}
-}
+// nav.nav-stack {
+//   z-index: 5;
+//   background-color: black;
+//   ul {
+//     list-style-type: none;
+//     margin: 0;
+//     padding: 0;
+//   }
+//   li {
+//     float: none;
+//   }
+//   .logout-link {
+//     padding: 1em;
+//     text-align: center;
+//     text-decoration: none;
+//     &:hover {
+//       color: yellow;
+//       border-left: 1px solid black;
+//     }
+//   }
+//   li a {
+//     text-align: center;
+//     padding: 0.5em;
+//     text-decoration: none;
+//     &:hover {
+//       color: yellow;
+//     }
+//   }
+// }
+// @media screen and (min-aspect-ratio: 2/3) {
+//   header {
+//     background-color: yellow;
+//   }
+// }

@@ -276,6 +276,7 @@ export var UpdateOrderMutation = mutationWithClientMutationId({
   },
   mutateAndGetPayload: (args, {rootValue}) => co(function*() {
     args.order.id = fromGlobalId(args.order.id).id;
+    args.order.restaurantID = fromGlobalId(args.order.restaurantID).id;
     return yield updateOrder(args.order, rootValue);
   })
 })

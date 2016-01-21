@@ -9,7 +9,7 @@ export default class Modal extends React.Component {
   render() {
     return (
       <div className = {classnames('modal', {hidden: this.props.hidden})}>
-        <div className = 'form' style={{'border': this.props.border || '2px solid', 'height': this.props.height || ""}}>
+        <div className = 'form' style={{'border': this.props.border || '', 'height': this.props.height || ""}}>
           {this.props.children}
         </div>
       </div>

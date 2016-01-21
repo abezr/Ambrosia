@@ -185,26 +185,6 @@ export function getRestaurant(id, rootValue) {
   });
 }
 
-export function getRestaurants(rootValue) {
-  return co(function*() {
-    var p = new Promise(function(resolve, reject) {
-      r.table('restaurant').run(rootValue.conn, function(err, res) {
-        if (err) reject(err);
-        if (res) {
-          res.toArray(function(err, res) {
-            if (err) reject(err);
-            console.log('database:getRestaurants', res);
-            resolve(res);
-          });
-        } else {
-          resolve([]);
-        }
-      });
-    });
-    return yield p;
-  });
-}
-
 export function getNearestRestaurants(location, rootValue) {
   if (!location) return [];
   return co(function*() {
@@ -232,9 +212,8 @@ export function getNearestRestaurants(location, rootValue) {
   });
 }
 
-export function getRestaurantsByName(args, rootValue) {
+export function getRestaurants(args, rootValue) {
   console.log('database:getRestaurantsByName', args);
-  if (!args.name) return [];
   return co(function*() {
     var p = new Promise(function(resolve, reject) {
       r.table('restaurant').getNearest(r.point(args.location[0], args.location[1]), {
@@ -244,11 +223,38 @@ export function getRestaurantsByName(args, rootValue) {
         if (err) reject(err);
         if (res) {
           res.toArray((err, res) => {
-            var filtre = res.filter((restaurant) => {
-              var re = new RegExp(`${args.name}`, 'gi');
-              return restaurant.doc['name'].match(re);
-            });
             if (err) reject(err);
+            var filtre = res;
+            if(args.name) {
+              filtre = filtre.filter((restaurant) => {
+                var re = new RegExp(`${args.name}`, 'gi');
+                return restaurant.doc['name'].match(re);
+              });
+              console.log('database:getRestaurants:filtre:name', filtre[15].doc.name);
+            }
+            if(args.rated) {
+              var averageScore = (restaurant) => {
+                restaurant = restaurant.doc;
+                if(!restaurant.scorable) return 0;
+                var stamp = 0;
+                if(restaurant.score) {
+                  restaurant.score.map(mark => {
+                    stamp += mark;
+                  });
+                  return stamp /= restaurant.score.length;
+                }
+              };
+              filtre.sort((a, b) => {
+                return averageScore(b) - averageScore(a);
+              });
+              console.log('database:getRestaurants:filtre:score', filtre[15].doc.score);
+            }
+            if(args.open) {
+              filtre = filtre.filter((restaurant) => {
+                return restaurant.doc.open || false;
+              });
+              console.log('database:getRestaurants:filtre:open', filtre[15].doc.name);
+            }
             var newResult = filtre.map((raw) => {
               delete raw.doc.location['$reql_type$'];
               var resto = raw.doc;
@@ -332,14 +338,19 @@ export function getRestaurantOrders(args, rootValue) {
   });
 }
 
-export function getUserOrders(userID, rootValue) {
-  if (!userID) return [];
+export function getUserOrders(args, rootValue) {
+  if (!args.userID) return [];
   return co(function*() {
     var p = new Promise(function(resolve, reject) {
-      r.table('order').getAll(userID, {index:'userID'}).run(rootValue.conn, function(err, res) {
+      r.table('order').getAll(args.userID, {index:'userID'}).orderBy(r.desc('date')).run(rootValue.conn, function(err, res) {
         if (res) {
           res.toArray(function(err, res) {
             if (err) reject(err);
+            if(args.pending) {
+              res = res.filter((order) => {
+                return order.treated === false;
+              });
+            }
             resolve(res);
           });
         } else {

@@ -15,9 +15,13 @@ export default class Textarea extends React.Component {
   }
 
   render() {
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext("2d");
+    ctx.font = "11px BlinkMacSystemFont";
+    var width = ctx.measureText(this.props.value).width * 2.1;
     return (
       <span>
-        <textarea className='textarea-widget' type='text' id={this.props.id} value={this.props.value} onChange={this._update} onBlur={this._onValid} onKeyDown={e => {if(e.keyCode === 13) e.target.blur()}} style={{width: (this.props.value.length + 1) / 2 + 'em'}}/>
+        <textarea className='widget-textarea' placeholder={this.props.placeholder} type='text' id={this.props.id} value={this.props.value} onChange={this._update} onBlur={this._onValid} onKeyDown={e => {if(e.keyCode === 13) e.target.blur()}} style={{width: width + 'px'}}/>
       </span>
     );
   }

@@ -35,12 +35,12 @@ export class Index extends React.Component {
     return (
       <div>
       <header ref = 'header'>
-      <nav className='navbar'>
+      <nav className='nav-list'>
         <div className='title'><Link to='/' >Ambrosia</Link></div>
-        <ul className='float-right nav-list'>
-          <li className= 'top-item'><Link to='/restaurants/list' className=''>Restaurants</Link></li>
-          <li className= 'top-item'><Link to='/start/card' className=''>Start!</Link></li>
-          <li className= 'top-item'><LoginButton {...user}/></li>
+        <ul className='float-right'>
+          <li><Link to='/restaurants/list' className=''>Restaurants</Link></li>
+          <li><Link to='/start/card' className=''>Start!</Link></li>
+          <LoginButton {...user}/>
         </ul>
       </nav>
       </header>
@@ -68,16 +68,16 @@ class LoginButton extends React.Component {
 
   render() {
     if(this.props.mail === '') {
-      return <Link to='/register' className='flex-item-4 login-link'><span>Login</span></Link>;
+      return <li><Link to='/register' className='flex-item-4 login-link'><span>Login</span></Link></li>;
     } else {
       return (
-        <nav className='session navlist'>
-          <ul className= 'list-container'>
-            <li className= 'button' onClick={this._expand}>{this.props.name ? this.props.name : this.props.mail} ▼</li>
-            <li className={classnames('profile-link', {hidden: !this.state.expand})}><Link to='/profile'>Profile</Link></li>
-            <li className={classnames('profile-link button', {hidden: !this.state.expand})} onClick={this._logout}>Logout</li>
-          </ul>
-        </nav>
+        <li className="auth" onClick={this._expand}>
+          <a className="auth-btn">{this.props.name ? this.props.name : this.props.mail} ▼</a>
+          <div className="dropdown-content">
+            <Link to='/profile'>Profile</Link>
+            <a onClick={this._logout}>Logout</a>
+          </div>
+        </li>
       );
     }
   }

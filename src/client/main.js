@@ -21,6 +21,7 @@ import StartMap from './components/start/map';
 import StartSubmit from './components/start/submit';
 import Board from './components/board/board';
 import BoardTimeLine from './components/board/timeline';
+import BoardCardIndex from './components/board/cardindex';
 import BoardCard from './components/board/card';
 import BoardSettings from './components/board/settings';
 import Ordering from './components/ordering';
@@ -56,7 +57,7 @@ const FullQuery = {
 };
 
 ReactDom.render(
-  <RelayRouter  history={browserHistory}>
+  <RelayRouter history={browserHistory}>
     <Route path='/' component={IndexContainer} queries={ViewerQuery}>
       <IndexRoute component={Home} queries={ViewerQuery}/>
       <Route path='restaurant/:id' component={Ordering} queries={FullQuery}/>
@@ -76,7 +77,10 @@ ReactDom.render(
       <Route path="board/:id" component={Board} queries={FullQuery}>
         <Route path="/settings/:id" component = {BoardSettings} queries={RestaurantQuery} />
         <Route path="/timeline/:id" component = {BoardTimeLine} queries={RestaurantQuery}/>
-        <Route path="/card/:id" component = {BoardCard} queries={RestaurantQuery}/>
+        <Route path="/card/:id" component = {BoardCardIndex}>
+          <Route path="/card/edit/:id" component= {BoardCard} queries={RestaurantQuery}/>
+          <Route path="/card/order/:id" component= {Ordering} queries={FullQuery}/>
+        </Route>
       </Route>
     </Route>
   </RelayRouter>, document.getElementById('app'));

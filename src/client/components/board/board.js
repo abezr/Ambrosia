@@ -9,25 +9,29 @@ import classnames from 'classnames';
 
 /// make a board component to go through card and dashboard order
 class Board extends React.Component {
-  constructor(props, context) {
+  constructor (props, context) {
     super(props, context);
     this.state = {
       active: this.props.location.pathname
     }
   }
   componentWillReceiveProps (newProps) {
-    if(!newProps.user.user.userID) {console.log('ChiefIndex:componentWillReceiveProps', newProps.user.user.userID);
+    if (!newProps.user.user.userID) {
+      console.log('ChiefIndex:componentWillReceiveProps', newProps.user.user.userID);
       this.context.router.pushState({
         previousPath: this.props.location.pathname
-      }, '/register');}
+      }, '/register');
+    }
   }
   componentWillMount () {
     console.log('board:componentWillMount', this.props);
-    if (this.props.user.user.userID !== this.props.restaurant.restaurant.userID) {console.log('ChiefIndex:ComponentWillMount', this.props.user.user.userID);
-      this.props.history.pushState({}, '/');}
+    if (this.props.user.user.userID !== this.props.restaurant.restaurant.userID) {
+      console.log('ChiefIndex:ComponentWillMount', this.props.user.user.userID);
+      this.props.history.pushState({}, '/');
+    }
   }
   _select = (e) => {
-    for(var i in this.refs) {
+    for (var i in this.refs) {
       console.log(this.refs[i].getDOMNode());
       this.refs[i].getDOMNode().className = 'item';
     }
@@ -38,17 +42,19 @@ class Board extends React.Component {
     console.log(this.props);
     return (
       <div className='chief-index'>
-        <div className='nav flex-center'>
-          <Link to= {'/card/'+this.props.id} className ={classnames('item', {
-            selected: (this.props.location.pathname.search('card') !== -1)
-          })} ref='card' onClick={this._select}>Card</Link>
-        <Link to= {'/timeline/'+this.props.id} className={classnames('item', {
-            selected: (this.props.location.pathname.search('timeline') !== -1)
-          })} ref='board' onClick={this._select}>Orders</Link>
-        <Link to= {'/settings/'+this.props.id} className={classnames('item', {
-            selected: (this.props.location.pathname.search('settings') !== -1)
-          })} ref='settings' onClick={this._select}>Settings</Link>
-        </div>
+        <nav className='nav-list'>
+          <ul className='center'>
+            <li><Link to= {'/card/edit/'+this.props.id} className ={classnames('item', {
+              selected: (this.props.location.pathname.search('card') !== -1)
+            })} ref='card' onClick={this._select}>Card</Link></li>
+            <li><Link to= {'/timeline/'+this.props.id} className={classnames('item', {
+              selected: (this.props.location.pathname.search('timeline') !== -1)
+            })} ref='board' onClick={this._select}>Orders</Link></li>
+            <li><Link to= {'/settings/'+this.props.id} className={classnames('item', {
+              selected: (this.props.location.pathname.search('settings') !== -1)
+            })} ref='settings' onClick={this._select}>Settings</Link></li>
+          </ul>
+        </nav>
         {this.props.children}
       </div>
     );

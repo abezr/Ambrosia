@@ -1,8 +1,17 @@
-.close-icon {
+
+@mixin icon {
+  display: inline;
+  cursor: default;
+}
+.icon-close {
   cursor: pointer;
   position: absolute;
   top: 0.5em;
   right: 0.5em;
+}
+
+.icon-valid {
+  @include icon;
 }
 
 .center-wrapper {
@@ -25,7 +34,7 @@
     to {transform: rotate(360deg);}
 }
 
-.loading-icon {
+.icon-loading {
   z-index: 10;
   animation-name: rotate;
   animation-duration: 2s;

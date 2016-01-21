@@ -11,7 +11,8 @@ module.exports = {
     }, {
       test: /\.scss$/,
       loader: 'style!css!sass'
-    }]
+    },
+    ]
   },
   output: {
     filename: 'app.js',

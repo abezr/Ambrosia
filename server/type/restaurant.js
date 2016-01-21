@@ -25,7 +25,7 @@ import {
 }
 from 'graphql-relay';
 
-import {getRestaurantOrders, getUserByID} from '../database';
+import {getRestaurantOrders, getRestaurant, getUserByID} from '../database';
 
 import co from 'co';
 
@@ -41,7 +41,7 @@ export var GraphQLGeoJSON = new GraphQLObjectType({
       description: 'geoJSON object location'
     }
   }
-})
+});
 
 export var GraphQLMeal = new GraphQLObjectType({
   name: 'Meal',
@@ -167,11 +167,17 @@ export var GraphQLOrder = new GraphQLObjectType({
     id: globalIdField('Order'),
     userID: {
       type: GraphQLString,
-      description: 'the orderer user-id'
+      description: 'the orderer user-id',
+      resolve: (order) => {
+        return toGlobalId(order.userID);
+      }
     },
     restaurantID: {
       type: GraphQLString,
-      description: 'the restaurant who get ordered'
+      description: 'the restaurant who get ordered',
+      resolve: (order) => {
+        return toGlobalId(order.restaurantID);
+      }
     },
     price: {
       type: GraphQLInt,
@@ -205,9 +211,16 @@ export var GraphQLOrder = new GraphQLObjectType({
       type: GraphQLString,
       description: 'orderer name if no name return mail',
       resolve: (order, args, {rootValue}) => co(function*() {
-        //console.log('GraphQLInputOrder:order', order.userID);
         var user = yield getUserByID(order.userID, rootValue);
         return user.name || user.mail;
+      })
+    },
+    restaurantName: {
+      type: GraphQLString,
+      description: 'restaurant name for that particular order',
+      resolve: (order, args, {rootValue}) => co(function*() {
+        var restaurant = yield getRestaurant(order.restaurantID, rootValue);
+        return restaurant? restaurant.name : 'unknown';
       })
     }
   }
@@ -268,16 +281,16 @@ export var GraphQLOrderEdge = orderConnection.edgeType;
 var GraphQLOpenHours = new GraphQLObjectType({
   name: 'OpenHours',
   fields: {
-    from: {type: GraphQLInt},
-    to: {type: GraphQLInt}
+    from: {type: GraphQLInt, description: 'in milliseconds since midnight of that day'},
+    to: {type: GraphQLInt, description: 'in milliseconds since midnight of that day'}
   }
 });
 
 var GraphQLInputOpenHours = new GraphQLInputObjectType({
   name: 'InputOpenHours',
   fields: {
-    from: {type: GraphQLInt},
-    to: {type: GraphQLInt}
+    from: {type: GraphQLInt, description: 'in milliseconds since midnight of that day'},
+    to: {type: GraphQLInt, description: 'in milliseconds since midnight of that day'}
   }
 });
 
@@ -386,7 +399,7 @@ export var GraphQLRestaurant = new GraphQLObjectType({
           {type: GraphQLFloat, description: 'only require order of the day'},
           ...connectionArgs
       },
-      description: 'all the orders of the restaurant',
+      description: 'all the restaurants orders',
       resolve: (restaurant, {midnightTime, ...args}, {rootValue}) => co(function*() {
         var restaurantID = restaurant.id;
         var orders = yield getRestaurantOrders({midnightTime, restaurantID}, rootValue);

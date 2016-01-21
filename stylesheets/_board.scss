@@ -1,31 +1,31 @@
-$green: rgba(20, 152, 13, 0.55);
-$red: rgba(194, 15, 15, 0.55);
-
-.red {
-  background-color: $red;
-}
-.green {
-  background-color: $green;
-}
 div.chief-index {
+  $green: rgba(20, 152, 13, 0.55);
+  $red: rgba(194, 15, 15, 0.55);
+  $bg-button: gold;
+  .button {
+    margin: auto 5px;
+  }
+  ul {
+    padding: 5px;
+    background-color: ghostwhite;
+  }
   a.item {
     @extend .flex-item-2;
+    min-width: 7em;
     border-radius: 0.25em;
-    color: #666666;
+    background-color: $bg-button;
     padding: 0.25em;
     margin: 0.125em;
-    border: 1px solid;
     text-decoration: none;
-  }
-  a.selected {
-    @extend a.item;
-    color: black;
-    box-shadow: 2px 2px 0;
+    &:hover,
+    &.selected {
+      box-shadow: 0 0 3px black;
+    }
   }
 }
 @keyframes appear {
   from {
-    height: 0em;
+    height: 0;
   }
   to {
     height: 3em;
@@ -70,31 +70,41 @@ div.board {
         }
       }
       .items {
+        @include flex-wrap;
+        &.hidden {
+          display: none;
+        }
         margin: 0 0.5em;
         .item {
+          background-color: gold;
           margin: 0 0.125em;
           padding: 0 0.25em;
           border: 1px solid;
         }
       }
-      .cursor-payed, .cursor-treated {
+      .cursor-payed,
+      .cursor-treated {
         float: right;
         margin: 0 0.25em;
       }
     }
   }
   div.timeline {
-    margin-top: 1em;
     text-align: center;
+    .fulfill {
+      position: fixed;
+      bottom: 1em;
+      right: 1em;
+    }
     span.play {
-      margin: 0.5em;
+      margin: 0 0.5em;
       float: left;
       width: 2em;
       height: 2em;
       background-image: url(/stylesheets/icons/play.svg);
     }
     span.pause {
-      margin: 0.5em;
+      margin: 0 0.5em;
       float: left;
       width: 2em;
       height: 2em;
@@ -102,14 +112,20 @@ div.board {
     }
     .cursor-container {
       span.cursor-wrapper {
-        margin: 0 0.125em;
         cursor: default;
+        margin: 0 2px;
         padding: 0.25em;
-        border: 1px solid;
         border-radius: 0.25em;
+        &.green {
+          box-shadow: 0 0 4px 0 rgba(20, 152, 13, 0.55) inset;
+        }
+        &.red {
+          box-shadow: 0 0 4px 0 rgba(194, 15, 15, 0.55) inset;
+        }
       }
     }
     .busy-container {
+      float: right;
       margin: 0 1em;
       span.busy-wrapper {
         border: 1px solid;
@@ -126,16 +142,8 @@ div.board {
 div.settings {
   margin: 2em;
   .setting {
-    font-size: 1.5em;
-    margin: 1em auto;
-    width: 75%;
-    position: relative;
     padding: 0.75em;
-    border: 1px solid;
     .cursor {
-      top: 0.5em;
-      right: 0.5em;
-      position: absolute;
     }
   }
   .close-icon {
@@ -149,6 +157,12 @@ div.settings {
       display: inline-block;
       padding: 0.5em;
       border: 1px solid;
+    }
+    .picker-container {
+      @include flex-wrap;
+      &.hidden {
+        display: none;
+      }
     }
     .picker-wrapper {
       background-color: rgb(171, 171, 168);

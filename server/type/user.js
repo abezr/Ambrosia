@@ -84,11 +84,15 @@ export var GraphQLUser = new GraphQLObjectType({
     },
     orders: {
       type: ordersConnection,
-      args: connectionArgs,
+      args: {
+        pending: {type: GraphQLBoolean, description:'only return pending orders (non treated)'},
+        ...connectionArgs
+      },
       description: 'The orders of the user',
       resolve: (user, args, {rootValue}) => co(function*() {
         console.log('schema:UserType:getUserOrders', user);
-        var orders = yield getUserOrders(user.userID, rootValue);
+        args.userID = user.userID;
+        var orders = yield getUserOrders(args, rootValue);
         return connectionFromArray(orders, args);
       })
     },

@@ -1,0 +1,17 @@
+
+@mixin flex {
+  @include display(flex);
+  @include justify-content(center);
+  flex-flow: row nowrap;
+}
+
+@mixin flex-wrap {
+  @include flex;
+  flex-wrap: wrap;
+}
+@mixin flex-item {
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: center;
+}

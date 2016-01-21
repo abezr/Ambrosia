@@ -7,7 +7,7 @@ export default class Loading extends React.Component {
 
   render() {
     return (
-      <svg className='loading-icon' viewBox="0 0 500 500" height={this.props.size || "1em"} width={this.props.size || "1em"}>
+      <svg className='icon-loading' viewBox="0 0 500 500" height={this.props.size || "1em"} width={this.props.size || "1em"}>
       <g>
       	<path fill = {this.props.fill || 'black'} stroke={this.props.stroke || 'black'} d="M250,0c14,0,24,10,24,24v94c0,14-10,25-24,25s-25-11-25-25V24C225,10,236,0,250,0z"/>
       	<path fill = {this.props.fill || 'black'} stroke={this.props.stroke || 'black'} d="M137,53l55,76c12,16,0,39-20,39c-8,0-14-3-19-10L98,82c-8-11-6-26,5-34S129,42,137,53z"/>

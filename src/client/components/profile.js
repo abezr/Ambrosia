@@ -1,23 +1,59 @@
+
 import React from 'react';
 import Relay from 'react-relay';
 import classnames from 'classnames';
 import {Link} from 'react-router';
 import UserMutation from '../mutations/usermutation';
 
+import Close from './icons/close';
+
+import Input from './widget/input';
+import Modal from './widget/modal';
+
 //Picture Profile
 //name
 //Restaurant owned
 //an history of orders made as a user
+var _displayModal;
+var _hideModal;
+var modalContent;
+var getModalContent = (order) => {
+  //TODO think about real order number instead of client orderID
+  console.log(order);
+  var date = new Date(order.date);
+  var day = date.toLocaleDateString();
+  var hours = date.getHours() + ' hours ';
+  var minutes = date.getMinutes() <10 ? '0'+date.getMinutes()+' minutes' : date.getMinutes()+' minutes';
+  return (
+    <div className='modal-content'>
+      <Close size='2em' onClick={e => _hideModal()}/>
+      <div>Order number: {order.id}</div>
+      <div>Ordered the {day} at {hours}{minutes} at <Link to ={'/restaurant/'+order.restaurantID}><strong>{order.restaurantName}</strong></Link></div>
+      <div className='items'>{order.items.map(item => {return <div className='item'>{item.parent}<br/>{item.name}</div>})}</div>
+      <div>price: {order.price} mB</div>
+      <div>payed: {order.payed ? 'yes' : 'no'}</div>
+      <div>treated: {order.treated ? 'yes' : 'no'}</div>
+    </div>
+  );
+}
 class Profile extends React.Component {
 
   constructor(props, context) {
     super(props, context);
     var user = this.props.user.user;
+    _displayModal = (order) => {
+      modalContent = getModalContent(order);
+      this.setState({modal: true});
+    }
+    _hideModal = () => {
+      this.setState({modal: false});
+    }
     this.state = {
+      modal: false,
       update: {
         name: user.name ? user.name : 'Your name here',
         mail: user.mail ? user.mail : 'Your mail here',
-        profilePicture: user.profilePicture || '/stylesheets/icons/profile.jpeg',
+        profilePicture: user.profilePicture || '/stylesheets/icons/profile.png',
       },
       save: false
     };
@@ -38,66 +74,62 @@ class Profile extends React.Component {
       update: {
         name: user.name ? user.name : 'Your name here',
         mail: user.mail ? user.mail : 'Your mail here',
-        profilePicture: user.profilePicture || '/stylesheets/icons/profile.jpeg',
+        profilePicture: user.profilePicture || '/stylesheets/icons/profile.png',
       },
       save: false
     });
   }
 
-  _onChange = (e) => {
-    this.state.update[e.target.id] = e.target.value;
-    this.setState({
-      update: this.state.update,
-      save: true
-    });
-  }
-
-  _onKeyUp = (e) => {
-    var onSuccess = () => {
-    }
+  _update = (e) => {
+    console.log(e.keyCode, e);
+    var onSuccess = () => console.log('success');
     var onFailure = () => console.log('failure');
     if(e.keyCode === 13) {
-      new Relay.Store.update(new UserMutation({user: this.props.user.user, update: this.state.update}), {onFailure, onSuccess});
-      e.target.blur();
-    }
-    if(e.keyCode === 27) {
-      e.target.blur();
+      Relay.Store.commitUpdate(new UserMutation({user: this.props.user.user, update: this.state.update}), {onFailure, onSuccess});
+    } else {
+      this.state.update[e.target.id] = e.target.value;
+      this.setState({
+        update: this.state.update,
+        save: true
+      });
     }
   }
+
   render() {
     var user = this.props.user.user;
     var createRestaurant = (resto, index) => {
-      var bool = user.restaurants.edges.length === index+1;
-      return <Link to ={'/timeline/'+resto.node.id} className={classnames({'last-restaurant': bool, restaurant: !bool})} key={resto.node.id}>{resto.node.name}</Link>;
+      return <Link to ={'/timeline/'+resto.node.id} className='restaurant' key={resto.node.id}>{resto.node.name}</Link>;
     };
     var createOrder = (order, index) => {
-      var date = new Date(order.node.date);
-      var bool = !(user.orders.edges.length === index+1);
+      const orderNode = order.node;
+      var date = new Date(orderNode.date);
       return (
-        <div className={classnames({'order': bool, 'last-order': !bool})} key={order.node.id}>
-          <div>{date.toLocaleDateString()}</div>
-          <div>{date.getHours()} Hours {date.getMinutes()} Minutes</div>
-          <span className='price'>{order.node.price} mɃ</span>
+        <div className='order' key={orderNode.id} onClick={(e)=>_displayModal(orderNode)}>
+          <div>Ordered to<Link to ={'/restaurant/'+orderNode.restaurantID}><strong>{orderNode.restaurantName}</strong></Link>the {date.toLocaleDateString()}</div>
+          <span className='price'>{orderNode.price} mɃ</span>
         </div>
       );
     };
     return (
       <div className='profile'>
-        <div className='flex'>
-          <img src={user.profilePicture ? user.profilePicture : '/stylesheets/icons/profile.jpeg'} alt="Profile-Picture"/>
+        <Modal hidden={!this.state.modal}>
+          {modalContent}
+        </Modal>
+        <div className='profile-credentials'>
+          <img src={user.profilePicture ? user.profilePicture : '/stylesheets/icons/profile.png'} alt="Profile-Picture"/>
           <div className='credentials marged'>
-            <h1><input id='name' type='text' onChange={this._onChange} onKeyUp={this._onKeyUp} value = {this.state.update.name} /></h1>
-            <h2><input id='mail' type='text' onChange={this._onChange} onKeyUp={this._onKeyUp} value = {this.state.update.mail} /></h2>
-            <Link className='openarestaurant-link button' to = {'/start/card'}>Open a restaurant.</Link>
+            <Input id='name' type='text' update={this._update} value = {this.state.update.name} /><br/>
+            <Input id='mail' type='text' update={this._update} value = {this.state.update.mail} /><br/>
+            <Link className='openarestaurant-link button' to = {'/start/card'}>Open a restaurant</Link>
           </div>
         </div>
-        <div className='flex'>
+        <div className='profile-data'>
           <div className={classnames('width-2', {hidden: !user.restaurants.edges.length})}>
             <h3>Your Restaurants</h3>
             <div className='restaurants-list'>{user.restaurants.edges.map(createRestaurant)}</div>
           </div>
           <div className='width-2'>
-            <h3>Your Orders</h3>
+            <h3>You have {user.orders.edges.length} pending Orders</h3>
             <div className='orders-list'>{user.orders.edges.map(createOrder)}</div>
           </div>
         </div>
@@ -126,12 +158,19 @@ export default Relay.createContainer(Profile, {
             }
           }
         }
-        orders(first: 30) {
+        orders(first:9999, pending: true) {
           edges {
             node {
               id,
               price,
-              date
+              date,
+              restaurantID,
+              restaurantName,
+              items {
+                id,
+                parent,
+                name
+              }
             }
           }
         }

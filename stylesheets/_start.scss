@@ -60,49 +60,11 @@ span.close {
   right: 0.5em;
 }
 div.openarestaurant {
+  .button {
+    margin: auto 5px;
+  }
   text-align: center;
   margin: 1em;
-  div.brand {
-    text-align: center;
-    h1 {
-      margin: 0.5em;
-    }
-    h2 {
-      margin: 0.5em;
-    }
-  }
-  div.foods {
-    margin: 1em;
-  }
-  div.food {
-    position: relative;
-    margin: 0.5em;
-    text-align: center;
-    font-size: 1.5em;
-    padding: 1em 1em 0;
-    border: 3px solid;
-    border-radius: 10px;
-    span.plus {
-      position: absolute;
-      top: 0.5em;
-      left: 0.5em;
-    }
-    div.meal {
-      span.close {
-        position: absolute;
-        width: 1.5em;
-        height: 1.5em;
-        top: -1em;
-        right: -1em;
-      }
-      position: relative;
-      margin: 1em;
-      #price,
-      #time {
-        width: 2em;
-      }
-    }
-  }
 }
 div.restaurants-map {
   position: relative;

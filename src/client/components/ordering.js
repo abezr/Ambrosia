@@ -2,21 +2,38 @@ import React from 'react';
 import Relay from 'react-relay';
 import classnames from 'classnames';
 import OrderMutation from '../mutations/newordermutation';
+import request from 'superagent';
 
 import Close from './icons/close';
+import Score from './icons/score';
+import Map from './icons/map';
 import Modal from './widget/modal';
 import Textarea from './widget/textarea';
 
 //var caddy = [];
 var _pushCaddy;
 var _splitCaddy;
+var _sum;
 var _modal;
 var _mutation;
+var _selfOrdering
+
+var averageScore = (restaurant) => {
+  if(!restaurant.scorable) return 0;
+  var stamp = 0;
+  if(restaurant.score) {
+    restaurant.score.map(mark => {
+      stamp += mark;
+    });
+    return stamp /= restaurant.score.length;
+  }
+};
 
 class Restaurant extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.state = {caddy: localStorage[this.props.id] ? JSON.parse(localStorage[this.props.id]) : [], modalHidden: true, order: null};
+    this.state = {caddy: localStorage[this.props.id] ? JSON.parse(localStorage[this.props.id]) : [], modal: false, order: null};
+    _selfOrdering: this.props.route.path.match('/card/order')
     _pushCaddy = (item) => {
       var match = false;
       this.state.caddy.forEach(order => {
@@ -31,17 +48,29 @@ class Restaurant extends React.Component {
     }
     _splitCaddy = (index) => {
       if(this.state.caddy[index].times) {
-        this.state.caddy[index].times--;
-        this.forceUpdate();
-        return;
+          this.state.caddy[index].times === 2 ? this.state.caddy[index].times = null : this.state.caddy[index].times--;
+          localStorage[this.props.id] = JSON.stringify(this.state.caddy);
+          this.forceUpdate();
+          return;
       }
       this.state.caddy.splice(index, 1);
       localStorage[this.props.id] = JSON.stringify(this.state.caddy);
       this.forceUpdate();
     }
+    _sum = () => {
+      var value = 0;
+      this.state.caddy.forEach(function(item) {
+        if(item.times) {
+          value += item.price * item.times;
+          return;
+        }
+        value += item.price;
+      });
+      return value;
+    }
     _modal = (order) => {
       this.state.order = order ? order : null;
-      this.state.modalHidden = !this.state.modalHidden;
+      this.state.modal = !this.state.modal;
       this.forceUpdate();
     }
     _mutation = (order) => {
@@ -58,6 +87,35 @@ class Restaurant extends React.Component {
       Relay.Store.update(new OrderMutation({order: order}), {onFailure, onSuccess});
     }
   }
+  _isOpen = (restaurant) => {
+    var d = new Date();
+    var day = d.getDay();
+    var time = d.getTime();
+    var midnightTime = d.setHours(0, 0, 0);
+    var millisecondsSinceMidnight = time - midnightTime;
+    var isOpen = undefined;
+    var willOpen = false;
+    var willOpenReadable = '';
+    restaurant.schedule[day].openHours.forEach((hours, i) => {
+      if(hours.from < millisecondsSinceMidnight && hours.to > millisecondsSinceMidnight) {
+        console.log(hours.from/10000, millisecondsSinceMidnight/10000, hours.to/10000);
+        var timeRemain = new Date(midnightTime+hours.to);
+        var hours = timeRemain.getHours();
+        var minutes = timeRemain.getMinutes() < 10 ? '0'+timeRemain.getMinutes() : timeRemain.getMinutes();
+        isOpen = 'open until ' + hours + ':' + minutes;
+      } else {
+        if(hours.from > millisecondsSinceMidnight) {
+          if(!willOpen) willOpen = hours.from - millisecondsSinceMidnight;
+          willOpen = willOpen > (hours.from-millisecondsSinceMidnight) ? hours.from-millisecondsSinceMidnight : willOpen;
+          var timeRemain = new Date(midnightTime+hours.from);
+          var hours = timeRemain.getHours();
+          var minutes = timeRemain.getMinutes() < 10 ? '0'+timeRemain.getMinutes() : timeRemain.getMinutes();
+          willOpenReadable = 'shall open at' + hours + ':' + minutes;
+        }
+      }
+    });
+    return restaurant.open ? isOpen : willOpenReadable || 'the restaurant is closed today';
+  }
   render() {
     var that = this;
     var {restaurant} = this.props.restaurant;
@@ -66,13 +124,17 @@ class Restaurant extends React.Component {
     };
     return (
       <div className='shop'>
-        <Caddy caddy={this.state.caddy}/>
-        <h1>{restaurant.name}</h1>
-        <h2>{restaurant.description}</h2>
-        <div className='foods nav-wrap'>{restaurant.foods.map(createFoods)}</div>
-        <Modal hidden={this.state.modalHidden} border={'4px solid yellow'}>
+        <Modal hidden={!this.state.modal}>
           <Order {...this.state.order} busy={restaurant.busy} items={this.state.caddy}/>
         </Modal>
+        <Caddy caddy={this.state.caddy}/>
+        <div className='card-order shop-card'>
+          <span className = {'shop-score ' + (_selfOrdering ? 'hidden' : '')}><Score score={averageScore(restaurant)} size={'5em'}/>{restaurant.score.length} marks</span>
+          <span className = {'shop-map ' + (_selfOrdering ? 'hidden' : '')}><Map size='2em'/>View on Map</span>
+          <h1>{restaurant.name}<span className = {'shop-open ' + (_selfOrdering ? 'hidden' : '')}>{this._isOpen(restaurant)}</span></h1>
+          <h2><i>{restaurant.description}</i></h2>
+          <div className='foods'>{restaurant.foods.map(createFoods)}</div>
+        </div>
       </div>
     );
   }
@@ -92,10 +154,10 @@ class Food extends React.Component {
       return (<Meal {...meal} parent={that.props.name} key={meal.id}/>);
     };
     return (
-      <div className='food flex-item-2' onClick={this._switch}>
+      <div className='food' onClick={this._switch}>
         <strong className='name'>{this.props.name}</strong>
         <div className='description'>{this.state.expand ? '' : this.props.description}</div>
-        <div className={classnames('meals', {nav: this.state.expand, hidden: !this.state.expand})}>{this.props.meals.map(createMeals)}</div>
+        <div className={classnames('meals', {hidden: !this.state.expand})}>{this.props.meals.map(createMeals)}</div>
       </div>
     );
   }
@@ -113,7 +175,7 @@ class Meal extends React.Component {
   }
   render () {
     return (
-      <div className='meal flex-item-2' onClick={this._addItem}>
+      <div className='meal' onClick={this._addItem}>
         <strong className='name'>{this.props.name}</strong>
         <div className='description'>{this.props.description}</div>
         <div className='price'>{this.props.price + 'mB'}</div>
@@ -127,11 +189,6 @@ class Caddy extends React.Component {
     super(props, context);
   }
   _order = () => {
-    var getTime = () => {
-      var d = 0;
-      this.props.caddy.map((item) => {d += item.time});
-      return d;
-    };
     var getItems = () => {
       return this.props.caddy.map((item) => {
         return {
@@ -143,32 +200,19 @@ class Caddy extends React.Component {
     };
     var order = {
       date: new Date().getTime(),
-      time: getTime(),
-      price: this._sum(),
       items: getItems()
     };
-    console.log(order);
     _modal(order);
     //_mutation(order);
   }
-  _sum = () => {
-    var value = 0;
-    this.props.caddy.forEach(function(item) {
-      if(item.times) {
-        value += item.price * item.times;
-        return;
-      }
-      value += item.price;
-    });
-    return value;
-  }
+
   _removeItem = () => {
 
   }
   render () {
     var createItems = function(item, i) {
       return (
-        <div className='flex-item-2 item'>
+        <div className='item'>
           <span onClick={e=>{_splitCaddy(i)}}><Close/></span>
           <span className='times'>{item.times ? item.times + 'X' : ''}</span>
           {item.parent}<br/>
@@ -177,13 +221,10 @@ class Caddy extends React.Component {
         </div>
       )
     }
-    var sum = this._sum();
     return (
       <div className='caddy'>
-        <div className='nav'>
-          {this.props.caddy.map(createItems)}<br/>
-        <div className={classnames('command flex-item-2', {hidden: !this.props.caddy.length})} onClick={this._order}><strong>{sum} mɃ </strong>order!
-        </div>
+        {this.props.caddy.map(createItems)}
+        <div className={classnames('command', {hidden: !this.props.caddy.length})} onClick={this._order}><strong>{_sum()} mɃ </strong><br/>Order!
         </div>
       </div>
     );
@@ -195,18 +236,18 @@ class Order extends React.Component {
     super(props, context);
     this.state = {
       orderReadyIn : this.props.busy ? this.props.busy : 0,
-      message: 'less than 70 caracteres'
+      message: ''
     };
   }
   _order = () => {
-
     var order = {
       id: '_' + Math.random().toString(36).substr(2, 9),
       items: this.props.items.map((item) => { return {id:item.id, parent: item.parent, name:item.name};}),
-      date: new Date().getTime(),
+      date: new Date().getTime() + this.state.orderReadyIn * 60 * 1000,
       payed: false,
+      treated: false,
       message: this.state.message,
-      price: this.props.price
+      price: _sum()
     };
     _mutation(order);
   }
@@ -232,9 +273,9 @@ class Order extends React.Component {
     this.forceUpdate();
   }
   render () {
-    var createItems = (item) => {
+    var createItems = (item, i) => {
       return (
-        <div className='flex-item-2 item'>
+        <div className='item' onClick={(e) => _splitCaddy(i)}>
           {item.times ? <div className='times'>{item.times+'X'}</div> : ''}
           {item.parent}<br/>
           {item.name}
@@ -243,14 +284,14 @@ class Order extends React.Component {
     };
     return (
       <div className='order'>
-        <span onClick={e => {_modal()}}><Close stroke={'white'} size={'2em'}/></span>
-        <div className='nav-wrap items'>
+        <span onClick={e => {_modal()}}><Close stroke={'black'} size={'2em'}/></span>
+        <div className='items'>
           {this.props.items.map(createItems)}
         </div>
-        <div className='price'>Total : {this.props.price} mɃ</div>
-        <div className='details'>Send additional details on your order<br/>
+        <div className='price'>Total : {_sum()} mɃ</div>
+        <div className='details'>Send additional details on your order: <br/>
           <span>{70 - this.state.message.length}</span><br/>
-          <Textarea id={'message'} value={this.state.message} update={this._update}/>
+          <Textarea id={'message'} minWidth={23} value={this.state.message} placeholder='Less than 70 caracteres' update={this._update}/>
         </div>
         <div className='date'>When do you want your command Ready? <br/>
         in <input type='number' value = {this.state.orderReadyIn} onChange={this._setMinutes}/> minutes</div>
@@ -277,6 +318,16 @@ export default Relay.createContainer(Restaurant, {
         name,
         description,
         busy,
+        scorable,
+        score,
+        open,
+        schedule {
+          day,
+          openHours {
+            from,
+            to
+          }
+        }
         foods {
           id,
           name,
@@ -286,7 +337,6 @@ export default Relay.createContainer(Restaurant, {
             name,
             description,
             price,
-            time
           }
         }
       }

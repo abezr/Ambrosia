@@ -141,7 +141,7 @@ var fakeOrders = (restaurantID, usersID) => {
 // });
 //
 export var ordersSeed = (conn) => {
-  return co(function* () {
+  return co(function*() {
     var p = new Promise((resolve, reject) => {
       r.table('restaurant')('id').run(conn, (err, res) => {
         if (err) {
@@ -153,7 +153,7 @@ export var ordersSeed = (conn) => {
         });
       });
     });
-    var q =  new Promise((resolve, reject) => {
+    var q = new Promise((resolve, reject) => {
       r.table('user')('id').run(conn, (err, res) => {
         if (err) {
           console.log('ordersSeed:getUserIDs', 'rethinkdb cant get userID');
@@ -165,7 +165,7 @@ export var ordersSeed = (conn) => {
       });
     });
     return yield [p, q];
-  }).then((value)=> {
+  }).then((value) => {
     console.log('restaurantsID', value[0]);
     console.log('usersID', value[1]);
     value[0].forEach((restaurantID, i) => {
@@ -176,6 +176,31 @@ export var ordersSeed = (conn) => {
           process.exit(1);
         }
       });
+    });
+  });
+};
+
+export var ordersSeedById = (restaurantID, conn) => {
+  return co(function*() {
+    var p = new Promise((resolve, reject) => {
+      r.table('user')('id').run(conn, (err, res) => {
+        if (err) {
+          console.log('ordersSeed:getUserIDs', 'rethinkdb cant get userID');
+          process.exit(1);
+        }
+        res.toArray((err, result) => {
+          resolve(result);
+        });
+      });
+    });
+    return yield p;
+  }).then((value) => {
+    var orders = fakeOrders(restaurantID, value);
+    r.table('order').insert(orders).run(conn, function(err, res) {
+      if (err) {
+        console.log('ordersSeed:insertOrders', 'rethinkdb cant insert orders');
+        process.exit(1);
+      }
     });
   });
 };

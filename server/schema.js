@@ -4,12 +4,14 @@ import {
   GraphQLFloat,
   GraphQLObjectType,
   GraphQLSchema,
-  GraphQLString
+  GraphQLString,
+  GraphQLBoolean
 }
 from 'graphql';
 
 import {
   fromGlobalId,
+  toGlobalId,
   nodeDefinitions,
   connectionArgs,
   connectionFromArray
@@ -18,7 +20,7 @@ from 'graphql-relay';
 
 import {
   getNearestRestaurants,
-  getRestaurantsByName,
+  getRestaurants,
   getRestaurant,
   getUser
 }
@@ -72,8 +74,9 @@ var GraphQLRoot = new GraphQLObjectType({
     restaurant: {
       type: GraphQLRestaurant,
       resolve: (id, args, {rootValue}) => co(function*() {
-        var restaurant = yield getRestaurant(fromGlobalId(id).id, rootValue);
-        //console.log('schema:Root:getRestaurant', restaurant);
+        console.log('schema:Root:getRestaurant', fromGlobalId(id), toGlobalId(id));
+        //Hack for getting both cases where restaruantID is generated from toglobalID or globalIDField
+        var restaurant = yield getRestaurant(fromGlobalId(id).id ? fromGlobalId(id).id : fromGlobalId(id).type, rootValue);
         return restaurant;
       })
     },
@@ -88,18 +91,20 @@ var GraphQLRoot = new GraphQLObjectType({
           type: GraphQLString,
           description: 'the name you are looking for'
         },
+        rated: {
+          type: GraphQLBoolean,
+          description: 'sort response depending on score'
+        },
+        open: {
+          type: GraphQLBoolean,
+          description: 'return only open restaurant'
+        },
         ...connectionArgs
       },
       description: 'The nearest restaurants',
       resolve: (root, args, {rootValue}) => co(function*() {
-        var restaurants;
-        if (args.name) {
-          console.log('schema:restaurants:name', args);
-          restaurants = yield getRestaurantsByName(args, rootValue);
-        } else {
-          console.log('schema:restaurants:location');
-          restaurants = yield getNearestRestaurants(args.location, rootValue);
-        }
+        console.log('schema:restaurants:name', args);
+        var restaurants = yield getRestaurants(args, rootValue);
         return connectionFromArray(restaurants, args);
       })
     },
