@@ -1,6 +1,7 @@
 @import './bourbon/bourbon';
 @import './neat/neat';
 @import "flex";
+@import "home";
 @import 'login';
 @import "start";
 @import "restaurants";
@@ -52,14 +53,14 @@ body {
   overflow: hidden;
 }
 @mixin button {
-  @include linear-gradient(45deg, #929590, #d1d1c9);
+  @include linear-gradient(45deg, gold, #d1d1c9);
   font-size: 1em;
   cursor: pointer;
   position: relative;
   padding: 0.25em;
   border-radius: 0.25em;
   &:hover {
-    box-shadow: 1px 0px 2px 0px black;
+    box-shadow: 0px 0px 2px 0px black;
   }
 }
 section {

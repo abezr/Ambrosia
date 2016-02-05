@@ -95,6 +95,7 @@ var fakeOrder = (restaurantID, usersID) => {
     items: items,
     payed: payed,
     treated: treated,
+    rate: getRandomInt(0, 5),
     date: time,
     message: message
   };

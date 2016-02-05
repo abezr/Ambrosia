@@ -19,11 +19,14 @@ import {
   cursorForObjectInConnection,
   fromGlobalId,
   globalIdField,
-  mutationWithClientMutationId,
-  nodeDefinitions,
   toGlobalId
 }
 from 'graphql-relay';
+
+import {
+  ordersConnection
+}
+from './order';
 
 import {getRestaurantOrders, getRestaurant, getUserByID} from '../database';
 
@@ -131,152 +134,6 @@ export var GraphQLInputFood = new GraphQLInputObjectType({
   }
 });
 
-export var GraphQLItem = new GraphQLObjectType({
-  name: 'Item',
-  fields: {
-    id: {
-      type: GraphQLString,
-    },
-    parent: {
-      type: GraphQLString,
-    },
-    name: {
-      type: GraphQLString,
-    }
-  }
-});
-
-export var GraphQLInputItem = new GraphQLInputObjectType({
-  name: 'InputItem',
-  fields: {
-    id: {
-      type: GraphQLString,
-    },
-    parent: {
-      type: GraphQLString,
-    },
-    name: {
-      type: GraphQLString,
-    },
-  }
-});
-
-export var GraphQLOrder = new GraphQLObjectType({
-  name: 'Order',
-  fields: {
-    id: globalIdField('Order'),
-    userID: {
-      type: GraphQLString,
-      description: 'the orderer user-id',
-      resolve: (order) => {
-        return toGlobalId(order.userID);
-      }
-    },
-    restaurantID: {
-      type: GraphQLString,
-      description: 'the restaurant who get ordered',
-      resolve: (order) => {
-        return toGlobalId(order.restaurantID);
-      }
-    },
-    price: {
-      type: GraphQLInt,
-      description: 'the order value, expressed with an integer'
-    },
-    message: {
-      type: GraphQLString,
-      description: 'a message along the order'
-    },
-    items: {
-      type: new GraphQLList(GraphQLItem),
-      description: 'the items in that order'
-    },
-    prepayed: {
-      type: GraphQLBoolean,
-      description: 'is the order prepayed'
-    },
-    payed: {
-      type: GraphQLBoolean,
-      description: 'is the order payed ?'
-    },
-    treated: {
-      type: GraphQLBoolean,
-      description: 'is the order processed ?'
-    },
-    date: {
-      type: GraphQLFloat,
-      description: 'the time by which the order has been done in milliseconds since january 1920'
-    },
-    userName: {
-      type: GraphQLString,
-      description: 'orderer name if no name return mail',
-      resolve: (order, args, {rootValue}) => co(function*() {
-        var user = yield getUserByID(order.userID, rootValue);
-        return user.name || user.mail;
-      })
-    },
-    restaurantName: {
-      type: GraphQLString,
-      description: 'restaurant name for that particular order',
-      resolve: (order, args, {rootValue}) => co(function*() {
-        var restaurant = yield getRestaurant(order.restaurantID, rootValue);
-        return restaurant? restaurant.name : 'unknown';
-      })
-    }
-  }
-});
-
-export var GraphQLInputOrder = new GraphQLInputObjectType({
-  name: 'inputOrder',
-  fields: {
-    id: {
-      type: GraphQLString
-    },
-    userID: {
-      type: GraphQLString,
-      description: 'the orderer user-id'
-    },
-    restaurantID: {
-      type: GraphQLString,
-      description: 'the restaurant who get ordered'
-    },
-    price: {
-      type: GraphQLFloat,
-      description: 'the order value, expressed with an integer'
-    },
-    message: {
-      type: GraphQLString,
-      description: 'a message along the order'
-    },
-    prepayed: {
-      type: GraphQLBoolean,
-      description: 'is the order payed?'
-    },
-    treated: {
-      type: GraphQLBoolean,
-      description: 'is the order treated'
-    },
-    payed: {
-      type: GraphQLBoolean,
-      description:  'is the order payed'
-    },
-    items: {
-      type: new GraphQLList(GraphQLInputItem),
-      description: 'the items in that order'
-    },
-    date: {
-      type: GraphQLFloat,
-      description: 'the time in milliseconds by which the order has been done since january 1920'
-    }
-  }
-});
-// look to add some more args to the order connection
-var orderConnection = connectionDefinitions({
-  name: 'Order',
-  nodeType: GraphQLOrder
-});
-export var ordersConnection = orderConnection.connectionType;
-export var GraphQLOrderEdge = orderConnection.edgeType;
 
 var GraphQLOpenHours = new GraphQLObjectType({
   name: 'OpenHours',
@@ -344,6 +201,20 @@ export var GraphQLInputLocation = new GraphQLInputObjectType({
   }
 });
 
+var GraphQLReviews = new GraphQLObjectType({
+  name: 'Reviews',
+  fields: {
+    averageScore: {
+      type: GraphQLFloat,
+      description: 'the restaurant average score from all reviews'
+    },
+    comments: {
+      type: new GraphQLList(GraphQLString),
+      description: 'list of customers reviews/comments'
+    },
+  }
+});
+
 export var GraphQLRestaurant = new GraphQLObjectType({
   name: 'Restaurant',
   fields: {
@@ -376,9 +247,24 @@ export var GraphQLRestaurant = new GraphQLObjectType({
       type: GraphQLBoolean,
       description: 'is the restaurant scorable'
     },
-    score: {
-      type: new GraphQLList(GraphQLInt),
-      description: 'restaurant score'
+    reviews: {
+      type: GraphQLReviews,
+      description: 'restaurant score',
+      resolve: (restaurant, args, {rootValue}) => co(function*() {
+        var restaurantID = restaurant.id,
+            scores = 0,
+            comments = [];
+        console.log('schemaRestaurnat:getScore');
+        var orders = yield getRestaurantOrders({restaurantID}, rootValue);
+        console.log('database:getRestaurantOrders', orders);
+        orders.map(order => {
+          if(order.rate) {
+            comments.push(order.comment || null);
+            scores += order.rate;
+          }
+        });
+        return {averageScore: scores / comments.length, comments: comments};
+      })
     },
     busy: {
       type: GraphQLInt,
@@ -431,9 +317,6 @@ export var GraphQLInputRestaurant = new GraphQLInputObjectType({
     scorable: {
       type: GraphQLBoolean,
       description: 'is restaurant scorable'
-    },
-    score: {
-      type: new GraphQLList(GraphQLInt),
     },
     busy: {
       type: GraphQLInt,

@@ -24,7 +24,7 @@ div.restaurants-index {
       height: 2em;
     }
     div.sort, div.display, div.find-more {
-      @include linear-gradient(45deg, #929590, #d1d1c9);
+      background-color: gold;
       font-size: 1em;
       cursor: pointer;
       position: relative;

@@ -19,9 +19,14 @@ import {
 from './type/user';
 
 import {
-  GraphQLRestaurant, GraphQLInputRestaurant, GraphQLRestaurantEdge, GraphQLOrder, GraphQLInputOrder, GraphQLOrderEdge, GraphQLInputFood, GraphQLInputDay
+  GraphQLRestaurant, GraphQLInputRestaurant, GraphQLRestaurantEdge, GraphQLInputFood, GraphQLInputDay
 }
 from './type/restaurant';
+
+import {
+   GraphQLOrder, GraphQLInputOrder, GraphQLOrderEdge
+}
+from './type/order';
 
 import co from 'co';
 
@@ -276,7 +281,7 @@ export var UpdateOrderMutation = mutationWithClientMutationId({
   },
   mutateAndGetPayload: (args, {rootValue}) => co(function*() {
     args.order.id = fromGlobalId(args.order.id).id;
-    args.order.restaurantID = fromGlobalId(args.order.restaurantID).id;
+    if(args.order.restaurantID) args.order.restaurantID = fromGlobalId(args.order.restaurantID).id;
     return yield updateOrder(args.order, rootValue);
   })
 })

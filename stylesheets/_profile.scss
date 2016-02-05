@@ -38,7 +38,9 @@ div.profile {
     }
   }
   div.profile-data {
-    display: flex;
+    @include flex-wrap;
+    text-align: center;
+    justify-content: flex-start;
   }
   .openarestaurant-link {
     position: absolute;
@@ -46,36 +48,33 @@ div.profile {
     right: 1em;
     color: black;
   }
-  div.restaurants-list {
-    border: 1px solid;
+  div.profile-data-wrapper {
+    background-color: gold;
+    width: 48%;
+    margin: 1em 1% 0 0;
+    padding: 0 0 1em;
+    border-radius: 5px;
+  }
+  div.profile-data-list {
+    text-align: left;
     margin: 0 1em;
-    .restaurant {
+    max-height: 20em;
+    overflow: scroll;
+    .restaurant, .order {
       cursor: pointer;
       color: black;
       text-decoration: none;
       display: block;
       padding: 0.5em;
+      background-color: white;
       &:nth-child(odd) {
         background-color: gainsboro;
       }
-    }
-  }
-  div.orders-list {
-    margin: 0 1em;
-    border: 1px solid;
-    height: 20em;
-    overflow: scroll;
-    .order {
-      cursor: pointer;
-      padding: 0.5em;
-      position: relative;
-      span.price {
-        position: absolute;
-        top: 0;
+      span.price, .widget-hearts-rated, .widget-hearts, .hearts-wrapper, .right {
+        float: right;
+      }
+      .widget-dropdown-content {
         right: 0;
-      }
-      &:nth-child(odd) {
-        background-color: gainsboro;
       }
     }
   }

@@ -2,8 +2,66 @@ div.chief-index {
   $green: rgba(20, 152, 13, 0.55);
   $red: rgba(194, 15, 15, 0.55);
   $bg-button: gold;
+  $PI: 3.14;
   .button {
     margin: auto 5px;
+  }
+  section {
+    >.settings {
+      position: fixed;
+      margin: 0;
+      padding: 0;
+      width: 0;
+      background-color: ghostwhite;
+      height: 100%;
+      overflow: hidden;
+      @include transform-style(preserve-3d);
+      @include transition(width 0.5s ease-in-out, padding 0.5s ease-in-out);
+      &.expand {
+        width: 20em;
+        padding: 1em;
+      }
+      .settings-cursor {
+        position: absolute;
+        width: 19em;
+        top: -10em;
+        left: -5em;
+        @include transition(left 0.5s ease-in-out, top 0.5s ease-in-out);
+        .widget-dropdown-selected:after {
+          @include triangle(1em, black, down);
+        }
+        &.expand {
+          top: 1em;
+          left: 1em;
+        }
+        >div {
+          margin: 8px 0;
+        }
+      }
+    }
+    .children-container {
+      overflow: scroll;
+      position: fixed;
+      left: 0em;
+      width: 100%;
+      height: 90%;
+      @include transition(left 0.5s ease-in-out);
+      &.expand {
+        left: 20em;
+      }
+    }
+  }
+  .icon-settings {
+    float: left;
+    margin: 5px 1em;
+    cursor: pointer;
+  }
+  nav.nav-list {
+    .open {
+      position: absolute;
+      top: 0.75em;
+      right: 5px;
+    }
   }
   ul {
     padding: 5px;
@@ -21,14 +79,6 @@ div.chief-index {
     &.selected {
       box-shadow: 0 0 3px black;
     }
-  }
-}
-@keyframes appear {
-  from {
-    height: 0;
-  }
-  to {
-    height: 3em;
   }
 }
 div.board {
@@ -51,13 +101,23 @@ div.board {
       color: gray;
     }
     div.order {
-      border: 1px solid;
+      display: block;
+
+      @include transition(height 0.5s ease-in-out, margin 0.5s ease-in-out);
+      height: 0em;
+      box-shadow: 0 0 1em 0;
       border-radius: 0.25em;
-      margin: 1em;
+      margin: 0em;
       overflow: hidden;
       text-align: center;
-      animation-name: appear;
-      animation-duration: 0.25s;
+      &.visible {
+        &.expand {
+          height: auto;
+        }
+        height: 3.1em;
+        margin: 1em;
+        //@include transition(height 0.5s ease-in-out, margin 0.5s ease-in-out);
+      }
       h1 {
         margin: 0;
         span.price {
@@ -139,55 +199,31 @@ div.board {
     }
   }
 }
-div.settings {
+div.details {
   margin: 2em;
-  .setting {
-    padding: 0.75em;
-    .cursor {
-    }
-  }
   .close-icon {
     top: 0;
     right: 0;
   }
-  .opening-hours {
+
+  .details-reviews {
+    height: 20em;
+    overflow: scroll;
+    padding: 1em;
     text-align: center;
-    .day-title {
+    .details-reviews-customer {
+      padding: 5px;
       text-align: left;
-      display: inline-block;
-      padding: 0.5em;
-      border: 1px solid;
-    }
-    .picker-container {
-      @include flex-wrap;
-      &.hidden {
-        display: none;
+      &:nth-child(odd) {
+        background-color: ghostwhite;
+      }
+      .userName {
+        display: inline-block;
+        min-width: 20%;
       }
     }
-    .picker-wrapper {
-      background-color: rgb(171, 171, 168);
-      position: relative;
-      margin: 0.5em;
-      padding: 1em;
-    }
-    .to {
-      margin: 0.5em;
-    }
-    .day-container {
-      width: 100%;
-      margin: auto;
-      .day {
-        width: 90%;
-        border: 1px solid;
-        margin: 1em;
-        #from,
-        #to {
-          cursor: col-resize;
-        }
-        text {
-          font-size: 0.75em;
-        }
-      }
+    .widget-hearts, .widget-hearts-rated {
+      float: right;
     }
   }
 }

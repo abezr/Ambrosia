@@ -20,22 +20,6 @@ var getRandomLocation = (geolocation) => {
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
-function getRandomScore() {
-  var scorable;
-  var score = [];
-  if (Math.random() < 0.5) {
-    scorable = true;
-    for (var i = 0; i < getRandomInt(12, 99); i++) {
-      score.push(getRandomInt(0, 5));
-    }
-  } else {
-    scorable = false;
-  }
-  return {
-    scorable: scorable,
-    score: score
-  };
-}
 
 function getRandomSchedule() {
  var schedule = [];
@@ -46,18 +30,16 @@ function getRandomSchedule() {
 }
 
 function getRandomBoolean() {
-  return Math.random() <= 0.5 ? true : false;
+  return Math.random() <= 0.5;
 }
 
 var fakeRestaurant = (userIDs, geolocation) => {
-  var randomScore = getRandomScore();
   return {
     name: restaurantsName[getRandomInt(0, 6)],
     description: descriptions[getRandomInt(0, 5)],
     foods: foods[getRandomInt(0, 2)],
     location: getRandomLocation(geolocation),
-    scorable: randomScore.scorable,
-    score: randomScore.score,
+    scorable: getRandomBoolean(),
     open: getRandomBoolean(),
     schedule: getRandomSchedule(),
     userID: userIDs[getRandomInt(0, userIDs.length)]

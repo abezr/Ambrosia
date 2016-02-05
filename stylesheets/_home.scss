@@ -1,0 +1,138 @@
+.home {
+  $bg-text: rgba(0, 0, 0, 0.5);
+  $bg-button: rgba(10, 10, 10, 0.31);
+  $bg-button-hover: rgba(224, 198, 36, 0.5);
+  overflow: scroll;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-image: url(http://www.villafactoryrestaurant.com/wp-content/uploads/2014/04/warsaw_food_restaurant_burger_kitchen_2.jpg);
+  background-clip: content-box;
+  .home-cursor-list {
+    position: fixed;
+    left: 1em;
+    margin: 30% 0;
+    .home-cursor {
+      width: 16px;
+      height: 16px;
+      border-radius: 8px;
+      border: 2px solid white;
+      margin: 8px 0;
+      box-shadow: 0 0 0 0 gold;
+      @include transition(box-shadow 0.5s linear);
+      &.selected {
+        box-shadow: 0 0 8px 5px gold;
+      }
+    }
+  }
+  .home-description,
+  .home-professional {
+    position: absolute;
+    height: 100%;
+    top: 0;
+    @include transition(top 0.5s $ease-out-back);
+    &.before {
+      top: -100%;
+    }
+    &.after {
+      top: 100%;
+    }
+  }
+  .home-description {
+    &.before {
+      .home-description-wrapper {
+        left: -100%;
+      }
+    }
+    .home-description-wrapper {
+      @include transition(left 0.5s $ease-out-back);
+      left: 0;
+      color: white;
+      text-shadow: 0 0 5px black;
+      position: relative;
+      padding: 10% 20%;
+      text-align: center;
+      h1 {
+        font-size: 2.5em;
+      }
+      p {
+        box-shadow: 0 0 3px white, 0 0 6px black;
+        padding: 1em;
+        font-size: 2em;
+        border-radius: 10px;
+        background-color: $bg-button;
+      }
+      .enjoy {
+        font-size: 2em;
+      }
+      .customer,
+      .chief {
+        color: white;
+        min-width: 6em;
+        box-shadow: 0 0 3px white;
+        text-shadow: none;
+        cursor: pointer;
+        padding: 0.5em;
+        background-color: $bg-button;
+        border-radius: 5px;
+        @include transition(background-color 0.25s linear, color 0.25s linear, box-shadow 0.25s linear);
+        &:hover {
+          background-color: $bg-button-hover;
+          color: black;
+          box-shadow: 0 0 3px black;
+        }
+      }
+      .customer {
+        position: absolute;
+        bottom: -5em;
+        left: 20%;
+      }
+      .chief {
+        position: absolute;
+        bottom: -5em;
+        right: 20%;
+      }
+    }
+  }
+  .home-professional {
+    padding: 0 10%;
+    height: 100%;
+    width: 100%;
+    .left-cursor {
+      @include triangle(2em, black, left);
+      position: absolute;
+      left: 1em;
+      top: 50%;
+    }
+    .right-cursor {
+      @include triangle(2em, black, right);
+      position: absolute;
+      right: 1em;
+      top: 50%;
+    }
+    .home-professional-wrapper {
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+      .picture-timeline,
+      .picture-details,
+      .picture-card {
+        left: 100%;
+        position: absolute;
+        height: 100%;
+        &.selected {
+          left: 0;
+        }
+      }
+      .picture-timeline {
+        background-size: 100% 100%;
+        .icon-play {
+          cursor: pointer;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+        }
+      }
+    }
+  }
+}

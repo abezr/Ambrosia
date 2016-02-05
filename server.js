@@ -7,7 +7,6 @@ import serve from 'koa-static';
 import session from 'koa-session';
 import parseBody from 'co-body';
 import path from 'path';
-import {getUserByCredentials} from './server/database';
 
 import co from 'co';
 // import React from 'react';
@@ -21,8 +20,8 @@ import r from 'rethinkdb';
 import {graphql} from 'graphql';
 import debug from 'debug';
 var config = {
-  host: 'localhost',
-  port: 28015,
+  host: process.env.RDB_HOST || 'localhost',
+  port: process.env.RDB_PORT || 28015,
   db: 'user'
 };
 
@@ -111,7 +110,6 @@ server.use(routes.middleware());
 
 server.use(function * (next) {
   //let's try to pass the session object into a script tag
-  var userID = this.cookies.get('userID') || '';
   yield next;
   this.body = `<!doctype html>
                 <html>
@@ -119,9 +117,9 @@ server.use(function * (next) {
                     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
                   </head
                   <body>
-                    <div id = "app" data-userid= "${userID}"></div>
+                    <div id = "app"></div>
                   </body>
-                <script src='/src/app.js'></script>
+                <script src='/app.js'></script>
                 </html>`;
 });
 
@@ -133,7 +131,7 @@ server.use(function * (next) {
 
 r.connect(config, function(error, conn) {
   if (error) {
-    console.log('could not connect to rethinkdb');
+    console.log('could not connect to rethinkdb', error);
     process.exit(1);
   } else {
     r.table('user').run(conn, function(err, result) {

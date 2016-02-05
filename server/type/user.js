@@ -31,11 +31,9 @@ import {
 }
 from '../database';
 
-import {
-  restaurantsConnection,
-  ordersConnection
-}
-from './restaurant';
+import {restaurantsConnection} from './restaurant';
+
+import {ordersConnection} from './order';
 
 import co from 'co';
 
@@ -94,18 +92,6 @@ export var GraphQLUser = new GraphQLObjectType({
         args.userID = user.userID;
         var orders = yield getUserOrders(args, rootValue);
         return connectionFromArray(orders, args);
-      })
-    },
-    friends: {
-      type: friendsConnection,
-      args: connectionArgs,
-      description: 'The friends of the user, for now everybody is friends with user',
-      resolve: (user, args, {
-        rootValue
-      }) => co(function*() {
-        var friends = yield getUsers(rootValue.conn);
-        console.log('Schema:resolve friends', friends);
-        return connectionFromArray(friends, args);
       })
     },
     restaurants: {

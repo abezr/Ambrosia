@@ -169,7 +169,6 @@ export function addRestaurant({
 }
 
 export function getRestaurant(id, rootValue) {
-  console.log('database:getRestaurant:id', id);
   return co(function*() {
     var p = new Promise(function(resolve, reject) {
       r.table('restaurant').get(id).run(rootValue.conn, function(err, res) {
@@ -328,12 +327,24 @@ export function updateOrder(order, rootValue) {
 export function getRestaurantOrders(args, rootValue) {
   //var endofDay = args.midnightTime + 24*60*60*1000;
   return co(function*() {
-    var p = new Promise(function(resolve, reject) {
-      r.table('order').getAll(args.restaurantID, {index:'restaurantID'}).filter(r.row("date").gt(args.midnightTime)).orderBy('date').run(rootValue.conn, function(err, res) {
-        if (err) reject(err);
-        resolve(res);
+    var p;
+    if(args.midnightTime) {
+      p = new Promise(function(resolve, reject) {
+        r.table('order').getAll(args.restaurantID, {index:'restaurantID'}).filter(r.row("date").gt(args.midnightTime)).orderBy('date').run(rootValue.conn, function(err, res) {
+          if (err) reject(err);
+          resolve(res);
+        });
       });
-    });
+    } else {
+      p = new Promise(function(resolve, reject) {
+        r.table('order').getAll(args.restaurantID, {index:'restaurantID'}).orderBy(r.desc('date')).run(rootValue.conn, (err, res) => {
+          if (err) reject(err);
+          res.toArray((err, res) => {
+            resolve(res);
+          });
+        });
+      });
+    }
     return yield p;
   });
 }

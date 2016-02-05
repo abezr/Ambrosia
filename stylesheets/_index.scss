@@ -1,17 +1,17 @@
 header {
   background-color: black;
   a {
-    color: grey;
+    color: white;
   }
   div.title {
     display: inline-flex;
     a {
-      color: grey;
+      color: white;
       font-weight: bold;
       font-size: 2em;
       padding: 0.25em 1em;
       &:hover {
-        color: yellow;
+        color: gold;
       }
     }
   }
@@ -24,12 +24,12 @@ header {
     }
     .auth-btn {
       a {
-        color: grey;
+        color: white;
         font-weight: bold;
         font-size: 2em;
         padding: 0.25em 1em;
         &:hover {
-          color: yellow;
+          color: gold;
         }
       }
     }
@@ -50,7 +50,7 @@ header {
   li a,
   .nav-item {
     &:hover {
-      color: yellow;
+      color: gold;
     }
   }
 }
@@ -103,7 +103,7 @@ nav.nav-list {
 //     text-align: center;
 //     text-decoration: none;
 //     &:hover {
-//       color: yellow;
+//       color: gold;
 //       border-left: 1px solid black;
 //     }
 //   }
@@ -112,12 +112,12 @@ nav.nav-list {
 //     padding: 0.5em;
 //     text-decoration: none;
 //     &:hover {
-//       color: yellow;
+//       color: gold;
 //     }
 //   }
 // }
 // @media screen and (min-aspect-ratio: 2/3) {
 //   header {
-//     background-color: yellow;
+//     background-color: gold;
 //   }
 // }

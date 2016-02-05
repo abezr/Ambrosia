@@ -22,6 +22,14 @@ div.shop-card {
   }
 }
 
+div.card-index {
+  .button {
+    display: inline-block;
+    width: 5em;
+    background: gold;
+  }
+}
+
 div.shop {
   $backcolor : gold;
   $itemcolor: gainsboro;
@@ -159,6 +167,11 @@ div.shop {
   }
 }
 .card-edit {
+  .icon-plus {
+    position: absolute;
+    cursor: pointer;
+    left: 1em;
+  }
   text-align: center;
   .brand {
     text-align: center;
