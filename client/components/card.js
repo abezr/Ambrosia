@@ -1,4 +1,8 @@
 /**
+ * @flow
+ */
+
+ /**
  * This component has two props
  * 1st one is the card object
  * 2nd one is the store, a function that updates the card object
@@ -112,7 +116,7 @@ class Card extends React.Component {
       ]
     });
     this.props.update(this.state);
-  }
+  };
 
   _onChange = (e) => {
     console.log('onChange');

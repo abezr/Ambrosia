@@ -47,12 +47,12 @@ export class RestaurantsIndexComponent extends React.Component {
         console.log('readyState', this.props.restaurant.restaurants.edges);
       }
     );
-  }
+  };
 
   _onKeyDown = (e) => {
     console.log(e.keyCode);
     if(e.keyCode === 13) this._submit();
-  }
+  };
 
   _onSelect = (e) => {
     var e = e.target;
@@ -60,7 +60,7 @@ export class RestaurantsIndexComponent extends React.Component {
     this.setState({
       orderByScore: e.options[e.selectedIndex].value === '2' ? true : false
     });
-  }
+  };
 
   _update = (e) => {
     console.log('update', e.currentTarget.id);
@@ -72,11 +72,12 @@ export class RestaurantsIndexComponent extends React.Component {
     }, (readyState) => {
       if (readyState.done) console.log('readystate');
     });
-  }
+  };
+
   _onChangeDisplay = (e, array) => {
     console.log('_onChangeDisplay');
     this.setState({display: array});
-  }
+  };
 
   renderChildren = () => {
     console.log('renderChildren', this.state.orderByScore);
@@ -90,7 +91,7 @@ export class RestaurantsIndexComponent extends React.Component {
           : null
       });
     });
-  }
+  };
 
   render () {
     console.log('render', this.props.restaurant.restaurants.edges);

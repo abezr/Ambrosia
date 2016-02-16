@@ -107,7 +107,7 @@ class Profile extends React.Component {
         save: true
       });
     }
-  }
+  };
 
   render() {
     var user = this.props.user.user;
@@ -162,18 +162,21 @@ class Order extends React.Component {
   }
   _update = (e) => {
     this.setState({[e.target.id]: e.target.value});
-  }
+  };
+  
   _onClick = (e, i) => {
     console.log(e.currentTarget, e.target, i);
     e.stopPropagation();
     this.setState({expand: true, rate: i});
-  }
+  };
+
   _setMutation = () => {
     console.log('setmutation');
     var onFailure = () => console.log('failure');
     var onSuccess = () => this.setState({expand: false});
     Relay.Store.commitUpdate(new UpdateOrderMutation({order:{id: this.props.order.node.id, rate: this.state.rate, comment: this.state.comment}}), {onFailure, onSuccess});
-  }
+  };
+
   render () {
     const orderNode = this.props.order.node;
     var date = new Date(orderNode.date);

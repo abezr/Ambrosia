@@ -101,13 +101,13 @@ export default class Map extends React.Component {
 
   _updateAddress = () => {
       this._getLatlng()
-  }
+  };
 
   _onChange = (e) => {
     console.log(e, 'onchange');
     address[e.target.id] = e.target.value;
     this.forceUpdate();
-  }
+  };
 
   renderChildren = () => {
     return React.Children.map(this.props.children, (child) => {
@@ -115,7 +115,7 @@ export default class Map extends React.Component {
           submit: this.props.submit,
         });
     });
-  }
+  };
 
   render() {
     return (

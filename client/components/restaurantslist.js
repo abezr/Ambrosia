@@ -38,7 +38,7 @@ class Restaurant extends React.Component {
     this.setState({
       expand: !this.state.expand
     });
-  }
+  };
 
   render() {
     var restaurant = this.props.node;

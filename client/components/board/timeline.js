@@ -123,7 +123,7 @@ class TimeLine extends React.Component {
       x: (this.props.time - midnightTime)/10000,
       play: true
     });
-  }
+  };
 
   onClick = (event) => {
     var margin = 8;
@@ -134,20 +134,20 @@ class TimeLine extends React.Component {
       play: false
     });
     console.log('TimeLine:onClick', 'width', this.width, 'event', event.clientX, event.pageX);
-  }
+  };
 
   _switch = (e) => {
     e.stopPropagation();
     params[e.currentTarget.id] = !params[e.currentTarget.id];
     localStorage.timelineParams = JSON.stringify(params);
     this.forceUpdate();
-  }
+  };
 
   _update = (e) => {
     params[e.currentTarget.id] = e.currentTarget.value;
     localStorage.timelineParams = JSON.stringify(params);
     _update();
-  }
+  };
 
   _updateRestaurantMutation = (e) => {
     var resto = {
@@ -158,7 +158,7 @@ class TimeLine extends React.Component {
     var onFailure = () => console.log('failure');
     var onSuccess = () => console.log('success');
     Relay.Store.update(new UpdateRestaurantMutation({restaurant: resto}), {onFailure, onSuccess});
-  }
+  };
 
   _populate = () => {
     request.post('http://localhost:3800/populate/order')
@@ -173,7 +173,7 @@ class TimeLine extends React.Component {
         if(readyState.done) console.log('updated!!!')
       })
     });
-  }
+  };
 
   componentWillReceiveProps () {
     //console.log('componentWillReceiveProps');
@@ -304,7 +304,7 @@ class Order extends React.Component {
     var onFailure = () => console.log('failure');
     var onSuccess = () => console.log('success');
     Relay.Store.update(new UpdateOrderMutation({order: order}), {onFailure, onSuccess});
-  }
+  };
 
   componentWillUnmount = () => {
     this.refs.order.className = 'leave';
@@ -312,7 +312,7 @@ class Order extends React.Component {
       console.log('leave');
      }, 250);
 
-  }
+  };
 
   render() {
     var order = this.props.order;

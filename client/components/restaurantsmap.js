@@ -113,7 +113,7 @@ export default class Map extends React.Component {
         }
       });
     }
-  }
+  };
 
   _setMap = () => {
     var map = this.map.setView([this.props.geolocation[1], this.props.geolocation[0]], 11);
@@ -122,7 +122,7 @@ export default class Map extends React.Component {
       maxZoom: 18
     }).addTo(map);
     L.marker([this.props.geolocation[1], this.props.geolocation[0]], {icon: hereYouAre}).addTo(map);
-  }
+  };
 
   render() {
     return (

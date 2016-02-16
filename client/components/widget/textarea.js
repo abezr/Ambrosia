@@ -9,13 +9,13 @@ export default class Textarea extends React.Component {
   _update = (e) => {
     if(e.keyCode === 13 || e.keyCode === 27) e.target.blur()
     this.props.update(e);
-  }
+  };
 
   _onValid = (e) => {
     console.log('blur');
     if (e.target.value === '') e.target.value = this.props.default || '';
     this.props.onValid() || this.props.update(e);
-  }
+  };
 
   render() {
     var canvas = document.createElement('canvas');

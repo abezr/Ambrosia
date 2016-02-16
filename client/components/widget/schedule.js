@@ -39,18 +39,21 @@ class Day extends React.Component {
   }
   _switch = () => {
     this.setState({expand: !this.state.expand});
-  }
+  };
+  
   _addHours = () => {
     week[this.props.index].openHours.push({
       from: 0,
       to: 0
     });
     _update(week);
-  }
+  };
+  
   _removeHours = (index) => {
     week[this.props.index].openHours.splice(index, 1);
     _update(week);
-  }
+  };
+  
   render() {
     var day = week[this.props.index];
     var createSVG = (time, index) => {

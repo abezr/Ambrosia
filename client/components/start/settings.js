@@ -31,12 +31,12 @@ export default class StartSettings extends React.Component {
   _switch = (e) => {
     Settings[e.currentTarget.id] = !Settings[e.currentTarget.id];
     _update();
-  }
+  };
 
   _updateSchedule = (schedule) => {
     Settings.schedule = schedule;
     _update();
-  }
+  };
 
   componentWillUnmount () {
     localStorage.settings = JSON.stringify(Settings);

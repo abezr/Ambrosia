@@ -10,12 +10,12 @@ export default class Input extends React.Component {
     console.log('input update');
     if(e.keyCode === 13 || e.keyCode === 27) e.target.blur()
     this.props.update(e);
-  }
+  };
 
   _onValid = (e) => {
     if (e.target.value === '') e.target.value = this.props.default || '';
     this.props.onValid(e) || this.props.update(e);
-  }
+  };
 
   render() {
     var canvas = document.createElement('canvas');

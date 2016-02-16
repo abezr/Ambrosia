@@ -1,4 +1,4 @@
-require('../../stylesheets/app.scss');
+require('../stylesheets/app.scss');
 
 import {
   IndexRoute,

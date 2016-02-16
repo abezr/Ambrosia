@@ -104,7 +104,8 @@ class Restaurant extends React.Component {
       }
     });
     return restaurant.open ? isOpen : willOpenReadable || 'the restaurant is closed today';
-  }
+  };
+
   render() {
     var that = this;
     var {restaurant} = this.props.restaurant;
@@ -136,7 +137,7 @@ class Food extends React.Component {
   }
   _switch = () => {
     this.setState({expand: !this.state.expand});
-  }
+  };
   render () {
     var that = this;
     var createMeals = function (meal) {
@@ -161,7 +162,7 @@ class Meal extends React.Component {
     _pushCaddy({...this.props});
     //caddy.push({parent: this.props.parent, name: this.props.name, price: 1});
     //pushCaddy(caddy);
-  }
+  };
   render () {
     return (
       <div className='meal' onClick={this._addItem}>
@@ -193,11 +194,12 @@ class Caddy extends React.Component {
     };
     _modal(order);
     //_mutation(order);
-  }
+  };
 
   _removeItem = () => {
 
-  }
+  };
+
   render () {
     var createItems = function(item, i) {
       return (
@@ -239,13 +241,13 @@ class Order extends React.Component {
       price: _sum()
     };
     _mutation(order);
-  }
+  };
   _close = () => {
     _modal();
-  }
+  };
   _orderWithPay = () => {
     console.log('pay the command');
-  }
+  };
   _setMinutes = (e) => {
     if(this.props.busy) {
       if(e.target.value < this.props.busy) return;
@@ -254,13 +256,14 @@ class Order extends React.Component {
     this.setState({
       orderReadyIn: e.target.value
     });
-  }
+  };
   //function to update the additional details message
   _update = (e) => {
     if (e.currentTarget.value.length > 70) return;
     this.state[e.currentTarget.id] = e.currentTarget.value;
     this.forceUpdate();
-  }
+  };
+  
   render () {
     var createItems = (item, i) => {
       return (

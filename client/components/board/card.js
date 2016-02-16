@@ -51,7 +51,7 @@ export class Card extends React.Component {
       ]
     });
     this.setState({foods: this.state.foods});
-  }
+  };
 
   _cardUpdateMutation = () => {
     this.state.foods.map((food) => {
@@ -69,12 +69,12 @@ export class Card extends React.Component {
     var onFailure = () => console.log('failure');
     var onSuccess = () => this.setState({save: false});
     Relay.Store.update(new UpdateRestaurantMutation({restaurant: resto}), {onFailure, onSuccess});
-  }
+  };
 
   _update = (e) => {
     card[e.target.id] = e.target.value;
     updateClass();
-  }
+  };
 
   render () {
     console.log('render', this.state.save);
@@ -128,24 +128,24 @@ class Food extends React.Component {
       price: 0,
     });
     updateClass();
-  }
+  };
 
   _switchExpand = (e) => {
     this.setState({
       expand: !this.state.expand
     });
-  }
+  };
 
   _close = () => {
     console.log('close');
     card.foods.splice(this.props.index, 1);
     updateClass();
-  }
+  };
 
   _update = (e) => {
     card.foods[this.props.index][e.target.id] = e.target.value;
     updateClass();
-  }
+  };
 
   render () {
     var food = this.props;
@@ -196,14 +196,14 @@ class Meal extends React.Component {
     e.stopPropagation();
     card.foods[this.props.parentIndex].meals.splice(this.props.index, 1);
     updateClass();
-  }
+  };
 
   _update = (e) => {
     card.foods[this.props.parentIndex].meals[this.props.index][e.target.id] = e.target.type === 'number'
       ? Math.abs(e.target.value)
       : e.target.value;
     updateClass();
-  }
+  };
 
   render () {
     var food = this.props;

@@ -1,0 +1,22 @@
+# version: '2'
+# services:
+#   web:
+#     build: .
+#     ports:
+#       - "3800:3800"
+#     volumes:
+#       - ./app.js:/opt/app
+#     depends_on:
+#       - rethinkdb
+#   rethinkdb:
+#     image: rethinkdb
+#     volumes:
+#       - ./rethinkdb_data:/data
+web:
+  image: ticruz38/ambrosia
+  ports:
+    - "3800:3800"
+  links:
+    - rethinkdb
+rethinkdb:
+  image: rethinkdb

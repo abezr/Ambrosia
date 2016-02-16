@@ -1,32 +1,22 @@
 import koa from 'koa';
-import koaRouter from 'koa-router';
-import mount from 'koa-mount';
+import KoaRouter from 'koa-router';
 import graphqlHTTP from 'koa-gql';
 import qs from 'koa-qs';
 import serve from 'koa-static';
 import session from 'koa-session';
-import parseBody from 'co-body';
-import path from 'path';
+//import parseBody from 'co-body';
 
 import co from 'co';
 // import React from 'react';
 // import Relay from 'react-relay';
 // import ReactRouter from 'react-router';
 
-import webpack from 'webpack';
-import WebpackDevMiddleware from 'koa-webpack-dev-middleware';
-
 import r from 'rethinkdb';
-import {graphql} from 'graphql';
-import debug from 'debug';
 var config = {
-  host: process.env.RDB_HOST || 'localhost',
-  port: process.env.RDB_PORT || 28015,
+  host: process.env.NODE_ENV === 'production' ? 'rethinkdb' : 'localhost',
+  port: 28015,
   db: 'user'
 };
-
-var err = debug('server:error');
-var log = debug('server');
 
 import {usersSeed} from './seed/users';
 import {restaurantsSeed} from './seed/restaurants';
@@ -36,7 +26,7 @@ import {ordersSeedById} from './seed/orders';
 import {Schema} from './server/schema';
 
 let port = process.env.PORT || 3800;
-let routes = new koaRouter();
+let routes = new KoaRouter();
 var server = koa();
 
 // support nested query tring params
@@ -81,7 +71,7 @@ server.use(function * (next) {
 //   this.body = {cookie: 'well'};
 // });
 
-routes.post('/populate', function * (next) {
+routes.post('/populate', function * () {
   console.log('populate');
   var geolocation = JSON.parse(this.query.params);
   yield usersSeed(this._rdbConn);
@@ -90,13 +80,13 @@ routes.post('/populate', function * (next) {
   this.body = 'database populated';
 });
 import {fromGlobalId} from 'graphql-relay';
-routes.post('/populate/order', function * (next) {
+routes.post('/populate/order', function * () {
   console.log('populate/order');
   yield ordersSeedById(fromGlobalId(this.query.params).id, this._rdbConn);
   this.body = 'database populated';
 });
 
-routes.post('/graphql', function * (next) {
+routes.post('/graphql', function * () {
   yield graphqlHTTP({
     schema: Schema,
     rootValue: {
@@ -138,14 +128,14 @@ r.connect(config, function(error, conn) {
       if (err) {
         console.log('creating user and restaurant tables');
         r.dbCreate(config.db).run(conn, function(err, result) {
-          if ((err) && (!err.message.match(/Database `.*` already exists/))) {
+          if (err && !err.message.match(/Database `.*` already exists/)) {
             console.log("Could not create the database `" + config.db + "`");
             console.log(err);
             process.exit(1);
           }
           console.log('Database `' + config.db + '` created.');
           r.tableCreate('user').run(conn, function(err, result) {
-            if ((err) && (!err.message.match(/Table `.*` already exists/))) {
+            if (err && !err.message.match(/Table `.*` already exists/)) {
               console.log("Could not create the table `users`");
               console.log(err);
               process.exit(1);
@@ -154,7 +144,7 @@ r.connect(config, function(error, conn) {
             co(function * () {
               var p = new Promise((resolve, reject) => {
                 r.tableCreate('restaurant').run(conn, function(err, result) {
-                  if ((err) && (!err.message.match(/Table `.*` already exists/))) {
+                  if (err && !err.message.match(/Table `.*` already exists/)) {
                     console.log("Could not create the table `users`");
                     console.log(err);
                     process.exit(1);
@@ -178,7 +168,7 @@ r.connect(config, function(error, conn) {
               });
               var q = new Promise((resolve, reject) => {
                 r.tableCreate('order').run(conn, function(err, result) {
-                  if ((err) && (!err.message.match(/Table `.*` already exists/))) {
+                  if (err && !err.message.match(/Table `.*` already exists/)) {
                     console.log("Could not create the table `order`");
                     console.log(err);
                     process.exit(1);

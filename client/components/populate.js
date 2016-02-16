@@ -40,7 +40,7 @@ export class Populate extends React.Component {
       }
       Relay.Store.update(new LoginMutation({credentials: {pseudo: 'duduche@gmail.com', password:'Ambrosia68'}, user: this.props.user.user}), {onFailure, onSuccess});
     });
-  }
+  };
 
   _login = () => {
     var onFailure = () => console.log('failure');
@@ -48,7 +48,7 @@ export class Populate extends React.Component {
       this.setState({hidden: false});
     }
     Relay.Store.update(new LoginMutation({credentials: {pseudo: 'duduche@gmail.com', password:'Ambrosia68'}, user: this.props.user.user}), {onFailure, onSuccess});
-  }
+  };
 
   render () {
     return (

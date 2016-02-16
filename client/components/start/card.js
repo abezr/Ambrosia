@@ -83,7 +83,7 @@ export default class Restaurant extends React.Component {
       ]
     });
     this.setState({foods: this.state.foods});
-  }
+  };
   //
   // _restaurantMutation = () => {
   //   console.log('Start:restaurantMutation');
@@ -103,7 +103,7 @@ export default class Restaurant extends React.Component {
     console.log('onChange');
     restaurant[e.target.id] = e.target.value;
     updateClass();
-  }
+  };
 
   render () {
     var createFood = (food, index) => {
@@ -158,24 +158,24 @@ class Food extends React.Component {
       time: 0
     });
     updateClass();
-  }
+  };
 
   _switchExpand = (e) => {
     this.setState({
       expand: !this.state.expand
     });
-  }
+  };
 
   _close = () => {
     console.log('close');
     restaurant.foods.splice(this.props.index, 1);
     updateClass();
-  }
+  };
 
   _update = (e) => {
     restaurant.foods[this.props.index][e.target.id] = e.target.value;
     updateClass();
-  }
+  };
 
   render () {
     var food = this.props;
@@ -227,14 +227,14 @@ class Meal extends React.Component {
     e.stopPropagation();
     restaurant.foods[this.props.parentIndex].meals.splice(this.props.index, 1);
     updateClass();
-  }
+  };
 
   _update = (e) => {
     restaurant.foods[this.props.parentIndex].meals[this.props.index][e.target.id] = e.target.type === 'number'
       ? Math.abs(e.target.value)
       : e.target.value;
     updateClass();
-  }
+  };
 
   render () {
     var food = this.props;

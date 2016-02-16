@@ -1,7 +1,12 @@
+script
+node_modules
 homemade-relay
+client
+stylesheet
 script
 bitcoin
 .gitignore
-rethinkdb_data
 .git
-.jshintrc
+.eslintrc
+.flowconfig
+.DS_Store

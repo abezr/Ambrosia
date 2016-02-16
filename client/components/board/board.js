@@ -33,6 +33,7 @@ class Board extends React.Component {
       }, '/register');
     }
   }
+  
   componentWillMount () {
     console.log('board:componentWillMount', this.props);
     if (this.props.user.user.userID !== this.props.restaurant.restaurant.userID) {
@@ -46,13 +47,13 @@ class Board extends React.Component {
       this.refs[i].getDOMNode().className = 'item';
     }
     e.target.className = 'item selected';
-  }
+  };
 
   _switchExpand = () => {
     this.setState({
       settings: !this.state.settings,
     });
-  }
+  };
 
   _switch = (e) => {
     var resto = {
@@ -67,7 +68,7 @@ class Board extends React.Component {
       this.setState({save: false});
     };
     Relay.Store.commitUpdate(new UpdateRestaurantMutation({restaurant: resto}), {onFailure, onSuccess});
-  }
+  };
 
   render () {
     var restaurant = this.props.restaurant.restaurant;

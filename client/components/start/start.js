@@ -62,7 +62,7 @@ export default class Start extends React.Component {
     var match = this.props.location.pathname.match(/card|settings|map|submit/);
     if(match === null) return route['card'];
     return route[match[0]];
-  }
+  };
 
   renderChildren = () => {
     return React.Children.map(this.props.children, (child) => {
@@ -70,7 +70,7 @@ export default class Start extends React.Component {
           submit: this._submit
         });
     });
-  }
+  };
 
   render() {
     var location = this._findLocation();

@@ -14,12 +14,12 @@ export default class StartSubmit extends React.Component {
 
   _close = () => {
     this.props.history.pushState(null, '/start/map');
-  }
+  };
 
   _submit = () => {
     this.setState({load: true});
     this.props.submit();
-  }
+  };
 
   render () {
     return (

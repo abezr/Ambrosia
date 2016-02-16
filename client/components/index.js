@@ -26,7 +26,7 @@ export class Index extends React.Component {
     if (e.target.scrollHeight <= e.target.scrollTop + e.target.clientHeight) {
       window.onContentScrollEnd ? window.onContentScrollEnd() : console.log('scrollEnd');
     }
-  }
+  };
 
   render() {
     //const {children, root} = this.props;
@@ -61,10 +61,10 @@ class LoginButton extends React.Component {
     console.log('LoginButton:Logout', this.props);
     //the easiest way to logout is to login with unknown user
     Relay.Store.update(new LoginMutation({credentials: {pseudo:'', password:''}, user: this.props}));
-  }
+  };
   _expand = () => {
     this.setState({expand: !this.state.expand});
-  }
+  };
 
   render() {
     if(this.props.mail === '') {

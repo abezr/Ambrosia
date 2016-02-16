@@ -53,18 +53,18 @@ class BoardSettings extends React.Component {
       this.setState({save: false});
     };
     Relay.Store.commitUpdate(new UpdateRestaurantMutation({restaurant: resto}), {onFailure, onSuccess});
-  }
+  };
 
   _switch = (e) => {
     Settings[e.currentTarget.id] = !Settings[e.currentTarget.id];
     _update();
-  }
+  };
 
   _updateSchedule = (schedule) => {
     console.log('updateSchedule', schedule);
     Settings.schedule = schedule;
     _update();
-  }
+  };
 
   _onReviewsScroll = (e) => {
     if (e.target.scrollHeight <= e.target.scrollTop + e.target.clientHeight) {
@@ -76,7 +76,7 @@ class BoardSettings extends React.Component {
         //this.setState({orderLoading: false});
       })
     }
-  }
+  };
 
   render() {
     midnightDate = new Date().setHours(0,0,0,0);

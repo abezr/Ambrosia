@@ -1,12 +1,14 @@
 module.exports = {
-  entry: './src/client/main.js',
+  entry: './client/main.js',
+  devtool: 'source-map',
   module: {
     loaders: [{
       test: /\.js$/,
       loader: 'babel',
+      exclude: /(node_modules|bower_components)/,
       query: {
-        stage: 0,
-        plugins: ['./build/BabelGraphQLPlugin']
+        presets: ['react', 'es2015', 'stage-0'],
+        plugins: ['./build/BabelGraphQLPlugin', 'transform-class-properties']
       }
     }, {
       test: /\.scss$/,

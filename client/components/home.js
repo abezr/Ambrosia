@@ -13,12 +13,12 @@ export default class Home extends React.Component {
 
   _endTransition = () => {
     setTimeout(()=>this.transition = false, transitionTime);
-  }
+  };
 
   _playTimeline = () => {
     console.log('playTimeline', this.refs.timeline);
     this.refs.timeline.play();
-  }
+  };
 
   _onWheel = (e) => {
     e.preventDefault();
@@ -27,7 +27,7 @@ export default class Home extends React.Component {
     this.transition = true;
     e.deltaY > 0 ? this.state.index++ : this.state.index <=0 ? 0 : this.state.index--;
     this.setState({index: this.state.index});
-  }
+  };
   render () {
     return (
       <div className='home' onWheel={this._onWheel}>
@@ -41,7 +41,7 @@ export default class Home extends React.Component {
             <h1>Enjoy food in a brand new Way</h1>
             <p>Ambrosia use the last pieces of financial and web technologies and change
              the way professionals and customers interact with each other, your meals won't ever
-              taste the same.
+              taste the same. version 4
             </p>
             <div className='enjoy'>Enjoy as</div>
             <span className='customer'>Customer</span>

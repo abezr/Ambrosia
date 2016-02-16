@@ -61,12 +61,12 @@ class Auth extends React.Component {
 
   _switch = () => {
     this.setState({toggle: !this.state.toggle});
-  }
+  };
 
   _close = () => {
     console.log('close');
     this.props.history.pushState({}, '/');
-  }
+  };
 
   _login = (e) => {
       e.preventDefault();
@@ -127,7 +127,7 @@ class Auth extends React.Component {
     } else {
       this.setState({errors: details.errors});
     }
-  }
+  };
 }
 
 export default Relay.createContainer(Auth, {
