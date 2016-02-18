@@ -66,11 +66,8 @@ body {
   }
 }
 section {
-  top: 4em;
-  width: 100%;
   position: relative;
   overflow-y: scroll;
-
 }
 .button {
   @include button;

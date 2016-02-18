@@ -7,47 +7,33 @@ div.chief-index {
     margin: auto 5px;
   }
   section {
-    >.settings {
-      position: fixed;
-      margin: 0;
-      padding: 0;
-      width: 0;
-      background-color: ghostwhite;
-      height: 100%;
-      overflow: hidden;
-      @include transform-style(preserve-3d);
-      @include transition(width 0.5s ease-in-out, padding 0.5s ease-in-out);
-      &.expand {
-        width: 20em;
-        padding: 1em;
+    .settings-cursor {
+      position: absolute;
+      width: 19em;
+      top: -10em;
+      left: -19em;
+      @include transition(left 0.5s ease-in-out, top 0.5s ease-in-out);
+      .widget-dropdown-selected:after {
+        @include triangle(1em, black, down);
       }
-      .settings-cursor {
-        position: absolute;
-        width: 19em;
-        top: -10em;
-        left: -5em;
-        @include transition(left 0.5s ease-in-out, top 0.5s ease-in-out);
-        .widget-dropdown-selected:after {
-          @include triangle(1em, black, down);
-        }
-        &.expand {
-          top: 1em;
-          left: 1em;
-        }
-        >div {
-          margin: 8px 0;
-        }
+      &.expand {
+        top: 1em;
+        left: 1em;
+      }
+      >div {
+        margin: 8px 0;
       }
     }
     .children-container {
       overflow: scroll;
-      position: fixed;
-      left: 0em;
       width: 100%;
       height: 90%;
-      @include transition(left 0.5s ease-in-out);
+      @include transform(translateX(0));
+      @include transition-property(transform);
+      @include transition-duration(0.5s);
+      @include transition-timing-function(ease-in-out);
       &.expand {
-        left: 20em;
+        @include transform(translateX(19em));
       }
     }
   }
@@ -102,12 +88,11 @@ div.board {
     }
     div.order {
       display: block;
-
       @include transition(height 0.5s ease-in-out, margin 0.5s ease-in-out);
-      height: 0em;
+      height: 0;
       box-shadow: 0 0 1em 0;
       border-radius: 0.25em;
-      margin: 0em;
+      margin: 0;
       overflow: hidden;
       text-align: center;
       &.visible {
@@ -116,6 +101,7 @@ div.board {
         }
         height: 3.1em;
         margin: 1em;
+
         //@include transition(height 0.5s ease-in-out, margin 0.5s ease-in-out);
       }
       h1 {
@@ -205,7 +191,6 @@ div.details {
     top: 0;
     right: 0;
   }
-
   .details-reviews {
     height: 20em;
     overflow: scroll;
@@ -222,7 +207,8 @@ div.details {
         min-width: 20%;
       }
     }
-    .widget-hearts, .widget-hearts-rated {
+    .widget-hearts,
+    .widget-hearts-rated {
       float: right;
     }
   }

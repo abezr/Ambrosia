@@ -33,7 +33,7 @@ class Board extends React.Component {
       }, '/register');
     }
   }
-  
+
   componentWillMount () {
     console.log('board:componentWillMount', this.props);
     if (this.props.user.user.userID !== this.props.restaurant.restaurant.userID) {
@@ -97,15 +97,13 @@ class Board extends React.Component {
           <div className='open'><Cursor id={'open'} size={'1em'} on={restaurant.open} update={this._switch}/> Open</div>
         </nav>
         <section>
-          <div className={'settings'+(this.state.settings ? ' expand' : '')}>
-            <div className={'settings-cursor'+(this.state.settings ? ' expand' : '')}>
-              <div>Today Turnover: <strong>{turnover()} {this.state.currency}</strong></div>
-              <div>Orders Today: <strong>{restaurant.orders.edges.length}</strong></div>
-              <div><Hearts rate={Math.round(restaurant.reviews.averageScore)} size={'1em'}/> {restaurant.reviews.comments.length} reviews</div>
-              <div><DropDownButton name={'Currency'} items={['mB', 'dollar', 'euro']} update={(e)=> this.setState({currency: e.currentTarget.id})} selected={this.state.currency} /></div>
-              <div><Cursor id={'open'} size={'1em'} on={restaurant.open} update={this._switch}/> open</div>
-              <div><Cursor id={'scorable'} size={'1em'} on={restaurant.scorable} update={this._switch}/> scorable</div>
-            </div>
+          <div className={'settings-cursor'+(this.state.settings ? ' expand' : '')}>
+            <div>Today Turnover: <strong>{turnover()} {this.state.currency}</strong></div>
+            <div>Orders Today: <strong>{restaurant.orders.edges.length}</strong></div>
+            <div><Hearts rate={Math.round(restaurant.reviews.averageScore)} size={'1em'}/> {restaurant.reviews.comments.length} reviews</div>
+            <div><DropDownButton name={'Currency'} items={['mB', 'dollar', 'euro']} update={(e)=> this.setState({currency: e.currentTarget.id})} selected={this.state.currency} /></div>
+            <div><Cursor id={'open'} size={'1em'} on={restaurant.open} update={this._switch}/> open</div>
+            <div><Cursor id={'scorable'} size={'1em'} on={restaurant.scorable} update={this._switch}/> scorable</div>
           </div>
           <div className={'children-container'+(this.state.settings ? ' expand' : '')}>
             {this.props.children}

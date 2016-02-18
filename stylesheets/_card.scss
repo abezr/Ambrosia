@@ -1,9 +1,9 @@
 div.shop-card {
-  position: absolute;
   right: 0;
   width: 85%;
   height: 100%;
   padding: 1em;
+  @include transform(translateX(10em));
   span.shop-score {
     float: right;
     .icon-score {
@@ -86,7 +86,7 @@ div.shop {
   }
   .caddy {
     position: absolute;
-    width: 15%;
+    width: 10em;
     height: 100%;
     overflow: scroll;
     text-align: center;

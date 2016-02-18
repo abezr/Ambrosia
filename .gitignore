@@ -1,3 +1,7 @@
 node_modules
 *.log
 rethinkdb_data
+desktop.js
+desktop.js.map
+mobile.js
+mobile.js.map

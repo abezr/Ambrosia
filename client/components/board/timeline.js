@@ -75,7 +75,7 @@ class Board extends React.Component {
   render() {
     var orders = filterOrder(this.props.restaurant.restaurant.orders.edges);
     return (
-      <div className='board'>
+      <div className='board' onScroll={e=>e.preventDefault()}>
         <TimeLine orders={orders} relay={this.props.relay} time={time} id={this.props.id}/>
         <Dashboard orders = {orders} restaurantID={this.props.id}/>
       </div>

@@ -4,13 +4,19 @@ nav.nav-list {
   $bg-color: rgba(0, 0, 0, 0.85);
   color: white;
   text-align: center;
-  background-color: $transparent;
+  background-color: $bg-color;
   @include transition(background-color 0.25s linear);
   &.expand {
     background-color: $bg-color;
     ul {
       @include transform(translateY(0) translateX(0));
+      li {
+        height: 2em;
+      }
     }
+  }
+  i {
+    color: white;
   }
   ul {
     .fa {
@@ -23,8 +29,9 @@ nav.nav-list {
     @include transition-duration(0.25s);
     @include transition-timing-function(ease-out);
     li {
-      margin: 1em 0;
       font-size: 2em;
+      height: 0;
+      @include transition(height 0.25s ease-out);
       display: block;
     }
   }
