@@ -1,5 +1,4 @@
 header {
-  background-color: black;
   a {
     color: white;
   }
@@ -61,7 +60,13 @@ a {
   color: black;
 }
 nav.nav-list {
-  position: relative;
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.7);;
+  i {
+    color: white;
+  }
   ul {
     list-style-type: none;
     margin: 0;
@@ -87,37 +92,3 @@ nav.nav-list {
     text-decoration: none;
   }
 }
-// nav.nav-stack {
-//   z-index: 5;
-//   background-color: black;
-//   ul {
-//     list-style-type: none;
-//     margin: 0;
-//     padding: 0;
-//   }
-//   li {
-//     float: none;
-//   }
-//   .logout-link {
-//     padding: 1em;
-//     text-align: center;
-//     text-decoration: none;
-//     &:hover {
-//       color: gold;
-//       border-left: 1px solid black;
-//     }
-//   }
-//   li a {
-//     text-align: center;
-//     padding: 0.5em;
-//     text-decoration: none;
-//     &:hover {
-//       color: gold;
-//     }
-//   }
-// }
-// @media screen and (min-aspect-ratio: 2/3) {
-//   header {
-//     background-color: gold;
-//   }
-// }

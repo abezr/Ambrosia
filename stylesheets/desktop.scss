@@ -1,0 +1,80 @@
+@import './bourbon/bourbon';
+@import './neat/neat';
+@import "flex";
+@import "home";
+@import 'login';
+@import "start";
+@import "restaurants";
+@import "timepicker";
+@import "profile";
+@import "board";
+@import "card";
+@import "leaflet";
+@import "icons";
+@import "widget";
+@import "index";
+body {
+  font-family: 'Osaka';
+}
+.flex-center {
+  justify-content: center;
+}
+.float-left {
+  margin: 0 1em;
+  float: left;
+}
+.float-right {
+  margin: 0 1em;
+  float: right;
+}
+.inline {
+  display: inline;
+}
+.flex {
+  display: flex;
+}
+.marged {
+  margin: 1em;
+}
+.center-text {
+  text-align: center;
+}
+svg {
+  overflow: visible;
+}
+@for $i from 2 through 10 {
+  .width-#{$i} {
+    width: 100%/$i;
+  }
+}
+.restaurant-popup {
+  text-align: center;
+}
+body {
+  margin: 0;
+  overflow: hidden;
+}
+@mixin button {
+  @include linear-gradient(45deg, gold, #d1d1c9);
+  font-size: 1em;
+  cursor: pointer;
+  position: relative;
+  padding: 0.25em;
+  border-radius: 0.25em;
+  &:hover {
+    box-shadow: 0px 0px 2px 0px black;
+  }
+}
+section {
+  top: 4em;
+  width: 100%;
+  position: relative;
+  overflow-y: scroll;
+
+}
+.button {
+  @include button;
+}
+.hidden {
+  display: none;
+}

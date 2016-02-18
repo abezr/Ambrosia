@@ -41,7 +41,7 @@ export default class Home extends React.Component {
             <h1>Enjoy food in a brand new Way</h1>
             <p>Ambrosia use the last pieces of financial and web technologies and change
              the way professionals and customers interact with each other, your meals won't ever
-              taste the same. version 4
+              taste the same.
             </p>
             <div className='enjoy'>Enjoy as</div>
             <span className='customer'>Customer</span>

@@ -1,5 +1,8 @@
 module.exports = {
-  entry: './client/main.js',
+  entry: {
+    desktop: './client/desktop.js',
+    mobile: './client/mobile.js'
+  },
   devtool: 'source-map',
   module: {
     loaders: [{
@@ -24,7 +27,7 @@ module.exports = {
     ]
   },
   output: {
-    filename: 'app.js',
+    filename: '[name].js',
     path: './'
   }
 };

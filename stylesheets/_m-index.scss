@@ -1,0 +1,35 @@
+@import 'index';
+nav.nav-list {
+  $transparent: rgba(0, 0, 0, 0);
+  $bg-color: rgba(0, 0, 0, 0.85);
+  color: white;
+  text-align: center;
+  background-color: $transparent;
+  @include transition(background-color 0.25s linear);
+  &.expand {
+    background-color: $bg-color;
+    ul {
+      @include transform(translateY(0) translateX(0));
+    }
+  }
+  ul {
+    .fa {
+      margin: 0 1em;
+    }
+    text-align: left;
+    padding-left: 10%;
+    @include transform(translateY(-21em) translateX(-10em));
+    @include transition-property(transform);
+    @include transition-duration(0.25s);
+    @include transition-timing-function(ease-out);
+    li {
+      margin: 1em 0;
+      font-size: 2em;
+      display: block;
+    }
+  }
+  .mobile-title {
+    font-size: 4em;
+    text-align: center;
+  }
+}

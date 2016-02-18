@@ -4,7 +4,7 @@ import graphqlHTTP from 'koa-gql';
 import qs from 'koa-qs';
 import serve from 'koa-static';
 import session from 'koa-session';
-//import parseBody from 'co-body';
+import useragent from 'useragent';
 
 import co from 'co';
 // import React from 'react';
@@ -51,7 +51,7 @@ server.use(session(server));
 server.use(function * (next) {
   yield r.connect(config, function(error, conn) {
     if (error) {
-      err(error);
+      console.log(error);
     } else {
       conn.use('user');
       this._rdbConn = conn;
@@ -99,18 +99,37 @@ routes.post('/graphql', function * () {
 server.use(routes.middleware());
 
 server.use(function * (next) {
-  //let's try to pass the session object into a script tag
   yield next;
-  this.body = `<!doctype html>
-                <html>
-                  <head>
-                    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
-                  </head
-                  <body>
-                    <div id = "app"></div>
-                  </body>
-                <script src='/app.js'></script>
-                </html>`;
+  const agentOS = useragent.parse(this.headers['user-agent']).os;
+  if (agentOS.toString().match('iOS') || agentOS.toString().match('BlackBerry') || agentOS.toString().match('Android')) {
+    this.body = `
+    <!doctype html>
+                  <html>
+                    <head>
+                      <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+                      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+                    </head
+                    <body>
+                      <div id = "app" data-agent = ${agentOS.toString()} data-unit = 'mobile'></div>
+                    </body>
+                  <script src='/mobile.js'></script>
+                  </html>
+    `
+  } else {
+    this.body = `
+    <!doctype html>
+                  <html>
+                    <head>
+                      <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+                      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+                    </head
+                    <body>
+                      <div id = "app" data-agent = ${agentOS.toString()} data-unit = 'desktop'></div>
+                    </body>
+                  <script src='/desktop.js'></script>
+                  </html>
+    `
+  }
 });
 
 
